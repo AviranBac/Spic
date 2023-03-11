@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Pressable } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
 type SpeakerIconProps = {
@@ -8,8 +8,8 @@ type SpeakerIconProps = {
     [key: string]: any;
 }
 
-const SpeakerSvgIcon = ({color = 'black', width = 50, height = 50, ...props}: SpeakerIconProps): JSX.Element => (
-    <View {...props}>
+const SpeakerSvgIcon = ({color = 'black', width = 50, height = 50, onPress}: SpeakerIconProps): JSX.Element => (
+    <Pressable onPress={onPress}>
         <Svg width={width} height={height} viewBox='0 0 75 75'>
             <Path d='M39.389,13.769 L22.235,28.606 L6,28.606 L6,47.699 L21.989,47.699 L39.389,62.75 L39.389,13.769z'
                   stroke={color}
@@ -22,7 +22,7 @@ const SpeakerSvgIcon = ({color = 'black', width = 50, height = 50, ...props}: Sp
                   strokeLinecap='round'
                   fill='none'/>
         </Svg>
-    </View>
+    </Pressable >
 );
 
 export default SpeakerSvgIcon;

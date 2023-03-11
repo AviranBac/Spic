@@ -8,13 +8,13 @@ type UseTextToSpeechProps = {
     text: string;
     gender: 'MALE' | 'FEMALE';
 }
-
 export type ReturnedValue = [boolean, () => void];
+
+const languageCode = 'he-IL';
 
 const useTextToSpeech = ({ text, gender }: UseTextToSpeechProps): ReturnedValue => {
     const { sound } = useContext(SoundContext);
     const [playing, setPlaying] = useState(false);
-    const languageCode = 'he-IL';
 
     const updateStatus = async (playbackStatus: AVPlaybackStatus) => {
         setPlaying((playbackStatus as AVPlaybackStatusSuccess).isPlaying);
@@ -24,7 +24,8 @@ const useTextToSpeech = ({ text, gender }: UseTextToSpeechProps): ReturnedValue 
         try {
             await sound.unloadAsync();
             const result: AVPlaybackStatus = await sound.loadAsync({
-                uri: `http://localhost:8084/tts?text="${text}"&gender=${gender}&languageCode=${languageCode}`
+                // TODO: get serverUrl from config (localhost should be computer's ip and will be replaced with a hostname in the future)
+                uri: `http://localhost:8080/tts?text="${text}"&gender=${gender}&languageCode=${languageCode}`
             });
 
             if ((result as AVPlaybackStatusError).error) {
@@ -35,7 +36,6 @@ const useTextToSpeech = ({ text, gender }: UseTextToSpeechProps): ReturnedValue 
                 console.error('Error when loading Audio');
             } else {
                 sound.setOnPlaybackStatusUpdate(updateStatus);
-                setPlaying(true);
                 await sound.playAsync();
             }
         } catch (error) {

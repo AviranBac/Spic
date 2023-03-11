@@ -9,7 +9,7 @@ const App: FC = () => {
     return (
         <View style={styles.container}>
             <SoundContextProvider>
-                <div style={{display: 'flex', flexDirection: 'row-reverse', gap: '1rem'}}>
+                <View style={{display: 'flex', flexDirection: 'row-reverse', gap: 10}}>
                     <TextInput
                         editable
                         onChangeText={setText}
@@ -20,7 +20,7 @@ const App: FC = () => {
                     />
                     <TextToSpeechIcon text={text} gender='MALE'/>
                     <TextToSpeechIcon text={text} gender='FEMALE'/>
-                </div>
+                </View>
             </SoundContextProvider>
         </View>
     );
