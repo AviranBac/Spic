@@ -1,24 +1,31 @@
+import cors from "cors";
 import express from "express";
 import bodyParser from "body-parser";
-import cors from "cors";
+import cookieParser from "cookie-parser";
+import { Request, Response } from "express";
+
 import { initializeApplication } from "./server";
-import authRouters from "../auth/auth-router";
+import authRouters from "../routes/auth.routes";
+import { authenticate } from "../auth/auth-middleware";
 
 export const app = express();
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 
-app.use(cors({
+app.use(
+  cors({
     origin: "*",
     credentials: true,
     optionsSuccessStatus: 200,
-}));
-
-app.get("/", (req: any, res: any) => {
-  res.send("This is a test");
-});
+  })
+);
 
 app.use("/auth", authRouters);
+
+app.get("/", authenticate, (req: Request, res: Response) => {
+  res.send("This is a authriazed test");
+});
 
 (async () => {
   await initializeApplication();
