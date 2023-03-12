@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-const accessKey: string | undefined = process.env.UNSPLASH_API_URL;
-const apiUrl: string | undefined = process.env.UNSPLASH_API_KEY;
+const accessKey = process.env.UNSPLASH_API_KEY;
+const apiUrl =  process.env.UNSPLASH_API_URL;
+
+console.log(apiUrl);
 
 const getImages = (searchQuery: string, callback: (results: any[]) => any): any =>
   axios.get(`${apiUrl}/search/photos`, {
