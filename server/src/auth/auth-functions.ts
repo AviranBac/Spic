@@ -1,10 +1,11 @@
 import bcrypt from "bcrypt";
-import { Request, Response } from "express";
+import { Request, Response, CookieOptions } from "express";
+
 import { StatusCodes } from "http-status-codes";
 
+import * as jwt from "../utils/jwt";
 import { validationResult } from "express-validator/check";
-import { User, UserModel } from "../db/schemas/user.schema";
-import { generateToken, verifyToken } from "../utils/jwt";
+import { IUser, IToken, UserModel } from "../db/schemas/user.schema";
 
 export const register = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -26,9 +27,10 @@ export const register = async (req: Request, res: Response) => {
     const salt = await bcrypt.genSalt(10);
     const encryptedPassword = await bcrypt.hash(password, salt);
 
-    const userModel: User = new UserModel({
+    const userModel: IUser = new UserModel({
       email,
       password: encryptedPassword,
+      tokens: []
     });
 
     await userModel.save();
@@ -49,14 +51,20 @@ export const login = async (req: Request, res: Response) => {
   }
 
   try {
-    const user: any = await UserModel.findOne({ email });
+    const user = await UserModel.findOne({ email });
     if (user && (await bcrypt.compare(password, user.password))) {
-      const accessToken = generateToken(user._id, "accessToken");
-      const refreshToken = generateToken(user._id, "refreshToken");
+      const { access_token, refresh_token } = jwt.signToken(user._id);
 
-      res.cookie("access_token", accessToken.token, accessToken.cookieTokenOptions);
-      res.cookie("refresh_token", refreshToken.token, refreshToken.cookieTokenOptions);
-      return res.status(StatusCodes.OK).send({ user, access_token: accessToken.token });
+      const refreshTokenCookieOptions: CookieOptions = jwt.refreshTokenCookieOptions();
+
+      const token = { token: refresh_token, expiryDate: refreshTokenCookieOptions.expires! };
+      user.tokens.push(token);
+      user.tokens = jwt.clearExpiryedTokens(user.tokens);
+      await user.save();
+
+      res.cookie("access_token", access_token, jwt.accessTokenCookieOptions());
+      res.cookie("refresh_token", refresh_token, refreshTokenCookieOptions);
+      return res.status(StatusCodes.OK).send({ user, access_token });
     }
 
     res.status(StatusCodes.BAD_REQUEST).send("Invalid Credentials");
@@ -66,7 +74,23 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-export const logout = (req: Request, res: Response) => {
+export const logout = async (req: Request, res: Response) => {
+  const reqRefreshToken = req.cookies.refresh_token as string;
+
+  const decoded = jwt.verifyToken(reqRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+  if (decoded) {
+    const { userId } = decoded;
+    try {
+      const user: any = await UserModel.findOne({ _id: userId });
+      if (user) {
+        user.tokens = user.tokens.filter((userToken: IToken) => userToken.token !== reqRefreshToken);
+        user.tokens = jwt.clearExpiryedTokens(user.tokens);
+        await user.save();
+      }
+    } catch (err) {
+      console.log(`An error occurred during log out: ${err}`);
+    }
+  }
   res.cookie("access_token", "", { maxAge: 1 });
   res.cookie("refresh_token", "", { maxAge: 1 });
   res.status(StatusCodes.OK).send();
@@ -76,9 +100,9 @@ export const refreshAccessTokenHandler = async (
   req: Request,
   res: Response
 ) => {
-  const refresh_token = req.cookies.refresh_token as string;
+  const reqRefreshToken = req.cookies.refresh_token as string;
 
-  const decoded = verifyToken(refresh_token, process.env.REFRESH_TOKEN_SECRET as string);
+  const decoded = jwt.verifyToken(reqRefreshToken, process.env.REFRESH_TOKEN_SECRET);
   if (!decoded) {
     return res.status(StatusCodes.FORBIDDEN).send("Could not refresh access token");
   }
@@ -86,17 +110,21 @@ export const refreshAccessTokenHandler = async (
   const { userId } = decoded;
 
   try {
-    const user = await UserModel.findOne({ _id: userId });
+    const user: any = await UserModel.findOne({ _id: userId });
     if (!user) {
       return res.status(StatusCodes.FORBIDDEN).send();
     }
+    const { access_token, refresh_token } = jwt.signToken(user._id);
 
-    const accessToken = generateToken(user._id, "accessToken");
-    res.cookie(
-      "access_token",
-      accessToken.token,
-      accessToken.cookieTokenOptions
-    );
+    const refreshTokenCookieOptions: CookieOptions = jwt.refreshTokenCookieOptions();
+    const token: IToken = { token: refresh_token, expiryDate: refreshTokenCookieOptions.expires! };
+    const index = user.tokens.findIndex((userToken: IToken) => userToken.token === reqRefreshToken);
+    if (index !== -1) user.tokens[index] = token;
+    user.tokens = jwt.clearExpiryedTokens(user.tokens);
+    await user.save();
+
+    res.cookie("access_token", access_token, jwt.accessTokenCookieOptions());
+    res.cookie("refresh_token", refresh_token, refreshTokenCookieOptions);
     res.status(StatusCodes.OK).send();
   } catch (err) {
     console.log(`An error occurred during refresh token: ${err}`);
