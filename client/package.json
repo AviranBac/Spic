@@ -14,6 +14,7 @@
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-native": "^0.70.5",
+    "react-native-element-dropdown": "^2.8.1",
     "react-native-web": "^0.18.10"
   },
   "devDependencies": {
