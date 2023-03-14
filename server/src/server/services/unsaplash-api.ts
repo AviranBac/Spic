@@ -11,6 +11,7 @@ const getImages = (searchQuery: string, callback: (results: any[]) => any): any 
       query: searchQuery,
       per_page: 5,
       safe: true,
+      lang: 'he'
     },
     headers: {
       Authorization: `Client-ID ${accessKey}`,
