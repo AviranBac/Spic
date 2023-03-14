@@ -16,7 +16,7 @@ const getImages = (searchQuery: string, callback: (results: any[]) => any): any 
       Authorization: `Client-ID ${accessKey}`,
     },
   })
-    .then((response) => callback(response.data.results))
+    .then((response) => callback(response.data.results.map((result: any) => result.urls)))
     .catch((error) => {
       console.error(error);
     });
