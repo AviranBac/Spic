@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, View } from 'react-native';
+import { TextInput, View } from 'react-native';
 import React, { FC, useState } from "react";
 import TextToSpeechIcon from "./components/icons/TextToSpeechIcon";
 import { Provider } from "react-redux";
@@ -9,7 +9,7 @@ const App: FC = () => {
 
     return (
         <Provider store={store}>
-            <View style={styles.container}>
+            <View style={{flex: 1,backgroundColor: '#fff',alignItems: 'center',justifyContent: 'center'}}>
                 <View style={{display: 'flex', flexDirection: 'row-reverse', gap: 10}}>
                     <TextInput
                         editable
@@ -17,7 +17,7 @@ const App: FC = () => {
                         placeholder="הכנס משפט"
                         placeholderTextColor="gray"
                         value={text}
-                        style={styles.textInput}
+                        style={{borderWidth: 2}}
                     />
                     <TextToSpeechIcon text={text} gender='MALE'/>
                     <TextToSpeechIcon text={text} gender='FEMALE'/>
@@ -26,24 +26,5 @@ const App: FC = () => {
         </Provider>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    textInput: {
-        borderWidth: 2
-    },
-    button: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 4,
-        borderWidth: 2,
-        backgroundColor: 'white',
-    },
-});
 
 export default App;
