@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.9.3",
     "expo": "~48.0.6",
     "expo-av": "~13.2.1",
     "expo-status-bar": "~1.4.2",
@@ -16,7 +17,8 @@
     "react-dom": "^18.2.0",
     "react-native": "0.71.3",
     "react-native-svg": "13.4.0",
-    "react-native-web": "^0.18.10"
+    "react-native-web": "^0.18.10",
+    "react-redux": "^8.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

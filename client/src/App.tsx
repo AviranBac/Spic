@@ -1,14 +1,15 @@
 import { StyleSheet, TextInput, View } from 'react-native';
 import React, { FC, useState } from "react";
 import TextToSpeechIcon from "./components/icons/TextToSpeechIcon";
-import { SoundContextProvider } from "./store/SoundContext";
+import { Provider } from "react-redux";
+import store from "./store/store";
 
 const App: FC = () => {
     const [text, setText] = useState('');
 
     return (
-        <View style={styles.container}>
-            <SoundContextProvider>
+        <Provider store={store}>
+            <View style={styles.container}>
                 <View style={{display: 'flex', flexDirection: 'row-reverse', gap: 10}}>
                     <TextInput
                         editable
@@ -21,8 +22,8 @@ const App: FC = () => {
                     <TextToSpeechIcon text={text} gender='MALE'/>
                     <TextToSpeechIcon text={text} gender='FEMALE'/>
                 </View>
-            </SoundContextProvider>
-        </View>
+            </View>
+        </Provider>
     );
 }
 

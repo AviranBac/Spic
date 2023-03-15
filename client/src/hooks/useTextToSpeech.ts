@@ -1,9 +1,10 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { AVPlaybackStatus } from "expo-av/src/AV";
 import { AVPlaybackStatusSuccess } from "expo-av/src/AV.types";
-import SoundContext from "../store/SoundContext";
 import { AVPlaybackStatusError } from "expo-av";
 import { config } from "../config/config";
+import { useSelector } from "react-redux";
+import { selectSound } from "../store/audio/audio.selectors";
 
 type UseTextToSpeechProps = {
     text: string;
@@ -14,7 +15,7 @@ export type ReturnedValue = [boolean, () => void];
 const languageCode = 'he-IL';
 
 const useTextToSpeech = ({ text, gender }: UseTextToSpeechProps): ReturnedValue => {
-    const { sound } = useContext(SoundContext);
+    const sound = useSelector(selectSound);
     const [playing, setPlaying] = useState(false);
 
     const updateStatus = (playbackStatus: AVPlaybackStatus) => {
