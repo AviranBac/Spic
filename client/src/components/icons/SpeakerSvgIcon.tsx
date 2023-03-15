@@ -9,7 +9,7 @@ type SpeakerIconProps = {
 }
 
 const SpeakerSvgIcon = ({playing, onPress, width = 50, height = 50}: SpeakerIconProps): JSX.Element => {
-    const color = playing ? '#009dff' : 'black';
+    const color: string = playing ? '#009dff' : 'black';
 
     return (
         <Pressable onPress={onPress}>

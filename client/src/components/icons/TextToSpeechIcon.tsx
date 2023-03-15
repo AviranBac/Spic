@@ -1,4 +1,4 @@
-import useTextToSpeech, { ReturnedValue } from "../../hooks/useTextToSpeech";
+import useTextToSpeech, { UseTextToSpeechOutput } from "../../hooks/useTextToSpeech";
 import SpeakerSvgIcon from "./SpeakerSvgIcon";
 
 type TextToSpeechIconProps = {
@@ -6,14 +6,14 @@ type TextToSpeechIconProps = {
     gender: 'MALE' | 'FEMALE';
 }
 
-const TextToSpeechIcon = ({text, gender }: TextToSpeechIconProps): JSX.Element => {
-    const [playing, loadAndPlayAudio]: ReturnedValue = useTextToSpeech({ text, gender });
+const TextToSpeechIcon = ({text, gender}: TextToSpeechIconProps): JSX.Element => {
+    const {playing, loadAndPlayAudioFn}: UseTextToSpeechOutput = useTextToSpeech({text, gender});
 
-    const pressHandler = async () => {
-        await loadAndPlayAudio();
+    const pressHandler: () => void = async () => {
+        await loadAndPlayAudioFn();
     }
 
-    return <SpeakerSvgIcon playing={playing} onPress={pressHandler} />;
+    return <SpeakerSvgIcon playing={playing} onPress={pressHandler}/>;
 };
 
 export default TextToSpeechIcon;
