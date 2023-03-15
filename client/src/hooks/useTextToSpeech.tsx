@@ -3,6 +3,7 @@ import { AVPlaybackStatus } from "expo-av/src/AV";
 import { AVPlaybackStatusSuccess } from "expo-av/src/AV.types";
 import SoundContext from "../store/SoundContext";
 import { AVPlaybackStatusError } from "expo-av";
+import { config } from "../config/config";
 
 type UseTextToSpeechProps = {
     text: string;
@@ -16,16 +17,24 @@ const useTextToSpeech = ({ text, gender }: UseTextToSpeechProps): ReturnedValue 
     const { sound } = useContext(SoundContext);
     const [playing, setPlaying] = useState(false);
 
-    const updateStatus = async (playbackStatus: AVPlaybackStatus) => {
+    const updateStatus = (playbackStatus: AVPlaybackStatus) => {
         setPlaying((playbackStatus as AVPlaybackStatusSuccess).isPlaying);
     };
+
+    const buildRequestUrl = () => {
+        const url: URL = new URL(`${config.serverUrl}/tts`);
+        url.searchParams.append("text", `"${text}"`);
+        url.searchParams.append("gender", gender);
+        url.searchParams.append("languageCode", languageCode);
+        return url.href;
+    }
 
     const loadAndPlayAudio = async () => {
         try {
             await sound.unloadAsync();
+
             const result: AVPlaybackStatus = await sound.loadAsync({
-                // TODO: get serverUrl from config (localhost should be computer's ip and will be replaced with a hostname in the future)
-                uri: `http://localhost:8080/tts?text="${text}"&gender=${gender}&languageCode=${languageCode}`
+                uri: buildRequestUrl()
             });
 
             if ((result as AVPlaybackStatusError).error) {

@@ -8,13 +8,12 @@ type TextToSpeechIconProps = {
 
 const TextToSpeechIcon = ({text, gender }: TextToSpeechIconProps): JSX.Element => {
     const [playing, loadAndPlayAudio]: ReturnedValue = useTextToSpeech({ text, gender });
-    const color = playing ? '#009dff' : 'black';
 
     const pressHandler = async () => {
         await loadAndPlayAudio();
     }
 
-    return <SpeakerSvgIcon color={color} onPress={pressHandler} />;
+    return <SpeakerSvgIcon playing={playing} onPress={pressHandler} />;
 };
 
 export default TextToSpeechIcon;
