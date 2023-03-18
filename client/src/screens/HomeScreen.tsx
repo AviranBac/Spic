@@ -13,7 +13,7 @@ export const HomeScreen = () => {
   };
 
   const onRefreshPress = () => {
-    api.get("/").then((res) => console.log(`Welcome`)).catch((err) => {
+    api.get("/").then((res) => console.log('Refreshing..')).catch((err) => {
       if (context !== null) context.deleteSession();
     });
   };

@@ -45,6 +45,7 @@ export const signUp = async (req: Request, res: Response) => {
 };
 
 export const signIn = async (req: Request, res: Response) => {
+  console.log('### sign in ###')
   const { email, password } = req.body;
 
   const errors = validationResult(req);
@@ -73,6 +74,7 @@ export const signIn = async (req: Request, res: Response) => {
 };
 
 export const signOut = async (req: Request, res: Response) => {
+  console.log('### sign out ###')
   const reqRefreshToken = req.body.refresh_token;
 
   const decoded = jwt.verifyToken(reqRefreshToken, process.env.REFRESH_TOKEN_SECRET);
@@ -95,6 +97,7 @@ export const refreshAccessTokenHandler = async (
   req: Request,
   res: Response
 ) => {
+  console.log('### refresh token ###')
   const reqRefreshToken = req.body.refresh_token;
 
   const decoded = jwt.verifyToken(reqRefreshToken, process.env.REFRESH_TOKEN_SECRET);

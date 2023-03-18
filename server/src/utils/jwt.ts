@@ -27,8 +27,5 @@ export const updateRefreshTokensList = (tokens: IToken[], token: string): IToken
 }
 
 export const clearExpiryedTokens = (tokens: IToken[], expiryToken?: string): IToken[] => {
-  return tokens.filter(token => { 
-    console.log(`token.expiryDate.getTime() > new Date().getTime(): ${token.expiryDate.getTime() > new Date().getTime()}`)
-    console.log(`expiryToken ? token.token !== expiryToken : true: ${expiryToken ? token.token !== expiryToken : true}`)
-    return token.expiryDate.getTime() > new Date().getTime() && (expiryToken ? token.token !== expiryToken : true)});
+  return tokens.filter(token => token.expiryDate.getTime() > new Date().getTime() && (expiryToken ? token.token !== expiryToken : true));
 }

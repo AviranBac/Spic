@@ -34,14 +34,17 @@ instance.interceptors.response.use(
       if (err.response.status === 401 && !originalConfig._retry) {
         originalConfig._retry = true;
 
+        console.log('Access token expired');
         try {
           const rs = await instance.post("/auth/refreshtoken", {
             refresh_token: await TokenService.getLocalRefreshToken(),
           });
 
           if (!!rs) {
-            const { accessToken } = rs.data;
-            await TokenService.setLocalAccessToken(accessToken);
+            console.log('Received new access token');
+            const { access_token, refresh_token } = rs.data;
+            await TokenService.setLocalAccessToken(access_token);
+            await TokenService.setLocalRefreshToken(refresh_token);
 
             return instance(originalConfig);
           }
@@ -49,6 +52,7 @@ instance.interceptors.response.use(
           return Promise.reject(error);
         }
       } else if (err.response.status === 403) {
+        console.log('Refresh token expired')
         await TokenService.deleteUserSession();
         return Promise.reject('Refresh token expired');
       }
