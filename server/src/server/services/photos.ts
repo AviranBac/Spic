@@ -10,7 +10,7 @@ const getPhotos = async (searchQuery: string): Promise<string[]> => {
     const response = await unsplash.search.getPhotos({
       query: searchQuery,
       perPage: 5,
-      contentFilter: 'high'as ContentFilter,
+      contentFilter: 'high' as ContentFilter,
       lang: 'he' as Language
     });
     console.log(response)
