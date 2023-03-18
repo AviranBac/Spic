@@ -7,6 +7,9 @@ export interface IToken {
 
 export interface IUser extends Document {
     email: string,
+    username: string,
+    gender: string, 
+    age: number,
     password: string,
     tokens: IToken[]
 }
@@ -14,6 +17,18 @@ export interface IUser extends Document {
 const UserModelSchema = new Schema<IUser>({
     email: {
         type: String,
+        require: true
+    },
+    username: {
+        type: String,
+        require: true
+    },
+    gender: {
+        type: String,
+        require: true
+    },
+    age: {
+        type: Number,
         require: true
     },
     password: {

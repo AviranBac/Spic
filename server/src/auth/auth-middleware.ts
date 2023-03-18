@@ -7,15 +7,16 @@ export const authenticate = async (
   res: Response,
   next: NextFunction
 ) => {
-  const access_token = req.cookies.access_token as string;
+  console.log(`Authentication middleware`);
+  const accessToken = req.headers.authorization as string;
 
-  if (!access_token) {
+  if (!accessToken) {
     return res
       .status(StatusCodes.FORBIDDEN)
-      .send("A token is required for authentication");
+      .send({ response: "A token is required for authentication" });
   }
 
-  const decoded = verifyToken(access_token, process.env.ACCESS_TOKEN_SECRET as string);
-  if (!decoded) return res.status(StatusCodes.UNAUTHORIZED).send("Invalid Token");
+  const decoded = verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET as string);
+  if (!decoded) return res.status(StatusCodes.UNAUTHORIZED).send({ response: "Invalid Token" });
   return next();
 };
