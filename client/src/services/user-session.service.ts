@@ -28,7 +28,6 @@ class UserSessionService {
         'userSession',
         JSON.stringify(userSession)
       );
-      console.log(`setting session date in storage: ${userSession}`)
     } catch (err) {
       console.log(`Error occored whie updating user session in storage: ${err}`)
     }

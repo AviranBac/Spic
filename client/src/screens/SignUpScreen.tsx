@@ -10,7 +10,7 @@ import {
     TouchableOpacity,
 } from "react-native";
 import AuthService from "../services/auth.service";
-import { SessionContext, IContextType } from "../App";
+import { SessionContext, IContextType } from "../services/session-context.service";
 
 const data = [
     { label: 'זכר', value: 'male' },
@@ -28,7 +28,6 @@ export const SignUpScreen = () => {
     const [isFocus, setIsFocus] = useState(false);
 
     const onSignUpPress = async () => {
-        console.log(`On press - sign up, email: ${email}, username: ${username}, password: ${password}, gender: ${gender}`);
         try {
             const userSession = await AuthService.signUp(username, email, password, age, gender);
             if (context !== null) context.updateSession(userSession);

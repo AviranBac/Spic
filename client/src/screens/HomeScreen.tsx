@@ -1,7 +1,7 @@
 import React, { FC, useContext } from "react";
 import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import api from "../services/api";
-import { SessionContext, IContextType } from "../App";
+import { SessionContext, IContextType } from "../services/session-context.service";
 import AuthService from "../services/auth.service";
 
 export const HomeScreen = () => {
@@ -12,20 +12,18 @@ export const HomeScreen = () => {
     if (context !== null) context.deleteSession();
   };
 
-  const fetchData = () => {
-    api.get("/").then((res) => console.log(`response home:${JSON.stringify(res.data.status)}`)).catch((err) => {
-      console.log(`error occured while fetching data: ${err}`);
+  const onRefreshPress = () => {
+    api.get("/").then((res) => console.log(`Welcome`)).catch((err) => {
       if (context !== null) context.deleteSession();
     });
   };
-  fetchData();
 
   return (
     <>
       <View>
-        <Text>
-          Home
-        </Text>
+        <TouchableOpacity style={styles.btn} onPress={onRefreshPress}>
+          <Text>רענן</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.btn} onPress={onSignOutPress}>
           <Text>התנתק</Text>
         </TouchableOpacity>
@@ -37,13 +35,13 @@ export const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   btn: {
-      width: "80%",
-      borderRadius: 25,
-      height: 50,
-      alignItems: "center",
-      justifyContent: "center",
-      marginTop: 40,
-      backgroundColor: "#A9C2C8",
+    width: "80%",
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 40,
+    backgroundColor: "#A9C2C8",
   },
 });
 

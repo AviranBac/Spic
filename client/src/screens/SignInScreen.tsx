@@ -9,7 +9,7 @@ import {
     TouchableOpacity,
 } from "react-native";
 import AuthService from "../services/auth.service";
-import { SessionContext, IContextType } from "../App";
+import { SessionContext, IContextType } from "../services/session-context.service";
 
 export const SignInScreen = ({ navigation } : {navigation: any}) => {
     const context = useContext<IContextType | null>(SessionContext);
@@ -18,7 +18,6 @@ export const SignInScreen = ({ navigation } : {navigation: any}) => {
     const [password, setPassword] = useState("");
 
     const onSignInPress = async () => {
-        console.log(`On press - sign in, email: ${email}, password: ${password}`);
         try {
             const userSession = await AuthService.signIn(email, password);
             if (context !== null) context.updateSession(userSession);
