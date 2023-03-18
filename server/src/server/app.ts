@@ -8,14 +8,13 @@ const { photosRouter } = require("./routes/photos");
 export const app = express();
 
 app.use(bodyParser.json());
-app.use('/photos', photosRouter);
-
 app.use(cors({
     origin: '*',
     credentials: true,
     optionsSuccessStatus: 200
 }));
-  
+app.use('/photos', photosRouter);
+
 (async () => {
     await initializeApplication();
 })();
