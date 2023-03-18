@@ -1,34 +1,20 @@
-import axios, { AxiosResponse } from 'axios';
+import { createApi, Language, ContentFilter } from 'unsplash-js';
 
-const accessKey: string = process.env.UNSPLASH_API_KEY || '';
-const apiUrl: string = process.env.UNSPLASH_API_URL || '';
+const unsplash = createApi({
+  accessKey: process.env.UNSPLASH_API_KEY || ''
+});
 
-interface UnsplashPhoto {
-  urls: {
-    raw: string;
-    full: string;
-    regular: string;
-    small: string;
-    thumb: string;
-  }
-}
-
-const getPhotos = async (searchQuery: string): Promise<UnsplashPhoto[]> => {
-  let photos: UnsplashPhoto[] = [];
+const getPhotos = async (searchQuery: string): Promise<string[]> => {
+  let photos: string[] = [];
   try {
-    console.log("Requesting photos from Unsplash-api");
-    const response: AxiosResponse = await axios.get(`${apiUrl}/search/photos`, {
-      params: {
-        query: searchQuery,
-        per_page: 5,
-        safe: true,
-        lang: 'he'
-      },
-      headers: {
-        Authorization: `Client-ID ${accessKey}`,
-      }
+    const response = await unsplash.search.getPhotos({
+      query: searchQuery,
+      perPage: 5,
+      contentFilter: 'high'as ContentFilter,
+      lang: 'he' as Language
     });
-    photos = response.data.results.map((photo: UnsplashPhoto) => photo.urls.regular);
+    console.log(response)
+    photos = response.response?.results.map((result) => result.urls.regular) ?? [];
     console.log(`Got ${photos.length} photos from Unsplash-api`);
   } catch (error) {
     console.log(`Failed while fetching photos: ${error}`);
