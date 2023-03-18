@@ -1,23 +1,22 @@
 import express, { Request, Response } from 'express';
 import HttpStatus from 'http-status-codes';
-import { getImages } from '../services/unsaplash-api';
+import { getPhotos } from '../services/photos';
 
 const router = express.Router();
 
-router.get('/:name/', async (req: Request, res: Response) => {
-  let response: any;
+router.get('/:searchQuery/', async (req: Request, res: Response) => {
+  let response: string[];
   let statusCode: number = HttpStatus.OK;
-  const { name } = req.params;
+  const { searchQuery } = req.params;
 
   try {
-    response = await getImages(name, (results: any[]) => {
-      console.log(`Sending requested photos of ${name}`);
-      res.send(results);
-    });
+    const photoUrls = await getPhotos(searchQuery);
+    console.log(`Sending requested photos of ${searchQuery}`);
+    res.send(photoUrls);
   } catch (e) {
     statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-    response = `Couldn't get photos of ${name}, error was ${e}`;
-    console.log(response);
+    response = [];
+    console.log(`Couldn't get photos of ${searchQuery}, error was ${e}`);
     res.status(statusCode).send(response);
   }
 });
