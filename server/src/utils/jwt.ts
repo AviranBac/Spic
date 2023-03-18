@@ -6,26 +6,26 @@ interface UserIDJwtPayload extends jwt.JwtPayload {
 }
 
 export const signToken = (userId: string) => {
-  const access_token = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: `${process.env.ACCESS_TOKEN_EXPIRATION_IN_MINUTES}m` });
-  const refresh_token = jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: `${process.env.REFRESH_TOKEN_EXPIRATION_IN_MINUTES}m` });
+  const access_token = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: `${process.env.ACCESS_TOKEN_EXPIRATION_IN_HOURS}h` });
+  const refresh_token = jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: `${process.env.REFRESH_TOKEN_EXPIRATION_IN_HOURS}h` });
 
   return { access_token, refresh_token };
 };
 
-export const verifyToken = (token: string, tokenSceret: string): UserIDJwtPayload | undefined => {
+export const verifyToken = (token: string, tokenSecret: string): UserIDJwtPayload | undefined => {
   try {
-    return jwt.verify(token, tokenSceret) as UserIDJwtPayload;
+    return jwt.verify(token, tokenSecret) as UserIDJwtPayload;
   } catch (err) {
-    console.log('Error occored, token is expired');
+    console.error("Error occurred while verifying a user's token, it might have been expired");
   }
 }
 
-export const updateRefreshTokensList = (tokens: IToken[], token: string): IToken[] => {
-  const refreshToken = { token, expiryDate: new Date(Date.now() + parseInt(process.env.REFRESH_TOKEN_EXPIRATION_IN_MINUTES) * 60 * 1000) };
-  tokens.push(refreshToken);
-  return tokens;
+export const updateRefreshTokensList = (currentTokens: IToken[], newRefreshToken: string): IToken[] => {
+  const refreshToken : IToken = { token: newRefreshToken, expiryDate: new Date(Date.now() + parseInt(process.env.REFRESH_TOKEN_EXPIRATION_IN_HOURS) * 60 * 60 * 1000) };
+  return [...currentTokens, refreshToken];
 }
 
-export const clearExpiryedTokens = (tokens: IToken[], expiryToken?: string): IToken[] => {
-  return tokens.filter(token => token.expiryDate.getTime() > new Date().getTime() && (expiryToken ? token.token !== expiryToken : true));
+export const clearExpiryedTokens = (tokens: IToken[], usedToken?: string): IToken[] => {
+  const currTime = new Date().getTime();
+  return tokens.filter(currTokenObj => currTokenObj.expiryDate.getTime() > currTime && (usedToken ? currTokenObj.token !== usedToken : true));
 }

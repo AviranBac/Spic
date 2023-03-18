@@ -1,6 +1,3 @@
-import * as dotenv from "dotenv";
-dotenv.config();
-
 import { initMongoConnection } from "../db/mongo-connection";
 import { app } from "./app";
 

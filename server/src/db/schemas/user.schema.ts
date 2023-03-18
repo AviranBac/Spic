@@ -11,7 +11,7 @@ export interface IUser extends Document {
     gender: string, 
     age: number,
     password: string,
-    tokens: IToken[]
+    refreshTokens: IToken[]
 }
 
 const UserModelSchema = new Schema<IUser>({
@@ -35,7 +35,7 @@ const UserModelSchema = new Schema<IUser>({
         type: String,
         require: true
     },
-    tokens: {
+    refreshTokens: {
         type: [{
             token: {
                 type: String,

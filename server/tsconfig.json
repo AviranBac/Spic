@@ -2,7 +2,9 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "lib": ["es6"],
+    "lib": [
+      "es6"
+    ],
     "allowJs": false,
     "rootDir": "src",
     "outDir": "dist",
@@ -10,7 +12,14 @@
     "noImplicitAny": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "typeRoots": ["./src/types"]
+    "typeRoots": [
+      "./src/types"
+    ]
   },
-  "exclude": ["node_modules"],
+  "exclude": [
+    "node_modules"
+  ],
+  "ts-node": {
+    "files": true
+  },
 }

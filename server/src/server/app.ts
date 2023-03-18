@@ -1,7 +1,7 @@
+import "dotenv/config";
 import cors from "cors";
 import express from "express";
 import bodyParser from "body-parser";
-import cookieParser from "cookie-parser";
 import { Request, Response } from "express";
 
 import { initializeApplication } from "./server";
@@ -11,7 +11,6 @@ import { authenticate } from "../auth/auth-middleware";
 export const app = express();
 
 app.use(bodyParser.json());
-app.use(cookieParser());
 
 app.use(
   cors({

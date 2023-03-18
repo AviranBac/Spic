@@ -16,7 +16,7 @@ export const authenticate = async (
       .send({ response: "A token is required for authentication" });
   }
 
-  const decoded = verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET as string);
+  const decoded = verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET);
   if (!decoded) return res.status(StatusCodes.UNAUTHORIZED).send({ response: "Invalid Token" });
   return next();
 };
