@@ -1,6 +1,5 @@
 import { initMongoConnection } from "../db/mongo-connection";
 import { app } from "./app";
-import {initCategoriesDb} from "../db/dal/init-db";
 
 export const initializeApplication: () => Promise<void> = async () => {
     await initMongoConnection();
