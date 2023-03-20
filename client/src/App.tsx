@@ -1,14 +1,18 @@
-import React, {FC} from "react";
-import {BottomBar} from "./ButtomBar/BottomBar";
-import MainAppBar from "./AppBar/MainAppBar";
-import {View} from "react-native";
+import React from "react";
+import {ButtomBar} from "./Components/ButtomBar/ButtomBar";
+import MainAppBar from "./Components/AppBar/MainAppBar";
+import styled from "styled-components/native";
 
-const App: FC = () => {
+const Wrapper = styled.Modal`
+    direction: rtl;
+`
+
+const App = () => {
     return (
-        <>
+        <Wrapper>
             <MainAppBar/>
-            <BottomBar/>
-        </>
+            <ButtomBar/>
+        </Wrapper>
     );
 }
 

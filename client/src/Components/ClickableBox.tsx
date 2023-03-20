@@ -1,41 +1,52 @@
-import {Button, Image, TextBase, TouchableOpacity, View} from "react-native";
+import {Button, TouchableOpacity} from "react-native";
 import {getImageByCategory} from "../Utils/getImageByCategory";
 import {replaceEngToHeb} from "../Utils/replaceEngToHeb";
+import styled from "styled-components/native";
 
 interface ClickableBoxProps {
-    categoryName: string,
-    subCategories: string[]
+    categoryName: string
 }
 
-export const ClickableBox = ({categoryName, subCategories}: ClickableBoxProps) => {
+const Wrapper = styled.View`
+  flex-basis: 50%;
+  align-items: center;
+  justify-content: center;
+`;
+
+const StyledImage = styled.Image`
+  width: 150px;
+  height: 150px;
+`
+
+export const ClickableBox = ({categoryName}: ClickableBoxProps) => {
     const image = getImageByCategory(categoryName);
     const title = replaceEngToHeb(categoryName);
     return (
-        <View style={{flexBasis: '50%', alignItems:'center', justifyContent:'center'}}>
+        <Wrapper>
             <TouchableOpacity>
-                <Image source={image} style={{width: 150, height: 150}}/>
+                <StyledImage source={image}/>
                 <Button title={title}/>
             </TouchableOpacity>
             <TouchableOpacity>
-                <Image source={image} style={{width: 150, height: 150}}/>
+                <StyledImage source={image}/>
                 <Button title={title}/>
             </TouchableOpacity>
             <TouchableOpacity>
-                <Image source={image} style={{width: 150, height: 150}}/>
+                <StyledImage source={image}/>
                 <Button title={title}/>
             </TouchableOpacity>
             <TouchableOpacity>
-                <Image source={image} style={{width: 150, height: 150}}/>
+                <StyledImage source={image}/>
                 <Button title={title}/>
             </TouchableOpacity>
             <TouchableOpacity>
-                <Image source={image} style={{width: 150, height: 150}}/>
+                <StyledImage source={image}/>
                 <Button title={title}/>
             </TouchableOpacity>
             <TouchableOpacity>
-                <Image source={image} style={{width: 150, height: 150}}/>
+                <StyledImage source={image}/>
                 <Button title={title}/>
             </TouchableOpacity>
-        </View>
+        </Wrapper>
     )
 }

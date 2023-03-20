@@ -2,21 +2,21 @@ import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {NavigationContainer} from "@react-navigation/native";
 import React from "react";
 import {createMaterialBottomTabNavigator} from "@react-navigation/material-bottom-tabs";
-import {HomeScreen} from "../Screens/HomeScreen";
-import {FavoritesScreen} from "../Screens/FavoritesScreen";
-import {RecentScreen} from "../Screens/RecentsScreen";
-import {SettingsScreen} from "../Screens/SettingsScreen";
+import {HomeScreen} from "../../Screens/HomeScreen";
+import {FavoritesScreen} from "../../Screens/FavoritesScreen";
+import {RecentScreen} from "../../Screens/RecentsScreen";
+import {SettingsScreen} from "../../Screens/SettingsScreen";
 
 const Tab = createMaterialBottomTabNavigator();
 
 const TABS = {
     HOME: "בית",
-    RECENT: 'בשימוש נפוץ',
+    COMMONLY_USED: 'בשימוש נפוץ',
     FAVORITES: 'מועדפים',
     SETTINGS: 'הגדרות משתמש'
 }
 
-export const BottomBar = () => {
+export const ButtomBar = () => {
     return (
         <NavigationContainer>
             <Tab.Navigator
@@ -44,9 +44,9 @@ export const BottomBar = () => {
                     }}
                 />
                 <Tab.Screen
-                    name={TABS.RECENT} component={RecentScreen}
+                    name={TABS.COMMONLY_USED} component={RecentScreen}
                     options={{
-                        tabBarLabel: TABS.RECENT,
+                        tabBarLabel: TABS.COMMONLY_USED,
                         tabBarIcon: ({color}) => (
                             <MaterialCommunityIcons name="clock" color={color} size={25}/>
                         ),

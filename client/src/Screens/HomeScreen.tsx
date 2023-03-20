@@ -1,31 +1,54 @@
-import {Image, ScrollView, Text, TouchableOpacity, View} from "react-native";
+import {ScrollView} from "react-native";
 import React from "react";
 import {ClickableBox} from "../Components/ClickableBox";
+import styled from "styled-components/native";
 
-const CATEGORIES_LIST: [string, string[]][] = [['play', []], ['dress', []]];
+const CATEGORIES_LIST: string[] = ['play', 'dress'];
+
+const Wrapper = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  padding-top: 10px;
+`;
+
+const HeadLindWrapper = styled.View`
+  flex: 0 0 15%;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StyledText = styled.Text`
+  font-size: 25px;
+`;
+
+const CategoriesWrapper = styled.View`
+  flex: 1;
+  flex-wrap: wrap;
+  flex-direction: row;
+  padding-top: 10px;
+`;
 
 export const HomeScreen = () => {
     return (
         <ScrollView>
-            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: 10}}>
-                <View style={{flexGrow: 0, flexShrink: 0, flexBasis: '15%'}}>
-                    <Text style={{fontSize: 25}}>
+            <Wrapper>
+                <HeadLindWrapper>
+                    <StyledText>
                         בוקר טוב אלי ☀️
+                    </StyledText>
+                    <StyledText>
                         מה תרצה לעשות היום ?
-                    </Text>
-                </View>
-                <View style={{
-                    flex: 1,
-                    flexWrap: 'wrap',
-                    flexDirection: 'row', paddingTop: 10
-                }}>
+                    </StyledText>
+                </HeadLindWrapper>
+                <CategoriesWrapper>
                     {
                         CATEGORIES_LIST.map((category) => {
-                            return <ClickableBox categoryName={category[0]} subCategories={category[1]} key={category[0]}/>
+                            return <ClickableBox categoryName={category} key={category}/>
                         })
                     }
-                </View>
-            </View>
+                </CategoriesWrapper>
+            </Wrapper>
         </ScrollView>
     );
 }
