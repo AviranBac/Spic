@@ -2,7 +2,8 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
-export interface Item extends mongoose.Document {
+export interface Item{
+    id?: mongoose.ObjectId,
     name: string,
     imageUrl: string
 }
