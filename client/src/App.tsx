@@ -1,5 +1,5 @@
 import React from "react";
-import {ButtomBar} from "./Components/ButtomBar/ButtomBar";
+import {BottomBar} from "./Components/BottomBar/BottomBar";
 import MainAppBar from "./Components/AppBar/MainAppBar";
 import styled from "styled-components/native";
 
@@ -11,7 +11,7 @@ const App = () => {
     return (
         <Wrapper>
             <MainAppBar/>
-            <ButtomBar/>
+            <BottomBar/>
         </Wrapper>
     );
 }

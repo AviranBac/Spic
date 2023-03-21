@@ -16,7 +16,7 @@ const TABS = {
     SETTINGS: 'הגדרות משתמש'
 }
 
-export const ButtomBar = () => {
+export const BottomBar = () => {
     return (
         <NavigationContainer>
             <Tab.Navigator
