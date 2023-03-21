@@ -3,27 +3,27 @@ import {Category} from "../schemas/category.schema";
 
 const categories: Category[] = [{
     name: 'clothes',
-    imageUrl: 'https://ibb.co/C7jghN1',
+    imageUrl: 'https://i.ibb.co/bB4TzqW/clothes.jpg',
     items: []
 },{
     name: 'emotions',
-    imageUrl: 'https://ibb.co/gvMHYs7',
+    imageUrl: 'https://i.ibb.co/B4Vdk8P/emotions.jpg',
     items: []
 },{
     name: 'food',
-    imageUrl: 'https://ibb.co/tzg3jts',
+    imageUrl: 'https://i.ibb.co/qCKxqfs/food.jpg',
     items: []
 },{
     name: 'games',
-    imageUrl: 'https://ibb.co/9NCZLBh',
+    imageUrl: 'https://i.ibb.co/PNfDnJM/games.jpg',
     items: []
 },{
     name: 'hygiene',
-    imageUrl: 'https://ibb.co/27FhZyK',
+    imageUrl: 'https://i.ibb.co/Y7NQ03j/hygiene.jpg',
     items: []
 },{
     name: 'sport',
-    imageUrl: 'https://ibb.co/zSmJRZ8',
+    imageUrl: 'https://i.ibb.co/SK6rnBQ/sport.jpg',
     items: []
 }];
 
