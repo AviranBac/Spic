@@ -1,13 +1,12 @@
-import { StatusBar } from "expo-status-bar";
 import { Dropdown } from 'react-native-element-dropdown';
 import React, { useContext, useState } from "react";
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, } from "react-native";
 import AuthService from "../services/auth.service";
 import { IContextType, SessionContext } from "../services/session-context.service";
 
 const data = [
-    { label: 'זכר', value: 'male' },
-    { label: 'נקבה', value: 'female' },
+    {label: 'זכר', value: 'male'},
+    {label: 'נקבה', value: 'female'},
 ];
 
 export const SignUpScreen = () => {
@@ -30,74 +29,76 @@ export const SignUpScreen = () => {
     };
 
     return (
-    <View style={styles.container}>
-        <Image style={styles.image} source={require("../../assets/logo-spic.png")} />
-        <StatusBar style="auto" />
-        <View style={styles.inputView}>
-            <TextInput
-                style={styles.TextInput}
-                placeholder="אימייל"
-                placeholderTextColor="#003f5c"
-                onChangeText={(email) => setEmail(email)}
-            />
-        </View>
-        <View style={styles.inputView}>
-            <TextInput
-                style={styles.TextInput}
-                placeholder="שם משתמש"
-                placeholderTextColor="#003f5c"
-                onChangeText={(username) => setUsername(username)}
-            />
-        </View>
-        <View style={styles.inputView}>
-            <TextInput
-                style={styles.TextInput}
-                placeholder="סיסמה"
-                placeholderTextColor="#003f5c"
-                secureTextEntry={true}
-                onChangeText={(password) => setPassword(password)}
-            />
-        </View>
-        <View style={styles.inputView}>
-            <TextInput
-                style={styles.TextInput}
-                placeholder="וידוא סיסמה"
-                placeholderTextColor="#003f5c"
-                secureTextEntry={true}
-                onChangeText={(verifyPassword) => verifyPassword === password}
-            />
-        </View>
-        <View style={styles.inputView}>
-            <TextInput
-                style={styles.TextInput}
-                keyboardType='numeric'
-                placeholder="גיל"
-                placeholderTextColor="#003f5c"
-                maxLength={3}
-                onChangeText={(age) => setAge(parseInt(age))}
-            />
-        </View>
-        <Dropdown
-            style={[styles.dropdown]}
-            data={data}
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            placeholder={!isFocus ? 'מין' : '...'}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            value={gender}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            onChange={item => {
-                setGender(item.value);
-                setIsFocus(false);
-            }}
-        />
-        <TouchableOpacity style={styles.loginBtn} onPress={onSignUpPress}>
-            <Text>הירשם</Text>
-        </TouchableOpacity>
-    </View>)
+        <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
+            <View style={styles.container}>
+                <Image style={styles.image} source={require("../../assets/logo-spic.png")}/>
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="אימייל"
+                        placeholderTextColor="#003f5c"
+                        onChangeText={(email) => setEmail(email)}
+                    />
+                </View>
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="שם משתמש"
+                        placeholderTextColor="#003f5c"
+                        onChangeText={(username) => setUsername(username)}
+                    />
+                </View>
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="סיסמה"
+                        placeholderTextColor="#003f5c"
+                        secureTextEntry={true}
+                        onChangeText={(password) => setPassword(password)}
+                    />
+                </View>
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="וידוא סיסמה"
+                        placeholderTextColor="#003f5c"
+                        secureTextEntry={true}
+                        onChangeText={(verifyPassword) => verifyPassword === password}
+                    />
+                </View>
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        keyboardType='numeric'
+                        placeholder="גיל"
+                        placeholderTextColor="#003f5c"
+                        maxLength={3}
+                        onChangeText={(age) => setAge(parseInt(age))}
+                    />
+                </View>
+                <Dropdown
+                    style={[styles.dropdown]}
+                    data={data}
+                    maxHeight={300}
+                    labelField="label"
+                    valueField="value"
+                    placeholder={!isFocus ? 'מין' : '...'}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedTextStyle={styles.selectedTextStyle}
+                    value={gender}
+                    onFocus={() => setIsFocus(true)}
+                    onBlur={() => setIsFocus(false)}
+                    onChange={item => {
+                        setGender(item.value);
+                        setIsFocus(false);
+                    }}
+                />
+                <TouchableOpacity style={styles.loginBtn} onPress={onSignUpPress}>
+                    <Text>הירשם</Text>
+                </TouchableOpacity>
+            </View>
+        </ScrollView>
+    )
 }
 
 const styles = StyleSheet.create({
@@ -106,6 +107,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#C7F5FE",
         alignItems: "center",
         justifyContent: "center",
+        paddingTop: 10
     },
     dropdown: {
         height: 50,

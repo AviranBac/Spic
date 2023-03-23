@@ -1,6 +1,5 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useContext, useState } from "react";
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, } from "react-native";
 import AuthService from "../services/auth.service";
 import { IContextType, SessionContext } from "../services/session-context.service";
 import type { StackScreenProps } from '@react-navigation/stack';
@@ -8,7 +7,7 @@ import { RootStackParamList } from "../utils/navigation-stack";
 
 type SignInScreenProps = StackScreenProps<RootStackParamList>;
 
-export const SignInScreen = ({ navigation } : SignInScreenProps) => {
+export const SignInScreen = ({navigation}: SignInScreenProps) => {
     const context = useContext<IContextType | null>(SessionContext);
 
     const [email, setEmail] = useState("");
@@ -23,33 +22,36 @@ export const SignInScreen = ({ navigation } : SignInScreenProps) => {
         }
     };
 
-    return (<View style={styles.container}>
-        <Image style={styles.image} source={require("../../assets/logo-spic.png")} />
-        <StatusBar style="auto" />
-        <View style={styles.inputView}>
-            <TextInput
-                style={styles.TextInput}
-                placeholder="אימייל"
-                placeholderTextColor="#003f5c"
-                onChangeText={(email) => setEmail(email)}
-            />
-        </View>
-        <View style={styles.inputView}>
-            <TextInput
-                style={styles.TextInput}
-                placeholder="סיסמה"
-                placeholderTextColor="#003f5c"
-                secureTextEntry={true}
-                onChangeText={(password) => setPassword(password)}
-            />
-        </View>
-        <TouchableOpacity style={styles.loginBtn} onPress={onSignInPress}>
-            <Text>התחבר</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('SignUp', {})}>
-            <Text style={styles.forgot_button}>אין לך משתמש? הירשם כאן</Text>
-        </TouchableOpacity>
-    </View>)
+    return (
+        <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
+            <View style={styles.container}>
+                <Image style={styles.image} source={require("../../assets/logo-spic.png")}/>
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="אימייל"
+                        placeholderTextColor="#003f5c"
+                        onChangeText={(email) => setEmail(email)}
+                    />
+                </View>
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="סיסמה"
+                        placeholderTextColor="#003f5c"
+                        secureTextEntry={true}
+                        onChangeText={(password) => setPassword(password)}
+                    />
+                </View>
+                <TouchableOpacity style={styles.loginBtn} onPress={onSignInPress}>
+                    <Text>התחבר</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('SignUp', {})}>
+                    <Text style={styles.forgot_button}>אין לך משתמש? הירשם כאן</Text>
+                </TouchableOpacity>
+            </View>
+        </ScrollView>
+    )
 }
 
 const styles = StyleSheet.create({
@@ -58,6 +60,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#C7F5FE",
         alignItems: "center",
         justifyContent: "center",
+        paddingTop: 10
     },
     image: {
         marginBottom: 40,
@@ -68,7 +71,7 @@ const styles = StyleSheet.create({
         width: "70%",
         height: 45,
         marginBottom: 20,
-        alignItems: "center",
+        alignItems: "center"
     },
     TextInput: {
         height: 50,

@@ -38,7 +38,7 @@ const App: FC = () => {
     <>
       <SessionContext.Provider value={{ session, updateSession, deleteSession }}>
         <NavigationContainer>
-          <Stack.Navigator>
+          <Stack.Navigator screenOptions={{headerTransparent: true, title: ''}}>
             {session ? (
               <Stack.Screen name="Home" component={HomeScreen} />
             ) : (
