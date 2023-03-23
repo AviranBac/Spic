@@ -1,17 +1,23 @@
-import axios from "axios";
+import axios, { AxiosInstance, AxiosResponse, HttpStatusCode } from "axios";
 import TokenService from "./user-session.service";
+import { config } from "../config/config";
 
-const instance = axios.create({
-  baseURL: "http://192.168.0.109:8080",
+type RefreshResponse = {
+  access_token: string,
+  refresh_token: string
+};
+
+const instance: AxiosInstance = axios.create({
+  baseURL: config.serverUrl,
   timeout: 1000,
   headers: {
     "Content-Type": "application/json",
-  },
+  }
 });
 
 instance.interceptors.request.use(
   async (config) => {
-    const token = await TokenService.getLocalAccessToken();
+    const token: string = await TokenService.getLocalAccessToken();
     if (token) {
       config.headers.authorization = token;
     }
@@ -23,7 +29,7 @@ instance.interceptors.request.use(
 );
 
 instance.interceptors.response.use(
-  (res) => {
+  (res: AxiosResponse) => {
     return res;
   },
   async (err) => {
@@ -31,18 +37,18 @@ instance.interceptors.response.use(
 
     if (originalConfig.url !== "/auth/signin") {
       // Access Token was expired
-      if (err.response.status === 401 && !originalConfig._retry) {
+      if (err.response.status === HttpStatusCode.Unauthorized && !originalConfig._retry) {
         originalConfig._retry = true;
 
         console.log('Access token expired');
         try {
-          const rs = await instance.post("/auth/refreshtoken", {
+          const refreshResponse: AxiosResponse<RefreshResponse> = await instance.post("/auth/refreshtoken", {
             refresh_token: await TokenService.getLocalRefreshToken(),
           });
 
-          if (!!rs) {
+          if (!!refreshResponse) {
             console.log('Received new access token');
-            const { access_token, refresh_token } = rs.data;
+            const { access_token, refresh_token } = refreshResponse.data;
             await TokenService.setLocalAccessToken(access_token);
             await TokenService.setLocalRefreshToken(refresh_token);
 
@@ -51,7 +57,7 @@ instance.interceptors.response.use(
         } catch (error) {
           return Promise.reject(error);
         }
-      } else if (err.response.status === 403) {
+      } else if (err.response.status === HttpStatusCode.Forbidden) {
         console.log('Refresh token expired')
         await TokenService.deleteUserSession();
         return Promise.reject('Refresh token expired');

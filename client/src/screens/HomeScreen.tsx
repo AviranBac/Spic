@@ -1,7 +1,7 @@
-import React, { FC, useContext } from "react";
-import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
-import api from "../services/api";
-import { SessionContext, IContextType } from "../services/session-context.service";
+import React, { useContext } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import axiosInstance from "../services/axios.service";
+import { IContextType, SessionContext } from "../services/session-context.service";
 import AuthService from "../services/auth.service";
 
 export const HomeScreen = () => {
@@ -13,7 +13,7 @@ export const HomeScreen = () => {
   };
 
   const onRefreshPress = () => {
-    api.get("/").then((res) => console.log('Refreshing..')).catch((err) => {
+    axiosInstance.get("/").then((res) => console.log('Refreshing..')).catch((err) => {
       if (context !== null) context.deleteSession();
     });
   };

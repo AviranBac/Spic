@@ -1,16 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import { Dropdown } from 'react-native-element-dropdown';
-import React, { useState, useContext } from "react";
-import {
-    StyleSheet,
-    Text,
-    View,
-    Image,
-    TextInput,
-    TouchableOpacity,
-} from "react-native";
+import React, { useContext, useState } from "react";
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, } from "react-native";
 import AuthService from "../services/auth.service";
-import { SessionContext, IContextType } from "../services/session-context.service";
+import { IContextType, SessionContext } from "../services/session-context.service";
 
 const data = [
     { label: 'זכר', value: 'male' },
@@ -32,7 +25,7 @@ export const SignUpScreen = () => {
             const userSession = await AuthService.signUp(username, email, password, age, gender);
             if (context !== null) context.updateSession(userSession);
         } catch (err) {
-            console.log(JSON.stringify(err));
+            console.error(JSON.stringify(err));
         }
     };
 
@@ -42,7 +35,7 @@ export const SignUpScreen = () => {
         <StatusBar style="auto" />
         <View style={styles.inputView}>
             <TextInput
-                style={{...styles.TextInput}}
+                style={styles.TextInput}
                 placeholder="אימייל"
                 placeholderTextColor="#003f5c"
                 onChangeText={(email) => setEmail(email)}
@@ -147,8 +140,7 @@ const styles = StyleSheet.create({
     TextInput: {
         height: 50,
         flex: 1,
-        padding: 10,
-        marginLeft: 20,
+        padding: 10
     },
     EmailInput: {},
     PasswordInput: {},

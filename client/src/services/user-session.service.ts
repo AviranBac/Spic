@@ -1,45 +1,44 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface IUserSession {
-  access_token: String,
-  refresh_token: String,
-  email: String,
-  username: String
-  gender: String
+  access_token: string,
+  refresh_token: string,
+  email: string,
+  username: string,
+  gender: 'MALE' | 'FEMALE'
 }
+
+const userSessionKey = 'userSession';
 
 class UserSessionService {
   async getSessionData(): Promise<IUserSession | null> {
     let userSession = null;
     try {
-      const sessionData = await AsyncStorage.getItem("userSession");
+      const sessionData = await AsyncStorage.getItem(userSessionKey);
       if (sessionData !== null) {
         userSession = JSON.parse(sessionData);
       }
     } catch (err) {
-      console.log(`Error occured while getting user session data from storage: ${err}`);
+      console.error(`Error occurred while getting user session data from storage: ${err}`);
     }
     return userSession;
   }
 
   async setSessionData(userSession: IUserSession) {
     try {
-      await AsyncStorage.setItem(
-        'userSession',
-        JSON.stringify(userSession)
-      );
+      await AsyncStorage.setItem(userSessionKey, JSON.stringify(userSession));
     } catch (err) {
-      console.log(`Error occored whie updating user session in storage: ${err}`)
+      console.error(`Error occurred while updating user session in storage: ${err}`)
     }
   }
 
-  async getLocalRefreshToken(): Promise<String> {
+  async getLocalRefreshToken(): Promise<string> {
     const userSession = await this.getSessionData();
-    return userSession == null ? '' : userSession.refresh_token;
+    return userSession?.refresh_token || '';
   }
-  async getLocalAccessToken(): Promise<String> {
+  async getLocalAccessToken(): Promise<string> {
     const userSession = await this.getSessionData();
-    return userSession == null ? '' : userSession.access_token;
+    return userSession?.access_token || '';
   }
 
   async setLocalRefreshToken(token: string) {
@@ -50,12 +49,9 @@ class UserSessionService {
     }
     userSession.refresh_token = token;
     try {
-      await AsyncStorage.setItem(
-        'userSession',
-        JSON.stringify(userSession)
-      );
+      await AsyncStorage.setItem(userSessionKey, JSON.stringify(userSession));
     } catch (err) {
-      console.log(`Error occored whie updating user's refresh token in storage: ${err}`)
+      console.error(`Error occurred while updating user's refresh token in storage: ${err}`)
     }
   }
 
@@ -67,20 +63,17 @@ class UserSessionService {
     }
     userSession.access_token = token;
     try {
-      await AsyncStorage.setItem(
-        'userSession',
-        JSON.stringify(userSession)
-      );
+      await AsyncStorage.setItem(userSessionKey, JSON.stringify(userSession));
     } catch (err) {
-      console.log(`Error occored whie updating user's access token in storage: ${err}`)
+      console.error(`Error occurred while updating user's access token in storage: ${err}`)
     }
   }
 
   async deleteUserSession() {
     try {
-      await AsyncStorage.removeItem('userSession');
+      await AsyncStorage.removeItem(userSessionKey);
     } catch (err) {
-      console.log(`Error occored whie deleting user's session in storage: ${err}`)
+      console.error(`Error occurred while deleting user's session in storage: ${err}`)
     }
   }
 }

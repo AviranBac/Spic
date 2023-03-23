@@ -1,17 +1,14 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useContext } from "react";
-import {
-    StyleSheet,
-    Text,
-    View,
-    Image,
-    TextInput,
-    TouchableOpacity,
-} from "react-native";
+import React, { useContext, useState } from "react";
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, } from "react-native";
 import AuthService from "../services/auth.service";
-import { SessionContext, IContextType } from "../services/session-context.service";
+import { IContextType, SessionContext } from "../services/session-context.service";
+import type { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParamList } from "../utils/navigation-stack";
 
-export const SignInScreen = ({ navigation } : {navigation: any}) => {
+type SignInScreenProps = StackScreenProps<RootStackParamList>;
+
+export const SignInScreen = ({ navigation } : SignInScreenProps) => {
     const context = useContext<IContextType | null>(SessionContext);
 
     const [email, setEmail] = useState("");
@@ -22,7 +19,7 @@ export const SignInScreen = ({ navigation } : {navigation: any}) => {
             const userSession = await AuthService.signIn(email, password);
             if (context !== null) context.updateSession(userSession);
         } catch (err) {
-            console.log(JSON.stringify(err));
+            console.error(JSON.stringify(err));
         }
     };
 
@@ -49,7 +46,7 @@ export const SignInScreen = ({ navigation } : {navigation: any}) => {
         <TouchableOpacity style={styles.loginBtn} onPress={onSignInPress}>
             <Text>התחבר</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+        <TouchableOpacity onPress={() => navigation.navigate('SignUp', {})}>
             <Text style={styles.forgot_button}>אין לך משתמש? הירשם כאן</Text>
         </TouchableOpacity>
     </View>)
@@ -76,8 +73,7 @@ const styles = StyleSheet.create({
     TextInput: {
         height: 50,
         flex: 1,
-        padding: 10,
-        marginLeft: 20,
+        padding: 10
     },
     forgot_button: {
         height: 30,

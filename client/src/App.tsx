@@ -1,7 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 
 import AuthService from "./services/auth.service";
 import { SessionContext } from "./services/session-context.service";
@@ -9,8 +8,7 @@ import { IUserSession } from "./services/user-session.service";
 import { SignUpScreen } from "./screens/SignUpScreen";
 import { SignInScreen } from "./screens/SignInScreen";
 import { HomeScreen } from "./screens/HomeScreen";
-
-const Stack = createStackNavigator();
+import { Stack } from './utils/navigation-stack';
 
 const App: FC = () => {
   const [session, setSession] = useState<IUserSession | null>(null);
