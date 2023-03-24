@@ -1,6 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import axiosInstance from "../services/axios.service";
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useAppDispatch } from "../store/hooks";
 import { logoutThunk } from "../store/auth/auth.slice";
 
@@ -11,21 +10,10 @@ export const HomeScreen = () => {
     dispatch(logoutThunk());
   };
 
-  const onRefreshPress = () => {
-    axiosInstance.get("/").then((res) => console.log('Refreshing..'));
-  };
-
   return (
-    <>
-      <View>
-        <TouchableOpacity style={styles.btn} onPress={onRefreshPress}>
-          <Text>רענן</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.btn} onPress={onLogoutPress}>
-          <Text>התנתק</Text>
-        </TouchableOpacity>
-      </View>
-    </>
+      <TouchableOpacity style={styles.btn} onPress={onLogoutPress}>
+        <Text>התנתק</Text>
+      </TouchableOpacity>
   );
 }
 

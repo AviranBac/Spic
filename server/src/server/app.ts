@@ -1,11 +1,10 @@
 import "dotenv/config";
 import cors from "cors";
-import express, { Request, Response } from "express";
+import express from "express";
 import bodyParser from "body-parser";
 
 import { initializeApplication } from "./server";
 import authRouters from "../routes/auth.routes";
-import { authenticate } from "../auth/auth-middleware";
 
 export const app = express();
 
@@ -21,9 +20,7 @@ app.use(
 
 app.use("/auth", authRouters);
 
-app.get("/", authenticate, (req: Request, res: Response) => {
-  res.send("This is a authriazed test");
-});
+// TODO: make sure to add "authenticate" middleware to newer routes after merge
 
 (async () => {
   await initializeApplication();
