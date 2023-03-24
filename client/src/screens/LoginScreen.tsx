@@ -5,15 +5,15 @@ import { RootStackParamList } from "../utils/navigation-stack";
 import { loginThunk } from "../store/auth/auth.slice";
 import { useAppDispatch } from "../store/hooks";
 
-type SignInScreenProps = StackScreenProps<RootStackParamList>;
+type LoginScreenProps = StackScreenProps<RootStackParamList>;
 
-export const SignInScreen = ({navigation}: SignInScreenProps) => {
+export const LoginScreen = ({navigation}: LoginScreenProps) => {
     const dispatch = useAppDispatch();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState();
 
-    const onSignInPress = async () => {
+    const onLoginPress = async () => {
         dispatch(loginThunk({email, password}))
             .unwrap()
             .catch(setError);
@@ -40,10 +40,10 @@ export const SignInScreen = ({navigation}: SignInScreenProps) => {
                         onChangeText={(password) => setPassword(password)}
                     />
                 </View>
-                <TouchableOpacity style={styles.loginBtn} onPress={onSignInPress}>
+                <TouchableOpacity style={styles.loginBtn} onPress={onLoginPress}>
                     <Text>התחבר</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('SignUp', {})}>
+                <TouchableOpacity onPress={() => navigation.navigate('Register', {})}>
                     <Text style={styles.forgot_button}>אין לך משתמש? הירשם כאן</Text>
                 </TouchableOpacity>
             </View>

@@ -7,9 +7,9 @@ import * as jwtUtils from "../utils/jwt";
 import { validationResult } from "express-validator/check";
 import { IUser, UserModel } from "../db/schemas/user.schema";
 
-export const signUp = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response) => {
   const { email, password, username, gender, age } = req.body;
-  console.log(`A Sign Up request has been received for ${email}`);
+  console.log(`A register request has been received for ${email}`);
 
   let status, response;
   const errors = validationResult(req);
@@ -48,9 +48,9 @@ export const signUp = async (req: Request, res: Response) => {
   res.status(status).send(response);
 };
 
-export const signIn = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  console.log(`A Sign In request has been received for ${email}`);
+  console.log(`A login request has been received for ${email}`);
 
   let status, response;
   const errors = validationResult(req);
@@ -83,7 +83,7 @@ export const signIn = async (req: Request, res: Response) => {
   res.status(status).send(response);
 };
 
-export const signOut = async (req: Request, res: Response) => {
+export const logout = async (req: Request, res: Response) => {
   const reqRefreshToken = req.body.refresh_token;
 
   const decoded = jwtUtils.verifyToken(reqRefreshToken, process.env.REFRESH_TOKEN_SECRET);
@@ -92,18 +92,18 @@ export const signOut = async (req: Request, res: Response) => {
     try {
       const user : IUser | null = await UserModel.findOne({ _id: userId });
       if (user) {
-        console.log(`A Sign Out request has been received from ${user.email}`);
+        console.log(`A logout request has been received from ${user.email}`);
         user.refreshTokens = jwtUtils.clearExpiryedTokens(user.refreshTokens, reqRefreshToken);
         await user.save();
       }
     } catch (err) {
-      console.error(`An error occurred during log out: ${err}`);
+      console.error(`An error occurred during logout: ${err}`);
     }
   }
   res.status(StatusCodes.OK).send();
 };
 
-export const refreshAccessTokenHandler = async (
+export const refreshTokenHandler = async (
   req: Request,
   res: Response
 ) => {

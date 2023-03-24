@@ -7,7 +7,7 @@ import { logoutThunk } from "../store/auth/auth.slice";
 export const HomeScreen = () => {
   const dispatch = useAppDispatch();
 
-  const onSignOutPress = async () => {
+  const onLogoutPress = async () => {
     dispatch(logoutThunk());
   };
 
@@ -21,7 +21,7 @@ export const HomeScreen = () => {
         <TouchableOpacity style={styles.btn} onPress={onRefreshPress}>
           <Text>רענן</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.btn} onPress={onSignOutPress}>
+        <TouchableOpacity style={styles.btn} onPress={onLogoutPress}>
           <Text>התנתק</Text>
         </TouchableOpacity>
       </View>

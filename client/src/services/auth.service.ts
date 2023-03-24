@@ -4,9 +4,9 @@ import { AxiosResponse } from "axios";
 import { IUserSession } from "../store/auth/auth.model";
 
 class AuthService {
-  async signIn(email: string, password: string) : Promise<IUserSession> {
+  async login(email: string, password: string) : Promise<IUserSession> {
     return axiosInstance
-      .post("/auth/signin", {
+      .post("/auth/login", {
         email,
         password
       })
@@ -16,9 +16,9 @@ class AuthService {
       });
   }
 
-  async signOut(): Promise<AxiosResponse<void>> {
+  async logout(): Promise<AxiosResponse<void>> {
     return axiosInstance
-      .post("/auth/signout", {
+      .post("/auth/logout", {
         refresh_token: await UserSessionService.getLocalRefreshToken()
       })
       .finally(async () => {
@@ -26,15 +26,15 @@ class AuthService {
       });
   }
 
-  async signUp(username: string, email: string, password: string, age: number, gender: string) : Promise<IUserSession> {
-    return axiosInstance.post("/auth/signup", {
+  async register(username: string, email: string, password: string, age: number, gender: string) : Promise<IUserSession> {
+    return axiosInstance.post("/auth/register", {
       username,
       email,
       password,
       age,
       gender
     }).then(async () => {
-      return await this.signIn(email, password);
+      return await this.login(email, password);
     });
   }
 

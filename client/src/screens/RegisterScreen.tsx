@@ -9,7 +9,7 @@ const data = [
     {label: 'נקבה', value: 'female'},
 ];
 
-export const SignUpScreen = () => {
+export const RegisterScreen = () => {
     const dispatch = useAppDispatch();
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
@@ -19,7 +19,7 @@ export const SignUpScreen = () => {
     const [isFocus, setIsFocus] = useState(false);
     const [error, setError] = useState();
 
-    const onSignUpPress = async () => {
+    const onRegisterPress = async () => {
         const typedGender = gender as 'MALE' | 'FEMALE';
         dispatch(registerThunk({username, email, password, age, gender: typedGender}))
             .unwrap()
@@ -91,7 +91,7 @@ export const SignUpScreen = () => {
                         setIsFocus(false);
                     }}
                 />
-                <TouchableOpacity style={styles.loginBtn} onPress={onSignUpPress}>
+                <TouchableOpacity style={styles.loginBtn} onPress={onRegisterPress}>
                     <Text>הירשם</Text>
                 </TouchableOpacity>
             </View>

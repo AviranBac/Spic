@@ -5,12 +5,12 @@ import AuthValidation from "../auth/validation";
 
 const router = Router();
 
-router.post("/signup", AuthValidation(), Auth.signUp);
+router.post("/register", AuthValidation(), Auth.register);
 
-router.post("/signin", AuthValidation(), Auth.signIn);
+router.post("/login", AuthValidation(), Auth.login);
 
-router.post("/refreshtoken", Auth.refreshAccessTokenHandler);
+router.post("/refresh", Auth.refreshTokenHandler);
 
-router.post("/signout", Auth.signOut);
+router.post("/logout", Auth.logout);
 
 export default router;

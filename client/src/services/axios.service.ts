@@ -37,14 +37,14 @@ instance.interceptors.response.use(
   async (err) => {
     const originalConfig = err.config;
 
-    if (originalConfig.url !== "/auth/signin") {
+    if (originalConfig.url !== "/auth/login") {
       // Access Token was expired
       if (err.response.status === HttpStatusCode.Unauthorized && !originalConfig._retry) {
         originalConfig._retry = true;
 
         console.log('Access token expired');
         try {
-          const refreshResponse: AxiosResponse<RefreshResponse> = await instance.post("/auth/refreshtoken", {
+          const refreshResponse: AxiosResponse<RefreshResponse> = await instance.post("/auth/refresh", {
             refresh_token: await UserSessionService.getLocalRefreshToken(),
           });
 

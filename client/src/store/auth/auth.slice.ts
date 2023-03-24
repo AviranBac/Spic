@@ -7,7 +7,7 @@ export const loginThunk = createAsyncThunk<{ userSession: IUserSession }, { emai
     async (payload, thunkApi) => {
         try {
             const {email, password} = payload;
-            const userSession = await AuthService.signIn(email, password);
+            const userSession = await AuthService.login(email, password);
             return {userSession};
         } catch (error: any) {
             return thunkApi.rejectWithValue(error.message);
@@ -20,7 +20,7 @@ export const registerThunk = createAsyncThunk<{ userSession: IUserSession }, { u
     async (payload, thunkApi) => {
         try {
             const {username, email, password, age, gender} = payload;
-            const userSession = await AuthService.signUp(username, email, password, age, gender);
+            const userSession = await AuthService.register(username, email, password, age, gender);
             console.log(userSession);
             return {userSession};
         } catch (error: any) {
@@ -32,7 +32,7 @@ export const registerThunk = createAsyncThunk<{ userSession: IUserSession }, { u
 export const logoutThunk = createAsyncThunk(
     'auth/logout',
     async () => {
-        await AuthService.signOut();
+        await AuthService.logout();
     }
 );
 
