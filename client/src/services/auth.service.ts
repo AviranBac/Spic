@@ -1,6 +1,7 @@
 import axiosInstance from "./axios.service";
-import UserSessionService, { IUserSession } from "./user-session.service";
+import UserSessionService from "./user-session.service";
 import { AxiosResponse } from "axios";
+import { IUserSession } from "../store/auth/auth.model";
 
 class AuthService {
   async signIn(email: string, password: string) : Promise<IUserSession> {
@@ -15,12 +16,12 @@ class AuthService {
       });
   }
 
-  async signOut(): Promise<void> {
+  async signOut(): Promise<AxiosResponse<void>> {
     return axiosInstance
       .post("/auth/signout", {
         refresh_token: await UserSessionService.getLocalRefreshToken()
       })
-      .then(async () => {
+      .finally(async () => {
         await UserSessionService.deleteUserSession();
       });
   }
@@ -39,10 +40,6 @@ class AuthService {
 
   async getCurrentUser() : Promise<IUserSession | null> {
     return await UserSessionService.getSessionData();
-  };
-
-  async setCurrentUser(user: IUserSession): Promise<void> {
-    await UserSessionService.setSessionData(user);
   };
 
 }

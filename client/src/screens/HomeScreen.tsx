@@ -1,21 +1,18 @@
-import React, { useContext } from "react";
+import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import axiosInstance from "../services/axios.service";
-import { IContextType, SessionContext } from "../services/session-context.service";
-import AuthService from "../services/auth.service";
+import { useAppDispatch } from "../store/hooks";
+import { logoutThunk } from "../store/auth/auth.slice";
 
 export const HomeScreen = () => {
-  const context = useContext<IContextType | null>(SessionContext);
+  const dispatch = useAppDispatch();
 
   const onSignOutPress = async () => {
-    await AuthService.signOut();
-    if (context !== null) context.deleteSession();
+    dispatch(logoutThunk());
   };
 
   const onRefreshPress = () => {
-    axiosInstance.get("/").then((res) => console.log('Refreshing..')).catch((err) => {
-      if (context !== null) context.deleteSession();
-    });
+    axiosInstance.get("/").then((res) => console.log('Refreshing..'));
   };
 
   return (

@@ -1,8 +1,8 @@
 import { Dropdown } from 'react-native-element-dropdown';
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, } from "react-native";
-import AuthService from "../services/auth.service";
-import { IContextType, SessionContext } from "../services/session-context.service";
+import { registerThunk } from "../store/auth/auth.slice";
+import { useAppDispatch } from "../store/hooks";
 
 const data = [
     {label: 'זכר', value: 'male'},
@@ -10,22 +10,20 @@ const data = [
 ];
 
 export const SignUpScreen = () => {
-    const context = useContext<IContextType | null>(SessionContext);
-
+    const dispatch = useAppDispatch();
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [age, setAge] = useState(0);
     const [gender, setGender] = React.useState("");
     const [isFocus, setIsFocus] = useState(false);
+    const [error, setError] = useState();
 
     const onSignUpPress = async () => {
-        try {
-            const userSession = await AuthService.signUp(username, email, password, age, gender);
-            if (context !== null) context.updateSession(userSession);
-        } catch (err) {
-            console.error(JSON.stringify(err));
-        }
+        const typedGender = gender as 'MALE' | 'FEMALE';
+        dispatch(registerThunk({username, email, password, age, gender: typedGender}))
+            .unwrap()
+            .catch(setError);
     };
 
     return (

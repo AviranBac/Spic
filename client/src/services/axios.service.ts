@@ -1,6 +1,8 @@
 import axios, { AxiosInstance, AxiosResponse, HttpStatusCode } from "axios";
-import TokenService from "./user-session.service";
+import UserSessionService from "./user-session.service";
 import { config } from "../config/config";
+import { store } from '../store/store';
+import { logoutThunk } from "../store/auth/auth.slice";
 
 type RefreshResponse = {
   access_token: string,
@@ -17,7 +19,7 @@ const instance: AxiosInstance = axios.create({
 
 instance.interceptors.request.use(
   async (config) => {
-    const token: string = await TokenService.getLocalAccessToken();
+    const token: string = await UserSessionService.getLocalAccessToken();
     if (token) {
       config.headers.authorization = token;
     }
@@ -43,14 +45,14 @@ instance.interceptors.response.use(
         console.log('Access token expired');
         try {
           const refreshResponse: AxiosResponse<RefreshResponse> = await instance.post("/auth/refreshtoken", {
-            refresh_token: await TokenService.getLocalRefreshToken(),
+            refresh_token: await UserSessionService.getLocalRefreshToken(),
           });
 
           if (!!refreshResponse) {
             console.log('Received new access token');
             const { access_token, refresh_token } = refreshResponse.data;
-            await TokenService.setLocalAccessToken(access_token);
-            await TokenService.setLocalRefreshToken(refresh_token);
+            await UserSessionService.setLocalAccessToken(access_token);
+            await UserSessionService.setLocalRefreshToken(refresh_token);
 
             return instance(originalConfig);
           }
@@ -59,7 +61,7 @@ instance.interceptors.response.use(
         }
       } else if (err.response.status === HttpStatusCode.Forbidden) {
         console.log('Refresh token expired')
-        await TokenService.deleteUserSession();
+        await store.dispatch(logoutThunk());
         return Promise.reject('Refresh token expired');
       }
     }

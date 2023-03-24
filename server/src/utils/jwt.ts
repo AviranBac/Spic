@@ -21,7 +21,7 @@ export const verifyToken = (token: string, tokenSecret: string): UserIDJwtPayloa
 }
 
 export const updateRefreshTokensList = (currentTokens: IToken[], newRefreshToken: string): IToken[] => {
-  const refreshToken : IToken = { token: newRefreshToken, expiryDate: new Date(Date.now() + parseInt(process.env.REFRESH_TOKEN_EXPIRATION_IN_HOURS) * 60 * 60 * 1000) };
+  const refreshToken : IToken = { token: newRefreshToken, expiryDate: new Date(Date.now() + parseFloat(process.env.REFRESH_TOKEN_EXPIRATION_IN_HOURS) * 60 * 60 * 1000) };
   return [...currentTokens, refreshToken];
 }
 

@@ -1,25 +1,22 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, } from "react-native";
-import AuthService from "../services/auth.service";
-import { IContextType, SessionContext } from "../services/session-context.service";
 import type { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from "../utils/navigation-stack";
+import { loginThunk } from "../store/auth/auth.slice";
+import { useAppDispatch } from "../store/hooks";
 
 type SignInScreenProps = StackScreenProps<RootStackParamList>;
 
 export const SignInScreen = ({navigation}: SignInScreenProps) => {
-    const context = useContext<IContextType | null>(SessionContext);
-
+    const dispatch = useAppDispatch();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState();
 
     const onSignInPress = async () => {
-        try {
-            const userSession = await AuthService.signIn(email, password);
-            if (context !== null) context.updateSession(userSession);
-        } catch (err) {
-            console.error(JSON.stringify(err));
-        }
+        dispatch(loginThunk({email, password}))
+            .unwrap()
+            .catch(setError);
     };
 
     return (
