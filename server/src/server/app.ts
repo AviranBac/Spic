@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 
 import { initializeApplication } from "./server";
 import authRouters from "../routes/auth.routes";
+import { StatusCodes } from "http-status-codes";
 
 export const app = express();
 
@@ -14,7 +15,7 @@ app.use(
   cors({
     origin: "*",
     credentials: true,
-    optionsSuccessStatus: 200,
+    optionsSuccessStatus: StatusCodes.OK
   })
 );
 
