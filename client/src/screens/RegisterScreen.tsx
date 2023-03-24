@@ -135,19 +135,13 @@ const styles = StyleSheet.create({
         width: "70%",
         height: 45,
         marginBottom: 20,
-        alignItems: "center",
+        alignItems: "center"
     },
     TextInput: {
         height: 50,
         flex: 1,
-        padding: 10
-    },
-    EmailInput: {},
-    PasswordInput: {},
-    AgeInput: {},
-    forgot_button: {
-        height: 30,
-        marginBottom: 30,
+        padding: 10,
+        textAlign: "center"
     },
     loginBtn: {
         width: "80%",
@@ -158,4 +152,12 @@ const styles = StyleSheet.create({
         marginTop: 40,
         backgroundColor: "#A9C2C8",
     },
+    errorText: {
+        fontSize: 14,
+        color: 'red',
+        marginBottom: 10
+    },
+    backendHebrewErrorContainer: {
+        marginTop: 10
+    }
 });

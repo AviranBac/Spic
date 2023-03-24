@@ -2,10 +2,10 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from './auth/auth.slice';
 import { persistReducer, persistStore } from 'redux-persist';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import UserSessionService from "../services/user-session.service";
 
-export const userSessionStorageKey = 'userSession';
 const rootReducer = combineReducers({
-    auth: persistReducer({ key: userSessionStorageKey, storage: AsyncStorage }, authReducer)
+    auth: persistReducer({ key: UserSessionService.storageKey, storage: AsyncStorage }, authReducer)
 });
 
 export const store = configureStore({

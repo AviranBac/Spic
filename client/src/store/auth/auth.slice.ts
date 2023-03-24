@@ -10,7 +10,7 @@ export const loginThunk = createAsyncThunk<{ userSession: IUserSession }, { emai
             const userSession = await AuthService.login(email, password);
             return {userSession};
         } catch (error: any) {
-            return thunkApi.rejectWithValue(error.message);
+            return thunkApi.rejectWithValue(error.response);
         }
     }
 );
@@ -24,7 +24,7 @@ export const registerThunk = createAsyncThunk<{ userSession: IUserSession }, { u
             console.log(userSession);
             return {userSession};
         } catch (error: any) {
-            return thunkApi.rejectWithValue(error.message);
+            return thunkApi.rejectWithValue(error.response);
         }
     }
 );

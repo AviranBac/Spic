@@ -1,16 +1,16 @@
 import React, { FC } from 'react';
-import { Provider } from "react-redux";
-import store, { persistor } from "./store/store";
+import { persistor } from "./store/store";
 import NavigationManager from "./components/NavigationManager";
 import { PersistGate } from "redux-persist/integration/react";
+import useAxiosInterceptor from "./hooks/useAxiosInterceptor";
 
 const App: FC = () => {
+    useAxiosInterceptor();
+
     return (
-        <Provider store={store}>
-            <PersistGate persistor={persistor}>
-                <NavigationManager />
-            </PersistGate>
-        </Provider>
+        <PersistGate persistor={persistor}>
+            <NavigationManager />
+        </PersistGate>
     );
 }
 

@@ -1,51 +1,118 @@
 import React, { useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, } from "react-native";
+import {
+    GestureResponderEvent,
+    Image,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from "../utils/navigation-stack";
 import { loginThunk } from "../store/auth/auth.slice";
 import { useAppDispatch } from "../store/hooks";
+import { Formik } from "formik";
+import * as yup from 'yup';
+import { AxiosResponse } from "axios";
 
 type LoginScreenProps = StackScreenProps<RootStackParamList>;
 
 export const LoginScreen = ({navigation}: LoginScreenProps) => {
     const dispatch = useAppDispatch();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState();
+    const [backendHebrewError, setBackendHebrewError] = useState('');
 
-    const onLoginPress = async () => {
+    const loginValidationSchema = yup.object().shape({
+        email: yup
+            .string()
+            .email("הכנס אימייל תקין")
+            .required("הכנס אימייל"),
+        password: yup
+            .string()
+            .min(7, ({min}) => `הסיסמה חייבת להכיל ${min} תווים`)
+            .required("הכנס סיסמה")
+    });
+
+    const translateAndSetBackendError = (error: AxiosResponse) => {
+        let errorMessage: string;
+
+        switch (error.data) {
+            case 'Invalid Credentials': errorMessage = 'פרטי ההתחברות שגויים. נסה שנית'; break;
+            default: errorMessage = 'אירעה שגיאה בהתחברות'; break;
+        }
+
+        setBackendHebrewError(errorMessage);
+    };
+
+    const onLoginSubmit = async ({ email, password }: { email: string, password: string }) => {
         dispatch(loginThunk({email, password}))
             .unwrap()
-            .catch(setError);
+            .then(() => setBackendHebrewError(''))
+            .catch(translateAndSetBackendError);
     };
 
     return (
         <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
             <View style={styles.container}>
                 <Image style={styles.image} source={require("../../assets/logo-spic.png")}/>
-                <View style={styles.inputView}>
-                    <TextInput
-                        style={styles.TextInput}
-                        placeholder="אימייל"
-                        placeholderTextColor="#003f5c"
-                        onChangeText={(email) => setEmail(email)}
-                    />
-                </View>
-                <View style={styles.inputView}>
-                    <TextInput
-                        style={styles.TextInput}
-                        placeholder="סיסמה"
-                        placeholderTextColor="#003f5c"
-                        secureTextEntry={true}
-                        onChangeText={(password) => setPassword(password)}
-                    />
-                </View>
-                <TouchableOpacity style={styles.loginBtn} onPress={onLoginPress}>
-                    <Text>התחבר</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('Register', {})}>
-                    <Text style={styles.forgot_button}>אין לך משתמש? הירשם כאן</Text>
-                </TouchableOpacity>
+                <Formik validationSchema={loginValidationSchema}
+                        initialValues={{email: '', password: ''}}
+                        onSubmit={onLoginSubmit}
+                >
+                    {({handleChange, handleBlur, handleSubmit, values, errors, touched, isValid}) => (
+                        <>
+                            <View style={styles.inputView}>
+                                <TextInput
+                                    style={styles.TextInput}
+                                    placeholder="אימייל"
+                                    placeholderTextColor="#003f5c"
+                                    onChangeText={handleChange('email')}
+                                    onBlur={handleBlur('email')}
+                                    value={values.email}
+                                    keyboardType="email-address"
+                                />
+                            </View>
+                            {errors.email && touched.email &&
+                                <Text style={styles.errorText}>{errors.email}</Text>
+                            }
+
+                            <View style={styles.inputView}>
+                                <TextInput
+                                    style={styles.TextInput}
+                                    placeholder="סיסמה"
+                                    placeholderTextColor="#003f5c"
+                                    onChangeText={handleChange('password')}
+                                    onBlur={handleBlur('password')}
+                                    value={values.password}
+                                    secureTextEntry
+                                />
+                            </View>
+                            {errors.password && touched.password &&
+                                <Text style={styles.errorText}>{errors.password}</Text>
+                            }
+
+                            <TouchableOpacity style={styles.loginBtn}
+                                              onPress={handleSubmit as unknown as (e: GestureResponderEvent) => void}
+                                              disabled={!isValid}
+                            >
+                                <Text>התחבר</Text>
+                            </TouchableOpacity>
+                            { backendHebrewError &&
+                                <View style={styles.backendHebrewErrorContainer}>
+                                    <Text style={styles.errorText}>{backendHebrewError}</Text>
+                                </View>
+                            }
+                        </>
+                    )}
+                </Formik>
+                <Text style={styles.forgotText}>{`אין לך משתמש? הירשם `}
+                    <Text onPress={() => navigation.navigate('Register', {})}
+                          style={styles.forgotLink}
+                    >
+                        כאן
+                    </Text>
+                </Text>
             </View>
         </ScrollView>
     )
@@ -67,17 +134,15 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         width: "70%",
         height: 45,
-        marginBottom: 20,
+        marginTop: 10,
+        marginBottom: 10,
         alignItems: "center"
     },
     TextInput: {
         height: 50,
         flex: 1,
-        padding: 10
-    },
-    forgot_button: {
-        height: 30,
-        marginBottom: 30,
+        padding: 10,
+        textAlign: "center"
     },
     loginBtn: {
         width: "80%",
@@ -86,6 +151,23 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         marginTop: 40,
-        backgroundColor: "#A9C2C8",
+        backgroundColor: "#A9C2C8"
     },
+    forgotText: {
+        height: 30,
+        marginTop: 20,
+        fontWeight: 'bold'
+    },
+    forgotLink: {
+        color: '#349EC9',
+        textDecorationLine: 'underline'
+    },
+    errorText: {
+        fontSize: 14,
+        color: 'red',
+        marginBottom: 10
+    },
+    backendHebrewErrorContainer: {
+        marginTop: 10
+    }
 });

@@ -1,12 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { IUserSession } from "../store/auth/auth.model";
-import { userSessionStorageKey } from "../store/store";
 
 class UserSessionService {
+  storageKey = 'userSession';
+
   async getSessionData(): Promise<IUserSession | null> {
     let userSession: IUserSession | null = null;
     try {
-      const sessionData = await AsyncStorage.getItem(userSessionStorageKey);
+      const sessionData = await AsyncStorage.getItem(this.storageKey);
       if (sessionData !== null) {
         userSession = JSON.parse(sessionData);
       }
@@ -18,7 +19,7 @@ class UserSessionService {
 
   async setSessionData(userSession: IUserSession): Promise<void> {
     try {
-      await AsyncStorage.setItem(userSessionStorageKey, JSON.stringify(userSession));
+      await AsyncStorage.setItem(this.storageKey, JSON.stringify(userSession));
     } catch (err) {
       console.error(`Error occurred while updating user session in storage: ${err}`)
     }
@@ -41,7 +42,7 @@ class UserSessionService {
     }
     userSession.refresh_token = token;
     try {
-      await AsyncStorage.setItem(userSessionStorageKey, JSON.stringify(userSession));
+      await AsyncStorage.setItem(this.storageKey, JSON.stringify(userSession));
     } catch (err) {
       console.error(`Error occurred while updating user's refresh token in storage: ${err}`)
     }
@@ -55,7 +56,7 @@ class UserSessionService {
     }
     userSession.access_token = token;
     try {
-      await AsyncStorage.setItem(userSessionStorageKey, JSON.stringify(userSession));
+      await AsyncStorage.setItem(this.storageKey, JSON.stringify(userSession));
     } catch (err) {
       console.error(`Error occurred while updating user's access token in storage: ${err}`)
     }
@@ -63,7 +64,7 @@ class UserSessionService {
 
   async deleteUserSession(): Promise<void> {
     try {
-      await AsyncStorage.removeItem(userSessionStorageKey);
+      await AsyncStorage.removeItem(this.storageKey);
     } catch (err) {
       console.error(`Error occurred while deleting user's session in storage: ${err}`)
     }
