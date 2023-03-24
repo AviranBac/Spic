@@ -18,6 +18,10 @@ import * as yup from 'yup';
 import { AxiosResponse } from "axios";
 
 type LoginScreenProps = StackScreenProps<RootStackParamList>;
+export interface LoginFormDetails {
+    email: string,
+    password: string
+}
 
 export const LoginScreen = ({navigation}: LoginScreenProps) => {
     const dispatch = useAppDispatch();
@@ -45,8 +49,8 @@ export const LoginScreen = ({navigation}: LoginScreenProps) => {
         setBackendHebrewError(errorMessage);
     };
 
-    const onLoginSubmit = async ({ email, password }: { email: string, password: string }) => {
-        dispatch(loginThunk({email, password}))
+    const onLoginSubmit = async (loginFormDetails: LoginFormDetails) => {
+        dispatch(loginThunk(loginFormDetails))
             .unwrap()
             .then(() => setBackendHebrewError(''))
             .catch(translateAndSetBackendError);

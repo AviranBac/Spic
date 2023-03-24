@@ -1,7 +1,7 @@
 import axiosInstance from "./axios.service";
 import UserSessionService from "./user-session.service";
 import { AxiosResponse } from "axios";
-import { IUserSession } from "../store/auth/auth.model";
+import { Gender, IUserSession } from "../store/auth/auth.model";
 
 class AuthService {
   async login(email: string, password: string) : Promise<IUserSession> {
@@ -26,7 +26,7 @@ class AuthService {
       });
   }
 
-  async register(username: string, email: string, password: string, age: number, gender: string) : Promise<IUserSession> {
+  async register(username: string, email: string, password: string, age: number, gender: Gender) : Promise<IUserSession> {
     return axiosInstance.post("/auth/register", {
       username,
       email,

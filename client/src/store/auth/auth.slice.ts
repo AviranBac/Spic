@@ -1,8 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import AuthService from "../../services/auth.service";
 import { AuthState, IUserSession } from "./auth.model";
+import { RegisterFormDetails } from "../../screens/RegisterScreen";
+import { LoginFormDetails } from "../../screens/LoginScreen";
 
-export const loginThunk = createAsyncThunk<{ userSession: IUserSession }, { email: string, password: string }>(
+export const loginThunk = createAsyncThunk<{ userSession: IUserSession }, LoginFormDetails>(
     'auth/login',
     async (payload, thunkApi) => {
         try {
@@ -15,7 +17,7 @@ export const loginThunk = createAsyncThunk<{ userSession: IUserSession }, { emai
     }
 );
 
-export const registerThunk = createAsyncThunk<{ userSession: IUserSession }, { username: string, email: string, password: string, age: number, gender: 'MALE' | 'FEMALE' }>(
+export const registerThunk = createAsyncThunk<{ userSession: IUserSession }, RegisterFormDetails>(
     'auth/register',
     async (payload, thunkApi) => {
         try {
