@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import {
-    GestureResponderEvent,
+    ActivityIndicator,
     Image,
     ScrollView,
     StyleSheet,
@@ -25,6 +25,7 @@ export interface LoginFormDetails {
 
 export const LoginScreen = ({navigation}: LoginScreenProps) => {
     const dispatch = useAppDispatch();
+    const [isLoading, setIsLoading] = useState(false);
     const [backendHebrewError, setBackendHebrewError] = useState('');
 
     const loginValidationSchema = yup.object().shape({
@@ -49,11 +50,14 @@ export const LoginScreen = ({navigation}: LoginScreenProps) => {
         setBackendHebrewError(errorMessage);
     };
 
+    const toggleLoading = () => setIsLoading(!isLoading);
+
     const onLoginSubmit = async (loginFormDetails: LoginFormDetails) => {
         dispatch(loginThunk(loginFormDetails))
             .unwrap()
             .then(() => setBackendHebrewError(''))
-            .catch(translateAndSetBackendError);
+            .catch(translateAndSetBackendError)
+            .finally(toggleLoading);
     };
 
     return (
@@ -63,6 +67,7 @@ export const LoginScreen = ({navigation}: LoginScreenProps) => {
                 <Formik validationSchema={loginValidationSchema}
                         initialValues={{email: '', password: ''}}
                         onSubmit={onLoginSubmit}
+                        validateOnMount
                 >
                     {({handleChange, handleBlur, handleSubmit, values, errors, touched, isValid}) => (
                         <>
@@ -97,10 +102,18 @@ export const LoginScreen = ({navigation}: LoginScreenProps) => {
                             }
 
                             <TouchableOpacity style={styles.loginBtn}
-                                              onPress={handleSubmit as unknown as (e: GestureResponderEvent) => void}
+                                              onPress={(event) => {
+                                                  handleSubmit(event as unknown as FormEvent<HTMLFormElement>);
+                                                  if (isValid) {
+                                                      toggleLoading();
+                                                  }
+                                              }}
                                               disabled={!isValid}
                             >
-                                <Text>התחבר</Text>
+                                {isLoading ?
+                                    <ActivityIndicator size="large" color="black" /> :
+                                    <Text>התחבר</Text>
+                                }
                             </TouchableOpacity>
                             { backendHebrewError &&
                                 <View style={styles.backendHebrewErrorContainer}>

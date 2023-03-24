@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import { verifyToken } from "../utils/jwt";
 
 export const authenticate = async (
@@ -7,7 +7,7 @@ export const authenticate = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(`Authentication middleware`);
+  console.log(`Started authentication middleware`);
   const accessToken = req.headers.authorization as string;
 
   if (!accessToken) {

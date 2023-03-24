@@ -23,7 +23,6 @@ export const registerThunk = createAsyncThunk<{ userSession: IUserSession }, Reg
         try {
             const {username, email, password, age, gender} = payload;
             const userSession = await AuthService.register(username, email, password, age, gender);
-            console.log(userSession);
             return {userSession};
         } catch (error: any) {
             return thunkApi.rejectWithValue(error.response);

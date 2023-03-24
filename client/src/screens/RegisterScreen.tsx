@@ -1,7 +1,7 @@
 import { Dropdown } from 'react-native-element-dropdown';
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import {
-    GestureResponderEvent,
+    ActivityIndicator,
     Image,
     ScrollView,
     StyleSheet,
@@ -35,6 +35,7 @@ export interface RegisterFormDetails {
 export const RegisterScreen = () => {
     const dispatch = useAppDispatch();
     const [isFocus, setIsFocus] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [backendHebrewError, setBackendHebrewError] = useState('');
 
     const registerValidationSchema = yup.object().shape({
@@ -74,11 +75,14 @@ export const RegisterScreen = () => {
         setBackendHebrewError(errorMessage);
     };
 
+    const toggleLoading = () => setIsLoading(!isLoading);
+
     const onRegisterSubmit = async (registerFormDetails: RegisterFormDetails) => {
         dispatch(registerThunk(registerFormDetails))
             .unwrap()
             .then(() => setBackendHebrewError(''))
-            .catch(translateAndSetBackendError);
+            .catch(translateAndSetBackendError)
+            .finally(toggleLoading);
     };
 
     return (
@@ -95,6 +99,7 @@ export const RegisterScreen = () => {
                             gender: '' as unknown as RegisterFormDetails['gender']
                         }}
                         onSubmit={onRegisterSubmit}
+                        validateOnMount
                 >
                     {({handleChange, handleBlur, handleSubmit, values, setFieldValue, errors, touched, isValid}) => (
                         <>
@@ -192,10 +197,18 @@ export const RegisterScreen = () => {
                             }
 
                             <TouchableOpacity style={styles.registerBtn}
-                                              onPress={handleSubmit as unknown as (e: GestureResponderEvent) => void}
+                                              onPress={(event) => {
+                                                  handleSubmit(event as unknown as FormEvent<HTMLFormElement>);
+                                                  if (isValid) {
+                                                      toggleLoading();
+                                                  }
+                                              }}
                                               disabled={!isValid}
                             >
-                                <Text>הירשם</Text>
+                                {isLoading ?
+                                    <ActivityIndicator size="large" color="white" /> :
+                                    <Text>הירשם</Text>
+                                }
                             </TouchableOpacity>
                             { backendHebrewError &&
                                 <View style={styles.backendHebrewErrorContainer}>
