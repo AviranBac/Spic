@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
         placeholderTextColor: '#003f5c'
     },
     image: {
-        marginBottom: 40,
+        marginBottom: 40
     },
     inputView: {
         backgroundColor: "#FFFFFF",
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         marginTop: 40,
-        backgroundColor: "#A9C2C8",
+        backgroundColor: "#A9C2C8"
     },
     errorText: {
         fontSize: 14,

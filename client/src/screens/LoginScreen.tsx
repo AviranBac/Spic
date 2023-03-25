@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
         paddingTop: 10
     },
     image: {
-        marginBottom: 40,
+        marginBottom: 40
     },
     inputView: {
         backgroundColor: "#FFFFFF",
