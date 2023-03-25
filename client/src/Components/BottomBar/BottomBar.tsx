@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { HomeScreen } from "../../HomeScreen";
+import { HomeScreen } from "../../screens/HomeScreen";
 import { FavoritesScreen } from "../../Screens/FavoritesScreen";
 import { RecentScreen } from "../../Screens/RecentsScreen";
 import { SettingsScreen } from "../../Screens/SettingsScreen";
