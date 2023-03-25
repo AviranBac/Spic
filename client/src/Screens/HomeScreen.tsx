@@ -1,9 +1,8 @@
 import {ScrollView} from "react-native";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {ClickableBox} from "../Components/ClickableBox";
 import styled from "styled-components/native";
-
-const CATEGORIES_LIST: string[] = ['play', 'dress'];
+import {getCategories} from "../Utils/Data";
 
 const Wrapper = styled.View`
   flex: 1;
@@ -26,10 +25,27 @@ const CategoriesWrapper = styled.View`
   flex: 1;
   flex-wrap: wrap;
   flex-direction: row;
+  justify-content: center;
   padding-top: 10px;
 `;
 
+interface Category {
+    imageUrl: string
+    items: []
+    name: string
+    _id: string
+}
+
 export const HomeScreen = () => {
+
+    const [categories, setCategories] = useState<Category[]>([]);
+
+    useEffect(() => {
+        getCategories().then((response) => {
+            setCategories(response);
+        })
+    }, [])
+
     return (
         <ScrollView>
             <Wrapper>
@@ -43,8 +59,9 @@ export const HomeScreen = () => {
                 </HeadLindWrapper>
                 <CategoriesWrapper>
                     {
-                        CATEGORIES_LIST.map((category) => {
-                            return <ClickableBox categoryName={category} key={category}/>
+                        categories?.map((category) => {
+                            return <ClickableBox categoryName={category.name} imageUrl={category.imageUrl}
+                                                 key={category._id}/>
                         })
                     }
                 </CategoriesWrapper>

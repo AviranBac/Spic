@@ -4,7 +4,7 @@ import MainAppBar from "./Components/AppBar/MainAppBar";
 import styled from "styled-components/native";
 
 const Wrapper = styled.Modal`
-    direction: rtl;
+  direction: rtl;
 `
 
 const App = () => {

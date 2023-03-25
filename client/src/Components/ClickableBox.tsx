@@ -1,14 +1,14 @@
-import {Button, TouchableOpacity} from "react-native";
-import {getImageByCategory} from "../Utils/getImageByCategory";
-import {replaceEngToHeb} from "../Utils/replaceEngToHeb";
+import {Button, TouchableOpacity, View} from "react-native";
 import styled from "styled-components/native";
 
 interface ClickableBoxProps {
-    categoryName: string
+    categoryName: string,
+    imageUrl: string;
 }
 
 const Wrapper = styled.View`
-  flex-basis: 50%;
+  display: flex;
+  gap: 20px;
   align-items: center;
   justify-content: center;
 `;
@@ -16,37 +16,17 @@ const Wrapper = styled.View`
 const StyledImage = styled.Image`
   width: 150px;
   height: 150px;
-`
+`;
 
-export const ClickableBox = ({categoryName}: ClickableBoxProps) => {
-    const image = getImageByCategory(categoryName);
-    const title = replaceEngToHeb(categoryName);
+export const ClickableBox = ({categoryName, imageUrl}: ClickableBoxProps) => {
     return (
-        <Wrapper>
-            <TouchableOpacity>
-                <StyledImage source={image}/>
-                <Button title={title}/>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <StyledImage source={image}/>
-                <Button title={title}/>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <StyledImage source={image}/>
-                <Button title={title}/>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <StyledImage source={image}/>
-                <Button title={title}/>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <StyledImage source={image}/>
-                <Button title={title}/>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <StyledImage source={image}/>
-                <Button title={title}/>
-            </TouchableOpacity>
-        </Wrapper>
+        <View style={{marginVertical: 10, marginHorizontal: 10}}>
+            <View style={{backgroundColor: '#fff', borderRadius: 10, padding: 20}}>
+                <TouchableOpacity>
+                    <StyledImage source={{uri: imageUrl}}/>
+                    <Button title={categoryName}/>
+                </TouchableOpacity>
+            </View>
+        </View>
     )
 }
