@@ -206,7 +206,7 @@ export const RegisterScreen = () => {
                                               disabled={!isValid}
                             >
                                 {isLoading ?
-                                    <ActivityIndicator size="large" color="white" /> :
+                                    <ActivityIndicator size="large" color="black" /> :
                                     <Text>הירשם</Text>
                                 }
                             </TouchableOpacity>
