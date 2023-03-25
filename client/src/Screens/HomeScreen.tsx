@@ -46,7 +46,7 @@ export const HomeScreen = () => {
         getCategories().then((response) => {
             setCategories(response);
         })
-    }, [])
+    }, []);
 
     return (
         <ScrollView>
