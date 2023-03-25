@@ -53,7 +53,7 @@ export const HomeScreen = () => {
             <Wrapper>
                 <HeadLinedWrapper>
                     <StyledText>
-                        בוקר טוב ${username} ☀️
+                        בוקר טוב {username} ☀️
                     </StyledText>
                     <StyledText>
                         מה תרצה לעשות היום ?

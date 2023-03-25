@@ -1,10 +1,10 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { HomeScreen } from "../../screens/HomeScreen";
-import { FavoritesScreen } from "../../Screens/FavoritesScreen";
-import { RecentScreen } from "../../Screens/RecentsScreen";
-import { SettingsScreen } from "../../Screens/SettingsScreen";
+import { FavoritesScreen } from "../screens/FavoritesScreen";
+import { HomeScreen } from "../screens/HomeScreen";
+import { CommonlyUsedScreen } from "../screens/CommonlyUsedScreen";
+import { SettingsScreen } from "../screens/SettingsScreen";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -42,7 +42,7 @@ export const BottomBar = () => {
                 }}
             />
             <Tab.Screen
-                name={TABS.COMMONLY_USED} component={RecentScreen}
+                name={TABS.COMMONLY_USED} component={CommonlyUsedScreen}
                 options={{
                     tabBarLabel: TABS.COMMONLY_USED,
                     tabBarIcon: ({color}) => (

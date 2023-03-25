@@ -27,7 +27,9 @@ const categories: Category[] = [{
     items: []
 }];
 
-export const initCategoriesDb = () => {
-    categories.map(category => addCategory(category));
+export const initCategoriesDb = async () => {
+    await Promise.all(
+        categories.map(async (category) => await addCategory(category))
+    );
     console.log('Finished initializing categories in DB');
 }

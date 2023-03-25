@@ -2,10 +2,10 @@ import React from "react";
 import { AppBar } from "@react-native-material/core";
 import { Image, Platform } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useAppDispatch } from "../../store/hooks";
-import { logoutThunk } from "../../store/auth/auth.slice";
+import { useAppDispatch } from "../store/hooks";
+import { logoutThunk } from "../store/auth/auth.slice";
 
-const logo = require('../../../assets/logo-spic.png');
+const logo = require('../../assets/logo-spic.png');
 export const MainAppBar = () => {
     const dispatch = useAppDispatch();
 
