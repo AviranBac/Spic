@@ -4,10 +4,10 @@ import axiosInstance from "../services/axios.service";
 import { AxiosResponse, HttpStatusCode } from "axios";
 import { useAppDispatch } from "../store/hooks";
 
-type RefreshResponse = {
+interface RefreshResponse {
     access_token: string,
     refresh_token: string
-};
+}
 
 const useAxiosInterceptor = () => {
     const dispatch = useAppDispatch();
