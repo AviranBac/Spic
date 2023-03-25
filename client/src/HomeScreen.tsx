@@ -1,8 +1,10 @@
-import {ScrollView} from "react-native";
-import React, {useEffect, useState} from "react";
-import {ClickableBox} from "../Components/ClickableBox";
+import { ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ClickableBox } from "./components/ClickableBox";
 import styled from "styled-components/native";
-import {getCategories} from "../Utils/Data";
+import { getCategories } from "./services/categories.service";
+import { useAppSelector } from "./store/hooks";
+import { selectUsername } from "./store/auth/auth.selectors";
 
 const Wrapper = styled.View`
   flex: 1;
@@ -11,7 +13,7 @@ const Wrapper = styled.View`
   padding-top: 10px;
 `;
 
-const HeadLindWrapper = styled.View`
+const HeadLinedWrapper = styled.View`
   flex: 0 0 15%;
   justify-content: center;
   align-items: center;
@@ -37,8 +39,8 @@ interface Category {
 }
 
 export const HomeScreen = () => {
-
     const [categories, setCategories] = useState<Category[]>([]);
+    const username: string | undefined = useAppSelector(selectUsername);
 
     useEffect(() => {
         getCategories().then((response) => {
@@ -49,14 +51,14 @@ export const HomeScreen = () => {
     return (
         <ScrollView>
             <Wrapper>
-                <HeadLindWrapper>
+                <HeadLinedWrapper>
                     <StyledText>
-                        בוקר טוב אלי ☀️
+                        בוקר טוב ${username} ☀️
                     </StyledText>
                     <StyledText>
                         מה תרצה לעשות היום ?
                     </StyledText>
-                </HeadLindWrapper>
+                </HeadLinedWrapper>
                 <CategoriesWrapper>
                     {
                         categories?.map((category) => {
