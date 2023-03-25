@@ -1,23 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import React, { FC } from "react";
+import React from "react";
+import {BottomBar} from "./Components/BottomBar/BottomBar";
+import MainAppBar from "./Components/AppBar/MainAppBar";
+import styled from "styled-components/native";
 
-const App: FC = () => {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+const Wrapper = styled.Modal`
+  direction: rtl;
+`
+
+const App = () => {
+    return (
+        <Wrapper>
+            <MainAppBar/>
+            <BottomBar/>
+        </Wrapper>
+    );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default App;
