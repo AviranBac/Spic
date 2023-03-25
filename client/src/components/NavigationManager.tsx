@@ -8,6 +8,11 @@ import { IUserSession } from "../store/auth/auth.model";
 import { BottomBar } from "./BottomBar";
 import MainAppBar from "./MainAppBar";
 import { NavigationContainer } from "@react-navigation/native";
+import styled from "styled-components/native";
+
+const Wrapper = styled.Modal`
+  direction: rtl;
+`
 
 const NavigationManager: FC = () => {
     const userSession: IUserSession | null = useAppSelector(selectUserSession);
@@ -15,10 +20,10 @@ const NavigationManager: FC = () => {
     return (
         <NavigationContainer>
             {userSession ? (
-                <>
+                <Wrapper>
                     <MainAppBar/>
                     <BottomBar/>
-                </>
+                </Wrapper>
             ) : (
                 <Stack.Navigator screenOptions={{headerTransparent: true, title: ''}}>
                     <Stack.Screen name="Login" component={LoginScreen}/>
