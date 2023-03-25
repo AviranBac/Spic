@@ -5,6 +5,8 @@ import bodyParser from "body-parser";
 
 import { initializeApplication } from "./server";
 import authRouters from "../routes/auth.routes";
+import categoriesRouters from "../routes/categories.routes";
+import itemsRouters from "../routes/items.routes";
 import { StatusCodes } from "http-status-codes";
 
 export const app = express();
@@ -20,8 +22,8 @@ app.use(
 );
 
 app.use("/auth", authRouters);
-
-// TODO: make sure to add "authenticate" middleware to newer routes after merge
+app.use("/categories", categoriesRouters);
+app.use("/items", itemsRouters);
 
 (async () => {
   await initializeApplication();
