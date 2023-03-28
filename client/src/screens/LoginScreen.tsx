@@ -111,7 +111,7 @@ export const LoginScreen = ({navigation}: LoginScreenProps) => {
                                               disabled={!isValid}
                             >
                                 {isLoading ?
-                                    <ActivityIndicator size="large" color="black" /> :
+                                    <ActivityIndicator size="large" color="white" /> :
                                     <Text>התחבר</Text>
                                 }
                             </TouchableOpacity>
