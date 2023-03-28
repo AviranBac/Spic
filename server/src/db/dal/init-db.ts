@@ -35,7 +35,7 @@ const categories: Category[] = [{
     items: []
 },{
     name: 'לימודים',
-    imageUrl: 'https://i.ibb.co/GH600qs/learn.jpg',
+    imageUrl: 'https://i.ibb.co/d2qNZXP/study.jpg',
     items: []
 },{
     name: 'צפייה',
