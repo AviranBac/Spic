@@ -25,6 +25,26 @@ const categories: Category[] = [{
     name: 'ספורט',
     imageUrl: 'https://i.ibb.co/SK6rnBQ/sport.jpg',
     items: []
+},{
+    name: 'משפחה וחברים',
+    imageUrl: 'https://i.ibb.co/Gn7QZfr/family.jpg',
+    items: []
+},{
+    name: 'מקומות',
+    imageUrl: 'https://i.ibb.co/XLdy7rp/locations.jpg',
+    items: []
+},{
+    name: 'לימודים',
+    imageUrl: 'https://i.ibb.co/GH600qs/learn.jpg',
+    items: []
+},{
+    name: 'צפייה',
+    imageUrl: 'https://i.ibb.co/8cbj9VF/watch.jpg',
+    items: []
+},{
+    name: 'שיחה',
+    imageUrl: 'https://i.ibb.co/x6KsbCF/chat.jpg',
+    items: []
 }];
 
 export const initCategoriesDb = async () => {
