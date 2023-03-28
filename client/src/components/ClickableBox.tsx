@@ -1,4 +1,4 @@
-import {Button, TouchableOpacity, View} from "react-native";
+import { Button, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 
 interface ClickableBoxProps {

@@ -1,4 +1,4 @@
-import {Category, CategoryModel} from "../schemas/category.schema";
+import { Category, CategoryModel } from "../schemas/category.schema";
 
 export const getAllCategories = async (): Promise<Category[]> => CategoryModel.find();
 

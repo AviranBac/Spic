@@ -1,28 +1,30 @@
-import express, {Request, Response} from "express";
-import bodyParser from "body-parser";
+import "dotenv/config";
 import cors from "cors";
-import {initializeApplication} from "./server";
-import {getAllCategories} from "../db/dal/categories.dal";
-import {getAllItems} from "../db/dal/items.dal";
+import express from "express";
+import bodyParser from "body-parser";
+
+import { initializeApplication } from "./server";
+import authRouters from "../routes/auth.routes";
+import categoriesRouters from "../routes/categories.routes";
+import itemsRouters from "../routes/items.routes";
+import { StatusCodes } from "http-status-codes";
 
 export const app = express();
 
 app.use(bodyParser.json());
 
-app.use(cors({
-    origin: '*',
+app.use(
+  cors({
+    origin: "*",
     credentials: true,
-    optionsSuccessStatus: 200
-}));
+    optionsSuccessStatus: StatusCodes.OK
+  })
+);
 
-app.get('/categories', async (req: Request, res:Response) => {
-    res.send(await getAllCategories());
-});
-
-app.get('/items', async (req: Request, res:Response) => {
-    res.send(await getAllItems());
-});
+app.use("/auth", authRouters);
+app.use("/categories", categoriesRouters);
+app.use("/items", itemsRouters);
 
 (async () => {
-    await initializeApplication();
+  await initializeApplication();
 })();

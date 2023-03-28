@@ -1,5 +1,5 @@
-import {addCategory} from "./categories.dal";
-import {Category} from "../schemas/category.schema";
+import { addCategory } from "./categories.dal";
+import { Category } from "../schemas/category.schema";
 
 const categories: Category[] = [{
     name: 'להתלבש',
@@ -25,8 +25,31 @@ const categories: Category[] = [{
     name: 'ספורט',
     imageUrl: 'https://i.ibb.co/SK6rnBQ/sport.jpg',
     items: []
+},{
+    name: 'משפחה וחברים',
+    imageUrl: 'https://i.ibb.co/Gn7QZfr/family.jpg',
+    items: []
+},{
+    name: 'מקומות',
+    imageUrl: 'https://i.ibb.co/XLdy7rp/locations.jpg',
+    items: []
+},{
+    name: 'לימודים',
+    imageUrl: 'https://i.ibb.co/d2qNZXP/study.jpg',
+    items: []
+},{
+    name: 'צפייה',
+    imageUrl: 'https://i.ibb.co/8cbj9VF/watch.jpg',
+    items: []
+},{
+    name: 'שיחה',
+    imageUrl: 'https://i.ibb.co/x6KsbCF/chat.jpg',
+    items: []
 }];
 
-export const initCategoriesDb = () => {
-    categories.map(category => addCategory(category));
+export const initCategoriesDb = async () => {
+    await Promise.all(
+        categories.map(async (category) => await addCategory(category))
+    );
+    console.log('Finished initializing categories in DB');
 }

@@ -1,18 +1,16 @@
-import React from "react";
-import {BottomBar} from "./Components/BottomBar/BottomBar";
-import MainAppBar from "./Components/AppBar/MainAppBar";
-import styled from "styled-components/native";
+import React, { FC } from 'react';
+import { persistor } from "./store/store";
+import NavigationManager from "./components/NavigationManager";
+import { PersistGate } from "redux-persist/integration/react";
+import useAxiosInterceptor from "./hooks/useAxiosInterceptor";
 
-const Wrapper = styled.Modal`
-  direction: rtl;
-`
+const App: FC = () => {
+    useAxiosInterceptor();
 
-const App = () => {
     return (
-        <Wrapper>
-            <MainAppBar/>
-            <BottomBar/>
-        </Wrapper>
+        <PersistGate persistor={persistor}>
+            <NavigationManager />
+        </PersistGate>
     );
 }
 
