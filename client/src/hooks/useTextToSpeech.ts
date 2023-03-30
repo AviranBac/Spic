@@ -5,10 +5,11 @@ import { Audio, AVPlaybackStatusError } from "expo-av";
 import { config } from "../config/config";
 import { useSelector } from "react-redux";
 import { selectSound } from "../store/audio/audio.selectors";
+import { Gender } from "../store/auth/auth.model";
 
 type UseTextToSpeechProps = {
     text: string;
-    gender: 'MALE' | 'FEMALE';
+    gender: Gender;
 }
 
 export interface UseTextToSpeechOutput {

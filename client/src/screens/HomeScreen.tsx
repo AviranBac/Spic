@@ -62,7 +62,9 @@ export const HomeScreen = () => {
                 <CategoriesWrapper>
                     {
                         categories?.map((category) => {
-                            return <ClickableBox categoryName={category.name} imageUrl={category.imageUrl}
+                            return <ClickableBox name={category.name}
+                                                 imageUrl={category.imageUrl}
+                                                 hasTtsIcon={false}
                                                  key={category._id}/>
                         })
                     }

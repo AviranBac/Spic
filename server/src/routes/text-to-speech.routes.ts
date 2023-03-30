@@ -18,7 +18,7 @@ router.get('', async (req: Request, res: Response) => {
         input: {text},
         voice: {
             languageCode,
-            name: `${languageCode}-Standard-${gender.toString() === 'MALE' ? 'B' : 'A'}`
+            name: `${languageCode}-Standard-${gender.toString().toUpperCase() === 'FEMALE' ? 'A' : 'B'}`
         },
         audioConfig: {
             audioEncoding: 'MP3'

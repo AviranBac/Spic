@@ -13,3 +13,8 @@ export const selectUsername = createSelector(
     [selectUserSession],
     (userSession: IUserSession | null) => userSession?.username
 );
+
+export const selectGender = createSelector(
+    [selectUserSession],
+    (userSession: IUserSession | null) => userSession?.gender
+);
