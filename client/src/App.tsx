@@ -1,13 +1,16 @@
-import { View } from 'react-native';
-import React, { FC } from "react";
-import { Provider } from "react-redux";
-import store from "./store/store";
+import React, { FC } from 'react';
+import { persistor } from "./store/store";
+import NavigationManager from "./components/NavigationManager";
+import { PersistGate } from "redux-persist/integration/react";
+import useAxiosInterceptor from "./hooks/useAxiosInterceptor";
 
 const App: FC = () => {
+    useAxiosInterceptor();
+
     return (
-        <Provider store={store}>
-            <View />
-        </Provider>
+        <PersistGate persistor={persistor}>
+            <NavigationManager />
+        </PersistGate>
     );
 }
 
