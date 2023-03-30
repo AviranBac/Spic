@@ -4,14 +4,13 @@ import { getPhotos } from '../services/photos';
 
 const router = express.Router();
 
-router.get('/:searchQuery/', async (req: Request, res: Response) => {
+router.get('/:searchQuery', async (req: Request, res: Response) => {
   let response: string[];
   let statusCode: number = HttpStatus.OK;
   const { searchQuery } = req.params;
 
   try {
-    const photoUrls = await getPhotos(searchQuery);
-    console.log(`Sending requested photos of ${searchQuery}`);
+    const photoUrls: string[] = await getPhotos(searchQuery);
     res.send(photoUrls);
   } catch (e) {
     statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -21,4 +20,4 @@ router.get('/:searchQuery/', async (req: Request, res: Response) => {
   }
 });
 
-export { router as photosRouter };
+export default router;
