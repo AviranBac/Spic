@@ -7,7 +7,7 @@ import { initializeApplication } from "./server";
 import authRouters from "../routes/auth.routes";
 import categoriesRouters from "../routes/categories.routes";
 import itemsRouters from "../routes/items.routes";
-import photosRouters from "../server/routes/photos";
+import photosRouters from "../routes/photos.routes";
 import { StatusCodes } from "http-status-codes";
 
 export const app = express();
