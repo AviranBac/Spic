@@ -110,3 +110,6 @@ dist
 
 # credentials
 credentials/
+
+# typescript
+.dist/

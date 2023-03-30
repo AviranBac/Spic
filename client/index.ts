@@ -1,5 +1,4 @@
 import registerRootComponent from 'expo/build/launch/registerRootComponent';
+import RootComponent from "./src/RootComponent";
 
-import App from './src/App';
-
-registerRootComponent(App);
+registerRootComponent(RootComponent);

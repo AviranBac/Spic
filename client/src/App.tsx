@@ -1,23 +1,17 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import React, { FC } from "react";
+import React, { FC } from 'react';
+import { persistor } from "./store/store";
+import NavigationManager from "./components/NavigationManager";
+import { PersistGate } from "redux-persist/integration/react";
+import useAxiosInterceptor from "./hooks/useAxiosInterceptor";
 
 const App: FC = () => {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+    useAxiosInterceptor();
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+    return (
+        <PersistGate persistor={persistor}>
+            <NavigationManager />
+        </PersistGate>
+    );
+}
 
 export default App;
