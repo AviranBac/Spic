@@ -64,7 +64,7 @@ export const login = async (req: Request, res: Response) => {
         const { access_token, refresh_token } = jwtUtils.signToken(user._id);
 
         user.refreshTokens = jwtUtils.updateRefreshTokensList(user.refreshTokens, refresh_token);
-        user.refreshTokens = jwtUtils.clearExpiryedTokens(user.refreshTokens);
+        user.refreshTokens = jwtUtils.clearExpiredTokens(user.refreshTokens);
         const { email, username, gender } = user;
         await user.save();
 
@@ -93,7 +93,7 @@ export const logout = async (req: Request, res: Response) => {
       const user : IUser | null = await UserModel.findOne({ _id: userId });
       if (user) {
         console.log(`A logout request has been received from ${user.email}`);
-        user.refreshTokens = jwtUtils.clearExpiryedTokens(user.refreshTokens, reqRefreshToken);
+        user.refreshTokens = jwtUtils.clearExpiredTokens(user.refreshTokens, reqRefreshToken);
         await user.save();
       }
     } catch (err) {
@@ -126,7 +126,7 @@ export const refreshTokenHandler = async (
         console.log(`A Refresh Token request has been received for ${user.email}`);
         const { access_token, refresh_token } = jwtUtils.signToken(user._id);
         user.refreshTokens = jwtUtils.updateRefreshTokensList(user.refreshTokens, refresh_token);
-        user.refreshTokens = jwtUtils.clearExpiryedTokens(user.refreshTokens, reqRefreshToken);
+        user.refreshTokens = jwtUtils.clearExpiredTokens(user.refreshTokens, reqRefreshToken);
 
         await user.save();
         status = StatusCodes.OK;

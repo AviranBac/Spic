@@ -18,7 +18,7 @@ const categories: Category[] = [{
     imageUrl: 'https://i.ibb.co/PNfDnJM/games.jpg',
     items: []
 },{
-    name: 'הגיינה',
+    name: 'היגיינה',
     imageUrl: 'https://i.ibb.co/Y7NQ03j/hygiene.jpg',
     items: []
 },{
