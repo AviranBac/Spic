@@ -10,6 +10,7 @@ declare global {
         REFRESH_TOKEN_SECRET: string;
         ACCESS_TOKEN_EXPIRATION_IN_HOURS: string;
         REFRESH_TOKEN_EXPIRATION_IN_HOURS: string;
+        GOOGLE_APPLICATION_CREDENTIALS: string;
     }
   }
 }

@@ -1,16 +1,20 @@
 import { Button, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
+import TextToSpeechIcon from "./icons/TextToSpeechIcon";
+import { selectGender } from "../store/auth/auth.selectors";
+import { useAppSelector } from "../store/hooks";
 
 interface ClickableBoxProps {
-    categoryName: string,
+    name: string,
     imageUrl: string;
+    hasTtsIcon?: boolean;
 }
 
-const Wrapper = styled.View`
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  justify-content: center;
+const RelativeView = styled.View`
+  position: relative;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
 `;
 
 const StyledImage = styled.Image`
@@ -18,15 +22,22 @@ const StyledImage = styled.Image`
   height: 150px;
 `;
 
-export const ClickableBox = ({categoryName, imageUrl}: ClickableBoxProps) => {
+export const ClickableBox = ({name, imageUrl, hasTtsIcon = true}: ClickableBoxProps) => {
+    const userGender = useAppSelector(selectGender);
+
     return (
         <View style={{marginVertical: 10, marginHorizontal: 10}}>
-            <View style={{backgroundColor: '#fff', borderRadius: 10, padding: 20}}>
+            <RelativeView>
+                {hasTtsIcon &&
+                    <TextToSpeechIcon text={name}
+                                      gender={userGender!}
+                                      style={{position: 'absolute', top: 3, left: 6, zIndex: 1}}/>
+                }
                 <TouchableOpacity>
                     <StyledImage source={{uri: imageUrl}}/>
-                    <Button title={categoryName}/>
+                    <Button title={name}/>
                 </TouchableOpacity>
-            </View>
+            </RelativeView>
         </View>
     )
 }

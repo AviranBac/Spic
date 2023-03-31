@@ -1,10 +1,12 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import audioReducer from './audio/audio.slice';
 import authReducer from './auth/auth.slice';
 import { persistReducer, persistStore } from 'redux-persist';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import UserSessionService from "../services/user-session.service";
 
 const rootReducer = combineReducers({
+    audio: audioReducer,
     auth: persistReducer({ key: UserSessionService.storageKey, storage: AsyncStorage }, authReducer)
 });
 

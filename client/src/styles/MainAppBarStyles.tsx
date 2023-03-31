@@ -1,7 +1,7 @@
 import styled from "styled-components/native";
-import {Image, Platform} from "react-native";
-import {MaterialCommunityIcons} from "@expo/vector-icons";
-import {AppBar} from "@react-native-material/core";
+import { Image, Platform } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { AppBar } from "@react-native-material/core";
 
 export const Wrapper = styled.View`
   display: flex;
