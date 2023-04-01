@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 export interface Category {
-    id?: mongoose.ObjectId
+    id?: mongoose.Types.ObjectId
     name: string,
     imageUrl: string,
     sentenceBeginning: string

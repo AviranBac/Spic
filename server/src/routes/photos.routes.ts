@@ -1,10 +1,11 @@
 import express, { Request, Response } from 'express';
 import HttpStatus from 'http-status-codes';
 import { getPhotos } from '../services/photos';
+import { authenticate } from "../auth/auth-middleware";
 
 const router = express.Router();
 
-router.get('/:searchQuery', async (req: Request, res: Response) => {
+router.get('/:searchQuery', authenticate, async (req: Request, res: Response) => {
   let response: string[];
   let statusCode: number = HttpStatus.OK;
   const { searchQuery } = req.params;

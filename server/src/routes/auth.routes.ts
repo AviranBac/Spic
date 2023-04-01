@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import * as Auth from "../auth/auth-functions";
-import AuthValidation from "../auth/validation";
+import AuthValidation from "../validation/auth.validation";
 
 const router = Router();
 

@@ -3,7 +3,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../../utils/navigation-stack";
 import { useAppSelector } from "../../store/hooks";
 import { selectEmail } from "../../store/auth/auth.selectors";
-import { getItems } from "../../services/items.service";
+import { getItems, recordItemChosen } from "../../services/items.service";
 import { ClickableBox } from "../../components/ClickableBox";
 import { Item } from "../../models/item";
 import { ScrollView, StyleSheet, View } from "react-native";
@@ -32,9 +32,12 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
     }, [email]);
 
     const onItemPress = (item: Item) => {
-        // TODO: document the chosen action
-        setModalVisible(true);
-        setActiveItem(item);
+        recordItemChosen(item, email!)
+            .then(() => {
+                setModalVisible(true);
+                setActiveItem(item);
+            })
+            .catch(console.error);
     };
 
     const onModalClose = () => {
