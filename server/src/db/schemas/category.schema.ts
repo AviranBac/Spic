@@ -1,18 +1,17 @@
 import mongoose from "mongoose";
-import { Item, ItemModelSchema } from "./item.schema";
 
 const Schema = mongoose.Schema;
 
-export interface Category{
+export interface Category {
     id?: mongoose.ObjectId
     name: string,
-    imageUrl: string
-    items: Array<Item>
+    imageUrl: string,
+    sentenceBeginning: string
 }
 const CategoryModelSchema = new Schema<Category>({
     name: String,
     imageUrl: String,
-    items: [ItemModelSchema]
+    sentenceBeginning: String
 });
 
 export const CategoryModel = mongoose.model<Category>("Category", CategoryModelSchema);

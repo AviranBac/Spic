@@ -2,6 +2,7 @@ import { Pressable, StyleProp, ViewStyle } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
 type SpeakerIconProps = {
+    loading: boolean;
     playing: boolean;
     onPress: () => void;
     style?: StyleProp<ViewStyle>;
@@ -9,11 +10,11 @@ type SpeakerIconProps = {
     height?: number;
 }
 
-const SpeakerSvgIcon = ({playing, onPress, style = {}, width = 30, height = 30}: SpeakerIconProps): JSX.Element => {
+const SpeakerSvgIcon = ({loading, playing, onPress, style = {}, width = 30, height = 30}: SpeakerIconProps): JSX.Element => {
     const color: string = playing ? '#009dff' : 'black';
 
     return (
-        <Pressable onPress={onPress} style={style}>
+        <Pressable onPress={onPress} style={style} disabled={loading}>
             <Svg width={width} height={height} viewBox='0 0 75 75'>
                 <Path d='M39.389,13.769 L22.235,28.606 L6,28.606 L6,47.699 L21.989,47.699 L39.389,62.75 L39.389,13.769z'
                       stroke={color}

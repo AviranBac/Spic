@@ -4,7 +4,7 @@ import { getAllItems } from "../db/dal/items.dal";
 
 const router = Router();
 
-router.get('/', authenticate, async (req: Request, res:Response) => {
+router.get('/:categoryId/:email', authenticate, async (req: Request, res:Response) => {
     res.send(await getAllItems());
 });
 

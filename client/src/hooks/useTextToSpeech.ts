@@ -13,14 +13,17 @@ type UseTextToSpeechProps = {
 }
 
 export interface UseTextToSpeechOutput {
+    loading: boolean;
     playing: boolean;
-    loadAndPlayAudioFn: () => void
+    loadAndPlayAudioFn: () => void;
+    forceStopFn: () => void
 }
 
 const languageCode = 'he-IL';
 
 const useTextToSpeech = ({text, gender}: UseTextToSpeechProps): UseTextToSpeechOutput => {
     const sound: Audio.Sound = useSelector(selectSound);
+    const [loading, setLoading] = useState(false);
     const [playing, setPlaying] = useState(false);
 
     const updateStatus: (playBackStatus: AVPlaybackStatus) => void = (playbackStatus: AVPlaybackStatus) => {
@@ -39,9 +42,11 @@ const useTextToSpeech = ({text, gender}: UseTextToSpeechProps): UseTextToSpeechO
         try {
             await sound.unloadAsync();
 
+            setLoading(true);
             const result: AVPlaybackStatus = await sound.loadAsync({
                 uri: buildRequestUrl()
             });
+            setLoading(false);
 
             if ((result as AVPlaybackStatusError).error) {
                 setPlaying(false);
@@ -54,12 +59,19 @@ const useTextToSpeech = ({text, gender}: UseTextToSpeechProps): UseTextToSpeechO
                 await sound.playAsync();
             }
         } catch (error) {
+            setLoading(false);
             setPlaying(false);
             console.error('Error when loading/playing Audio', error);
         }
     };
 
-    return {playing, loadAndPlayAudioFn};
+    const forceStopFn = async () => {
+        await sound.unloadAsync();
+        setLoading(false);
+        setPlaying(false);
+    };
+
+    return {loading, playing, loadAndPlayAudioFn, forceStopFn};
 };
 
 export default useTextToSpeech;

@@ -5,6 +5,9 @@ import styled from "styled-components/native";
 import { getCategories } from "../services/categories.service";
 import { useAppSelector } from "../store/hooks";
 import { selectUsername } from "../store/auth/auth.selectors";
+import { StackScreenProps } from "@react-navigation/stack";
+import { HomeStackParamList } from "../utils/navigation-stack";
+import { Category } from "../models/category";
 
 const Wrapper = styled.View`
   flex: 1;
@@ -31,14 +34,9 @@ const CategoriesWrapper = styled.View`
   padding-top: 10px;
 `;
 
-interface Category {
-    imageUrl: string
-    items: []
-    name: string
-    _id: string
-}
+type HomeScreenProps = StackScreenProps<HomeStackParamList>;
 
-export const HomeScreen = () => {
+export const HomeScreen = ({navigation}: HomeScreenProps) => {
     const [categories, setCategories] = useState<Category[]>([]);
     const username: string | undefined = useAppSelector(selectUsername);
 
@@ -61,9 +59,10 @@ export const HomeScreen = () => {
                 </HeadLinedWrapper>
                 <CategoriesWrapper>
                     {
-                        categories?.map((category) => {
+                        categories?.map((category: Category) => {
                             return <ClickableBox name={category.name}
                                                  imageUrl={category.imageUrl}
+                                                 onPress={() => navigation.navigate('Category', {category})}
                                                  hasTtsIcon={false}
                                                  key={category._id}/>
                         })
