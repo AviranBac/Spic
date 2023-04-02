@@ -5,13 +5,17 @@ export const getAllCategories = async (): Promise<Category[]> => CategoryModel.f
 
 export const addCategory = async (category: Category): Promise<Category> => CategoryModel.create(category);
 
-export const getCategoryIdByName = async (name: string): Promise<mongoose.Types.ObjectId | undefined> => {
+export const getCategoriesMap = async (): Promise<Map<string, mongoose.Types.ObjectId>> => {
   try {
-    const category: Category | null = await CategoryModel.findOne({ name: name }).exec();
-    return category?.id;
+    const categories: Category[] = await CategoryModel.find().exec();
+    const categoriesMap: Map<string, mongoose.Types.ObjectId> = new Map();
+    categories.forEach((category: Category) => {
+      categoriesMap.set(category.name, category.id!);
+    });
+    return categoriesMap;
   } catch (error) {
-    console.log(`Failed while fetching category: ${error}`);
-    return undefined;
+    console.log(`Failed while fetching categories: ${error}`);
+    return new Map();
   }
 };
 
