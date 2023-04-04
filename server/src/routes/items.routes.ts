@@ -1,6 +1,6 @@
 import { AuthenticatedRequest, authenticate } from "../auth/auth-middleware";
 import { Request, Response, Router } from "express";
-import { getItemsByCategoryId } from "../db/dal/items.dal";
+import { getItemsByCategoryId, getAllItemsByUserId } from "../db/dal/items.dal";
 import HttpStatus, { StatusCodes } from "http-status-codes";
 import { Item } from "../db/schemas/item.schema";
 
@@ -13,7 +13,11 @@ router.get('/:categoryId/', authenticate, async (req: Request, res:Response) => 
     let statusCode = StatusCodes.OK;
 
     try {        
-        response = await getItemsByCategoryId(categoryId);
+        const categoryItems = await getItemsByCategoryId(categoryId);
+        const userItems = await getAllItemsByUserId(userId);
+    
+        response = categoryItems.concat(userItems);
+    
         console.log(`Sending ${response.length} items. categoryId: ${categoryId}, userId: ${userId}`);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
