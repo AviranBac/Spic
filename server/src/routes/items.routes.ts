@@ -14,10 +14,10 @@ router.get('/:categoryId/', authenticate, async (req: Request, res:Response) => 
 
     try {        
         const categoryItems = await getItemsByCategoryId(categoryId);
-        const userItems = await getAllItemsByUserId(userId);
+    //    const userItems = await getAllItemsByUserId(userId);
     
-        response = categoryItems.concat(userItems);
-    
+       // response = categoryItems.concat(userItems);
+        response = categoryItems;
         console.log(`Sending ${response.length} items. categoryId: ${categoryId}, userId: ${userId}`);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
