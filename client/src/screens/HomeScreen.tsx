@@ -5,6 +5,7 @@ import styled from "styled-components/native";
 import { getCategories } from "../services/categories.service";
 import { useAppSelector } from "../store/hooks";
 import { selectUsername } from "../store/auth/auth.selectors";
+import { Category } from "../services/categories.service";
 
 const Wrapper = styled.View`
   flex: 1;
@@ -30,13 +31,6 @@ const CategoriesWrapper = styled.View`
   justify-content: center;
   padding-top: 10px;
 `;
-
-interface Category {
-    imageUrl: string
-    items: []
-    name: string
-    _id: string
-}
 
 export const HomeScreen = () => {
     const [categories, setCategories] = useState<Category[]>([]);
