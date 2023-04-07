@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { IToken } from "../db/schemas/user.schema";
 
-interface UserIDJwtPayload extends jwt.JwtPayload {
+export interface UserIDJwtPayload extends jwt.JwtPayload {
   userId: string;
 }
 
