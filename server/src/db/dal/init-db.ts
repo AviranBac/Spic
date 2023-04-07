@@ -2,7 +2,7 @@ import { addCategory } from "./categories.dal";
 import { Category } from "../schemas/category.schema";
 
 const categories: Category[] = [{
-    name: 'להתלבש',
+    name: 'לבוש',
     imageUrl: 'https://i.ibb.co/bB4TzqW/clothes.jpg',
     sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
@@ -10,11 +10,11 @@ const categories: Category[] = [{
     imageUrl: 'https://i.ibb.co/B4Vdk8P/emotions.jpg',
     sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
-    name: 'לאכול',
+    name: 'אוכל',
     imageUrl: 'https://i.ibb.co/qCKxqfs/food.jpg',
     sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
-    name: 'לשחק',
+    name: 'משחק',
     imageUrl: 'https://i.ibb.co/PNfDnJM/games.jpg',
     sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{

@@ -1,6 +1,10 @@
 import { StatusCodes } from "http-status-codes";
 import { NextFunction, Request, Response } from "express";
-import { verifyToken } from "../utils/jwt";
+import { UserIDJwtPayload, verifyToken } from "../utils/jwt";
+
+export interface AuthenticatedRequest extends Request {
+  token: UserIDJwtPayload;
+}
 
 export const authenticate = async (
   req: Request,
@@ -18,5 +22,6 @@ export const authenticate = async (
 
   const decoded = verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET);
   if (!decoded) return res.status(StatusCodes.UNAUTHORIZED).send({ response: "Invalid Token" });
+  (req as AuthenticatedRequest).token = decoded;
   return next();
 };
