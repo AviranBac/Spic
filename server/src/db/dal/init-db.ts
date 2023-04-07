@@ -2,49 +2,49 @@ import { addCategory } from "./categories.dal";
 import { Category } from "../schemas/category.schema";
 
 const categories: Category[] = [{
-    name: 'להתלבש',
+    name: 'לבוש',
     imageUrl: 'https://i.ibb.co/bB4TzqW/clothes.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
     name: 'רגשות',
     imageUrl: 'https://i.ibb.co/B4Vdk8P/emotions.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
-    name: 'לאכול',
+    name: 'אוכל',
     imageUrl: 'https://i.ibb.co/qCKxqfs/food.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
-    name: 'לשחק',
+    name: 'משחק',
     imageUrl: 'https://i.ibb.co/PNfDnJM/games.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
     name: 'היגיינה',
     imageUrl: 'https://i.ibb.co/Y7NQ03j/hygiene.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
     name: 'ספורט',
     imageUrl: 'https://i.ibb.co/SK6rnBQ/sport.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
     name: 'משפחה וחברים',
     imageUrl: 'https://i.ibb.co/Gn7QZfr/family.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
     name: 'מקומות',
     imageUrl: 'https://i.ibb.co/XLdy7rp/locations.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
     name: 'לימודים',
     imageUrl: 'https://i.ibb.co/d2qNZXP/study.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
     name: 'צפייה',
     imageUrl: 'https://i.ibb.co/8cbj9VF/watch.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
     name: 'שיחה',
     imageUrl: 'https://i.ibb.co/x6KsbCF/chat.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 }];
 
 export const initCategoriesDb = async () => {
