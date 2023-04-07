@@ -13,7 +13,7 @@ const categories: Category[] = [{
     items: []
 },{
     name: 'לאכול',
-    sentenceBeginning: 'אני רוצה לאכול',
+    sentenceBeginning: 'אני רוצה',
     imageUrl: 'https://i.ibb.co/qCKxqfs/food.jpg',
     items: []
 },{
@@ -28,12 +28,12 @@ const categories: Category[] = [{
     items: []
 },{
     name: 'ספורט',
-    sentenceBeginning: 'אני רוצה להתאמן ב',
+    sentenceBeginning: 'אני רוצה',
     imageUrl: 'https://i.ibb.co/SK6rnBQ/sport.jpg',
     items: []
 },{
     name: 'משפחה וחברים',
-    sentenceBeginning: 'אני רוצה לפגוש את',
+    sentenceBeginning: '',
     imageUrl: 'https://i.ibb.co/Gn7QZfr/family.jpg',
     items: []
 },{
