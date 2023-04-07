@@ -36,7 +36,7 @@ export const ClickableBox = ({name, imageUrl, onPress = () => {}, hasTtsIcon = t
                 }
                 <TouchableOpacity onPress={onPress}>
                     <StyledImage source={{uri: imageUrl}}/>
-                    <Button title={name}/>
+                    <Button title={name} onPress={onPress}/>
                 </TouchableOpacity>
             </RelativeView>
         </View>
