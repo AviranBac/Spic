@@ -5,14 +5,13 @@ export const getAllItems = async (): Promise<Item[]> => ItemModel.find();
 
 export const addItem = async (item: Item): Promise<Item> => ItemModel.create(item);
 
-export const getItemsByCategoryAndUserId = async (categoryId: mongoose.Types.ObjectId, userId?: mongoose.Types.ObjectId): Promise<Item[]> => {
-  let query: mongoose.FilterQuery<Item> = { categoryId };
-
-  if (userId !== undefined) {
-    query.userId = userId;
-  }
+export const getItemsByCategoryAndUserId = async (categoryId: mongoose.Types.ObjectId, userId: mongoose.Types.ObjectId): Promise<Item[]> => {
+  const query: mongoose.FilterQuery<Item> = {
+    categoryId,
+    $or: [{ userId }, { userId: { $exists: false } }]
+  };
 
   const items = await ItemModel.find(query).exec();
   return items;
-}
+};
   

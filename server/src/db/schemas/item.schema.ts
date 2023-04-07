@@ -9,7 +9,7 @@ export interface Item {
     name: string,
     imageUrl: string,
     categoryId: mongoose.Types.ObjectId,
-    userID?: mongoose.Types.ObjectId
+    userId?: mongoose.Types.ObjectId
 }
 
 export const ItemModelSchema = new Schema<Item>({
@@ -19,7 +19,7 @@ export const ItemModelSchema = new Schema<Item>({
         type: mongoose.Schema.Types.ObjectId,
         ref: CategoryModel.modelName
     },
-    userID: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: UserModel.modelName, 
         optional: true 
