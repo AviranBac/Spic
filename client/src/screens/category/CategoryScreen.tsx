@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../../utils/navigation-stack";
-import { useAppSelector } from "../../store/hooks";
-import { selectEmail } from "../../store/auth/auth.selectors";
 import { getItems, recordItemChosen } from "../../services/items.service";
 import { ClickableBox } from "../../components/ClickableBox";
 import { Item } from "../../models/item";
@@ -13,7 +11,6 @@ import { CircleIcon } from "../../components/icons/CircleIcon";
 type CategoryScreenProps = StackScreenProps<HomeStackParamList, 'Category'>;
 
 export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
-    const email = useAppSelector(selectEmail);
     const [items, setItems] = useState<Item[]>([]);
     const [isModalVisible, setModalVisible] = useState<boolean>(false);
     const [activeItem, setActiveItem] = useState<Item | null>(null);
@@ -27,12 +24,12 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
     }, [navigation]);
 
     useEffect(() => {
-        getItems(categoryId, email!)
+        getItems(categoryId)
             .then(setItems);
-    }, [email]);
+    }, []);
 
     const onItemPress = (item: Item) => {
-        recordItemChosen(item, email!)
+        recordItemChosen(item)
             .then(() => {
                 setModalVisible(true);
                 setActiveItem(item);

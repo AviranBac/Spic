@@ -1,5 +1,4 @@
 import { body } from "express-validator/check";
-import { UserModel } from "../db/schemas/user.schema";
 import { ItemModel } from "../db/schemas/item.schema";
 
 export const validateRecordRequest = () => {
@@ -12,14 +11,6 @@ export const validateRecordRequest = () => {
                     return true;
                 }
                 throw new Error('itemId does not exist');
-            }),
-        body('email', 'Invalid email')
-            .isEmail()
-            .custom(async (email: string) => {
-                if (await UserModel.exists({email})) {
-                    return true;
-                }
-                throw new Error('email does not exist');
             })
     ];
 };

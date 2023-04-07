@@ -38,19 +38,20 @@ router.post('/record', authenticate, validateRecordRequest(), async (req: Reques
 
     let response: ChosenItemRecord | string;
     let statusCode = HttpStatus.OK;
-    const {itemId, requestTime, email} = req.body;
+    const {itemId, requestTime} = req.body;
+    const {userId} = (req as AuthenticatedRequest).token;
 
     try {
         response = await addRecord({
-            email,
             itemId: new mongoose.Types.ObjectId(itemId),
+            userId: new mongoose.Types.ObjectId(userId),
             requestTime
         });
 
-        console.log(`Recorded chosen item. itemId: ${itemId}, requestTime: ${requestTime}, email: ${email}`);
+        console.log(`Recorded chosen item. itemId: ${itemId}, userId: ${userId}, requestTime: ${requestTime}`);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-        response = `Failed while trying to add chosen item record. itemId: ${itemId}, requestTime: ${requestTime}, email: ${email}. Error: ${error}`;
+        response = `Failed while trying to add chosen item record. itemId: ${itemId}, userId: ${userId}, requestTime: ${requestTime}. Error: ${error}`;
         console.log(response);
     }
 

@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
 import { ItemModel } from "./item.schema";
+import { UserModel } from "./user.schema";
 
 const Schema = mongoose.Schema;
 
 export interface ChosenItemRecord {
     id?: mongoose.Types.ObjectId,
     itemId: mongoose.Types.ObjectId,
-    email: string,
+    userId: mongoose.Types.ObjectId,
     requestTime: Date
 }
 
@@ -15,7 +16,10 @@ export const ChosenItemRecordSchema = new Schema<ChosenItemRecord>({
         type: mongoose.Schema.Types.ObjectId,
         ref: ItemModel.modelName
     },
-    email: String,
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: UserModel.modelName
+    },
     requestTime: Date
 });
 
