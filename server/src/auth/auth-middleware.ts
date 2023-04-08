@@ -21,7 +21,7 @@ export const authenticate = async (
   }
 
   const decoded = verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET);
-  if (!decoded) return res?.status(StatusCodes.UNAUTHORIZED).send({ response: "Invalid Token" });
+  if (!decoded) return res.status(StatusCodes.UNAUTHORIZED).send({ response: "Invalid Token" });
   (req as AuthenticatedRequest).token = decoded;
   return next();
 };

@@ -36,6 +36,7 @@ export const AddItemScreen = ({navigation, route}: AddItemScreenProps) => {
 
     const handleOnPress = () => {
         setImage('');
+        setImagesList([]);
         return axiosInstance.get(`/photos/${searchItem}`)
             .then((response) => setImagesList(response.data))
             .catch(console.error);
