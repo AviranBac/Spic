@@ -47,13 +47,13 @@ const getTimeString = () => {
     let timeString: TIME_STRINGS = TIME_STRINGS.MORNING;
     const time = new Date().getHours();
 
-    if (time > 21 || time < 5) {
+    if (time >= 21 || time < 5) {
         timeString = TIME_STRINGS.NIGHT;
-    } else if (time > 5 && time < 12) {
+    } else if (time >= 5 && time < 12) {
         timeString = TIME_STRINGS.MORNING;
-    } else if (time > 11 && time < 18) {
+    } else if (time >= 12 && time < 18) {
         timeString = TIME_STRINGS.NOON
-    } else if (time > 17 && time < 21) {
+    } else if (time >= 18 && time < 21) {
         timeString = TIME_STRINGS.EVENING
     }
 
@@ -82,7 +82,7 @@ export const HomeScreen = ({navigation}: HomeScreenProps) => {
                         {timeString} {username}
                         {timeString === TIME_STRINGS.MORNING && <> ☀️ </>}
                         {timeString === TIME_STRINGS.NOON && <> 🌞 </>}
-                        {timeString === TIME_STRINGS.EVENING && <> 🌝️ </>}
+                        {timeString === TIME_STRINGS.EVENING && <> 🌗 </>}
                         {timeString === TIME_STRINGS.NIGHT && <> 🌚 </>}
                     </StyledText>
                     <StyledText>

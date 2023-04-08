@@ -11,23 +11,16 @@ import {
     StyledText,
     StyledTextInput
 } from "../styles/AddItemScreenStyles";
-
-interface RouteProps {
-    route: {
-        params: {
-            category: {
-                _id: string
-                name: string,
-            }
-        }
-    }
-}
+import {StackScreenProps} from "@react-navigation/stack";
+import {HomeStackParamList} from "../utils/navigation-stack";
 
 const defaultColor = '#2196f3';
+type AddItemScreenProps = StackScreenProps<HomeStackParamList, 'AddItem'>;
 
-export const AddItemScreen = ({route}: RouteProps) => {
-    const category = route?.params?.category.name;
-    const categoryId = route?.params?.category._id;
+export const AddItemScreen = ({navigation, route}: AddItemScreenProps) => {
+    const {_id, name} = route.params.category;
+    const category = name;
+    const categoryId = _id;
     const [itemName, setItemName] = useState<string>('');
     const [searchItem, setSearchItem] = useState<string>('');
     const [image, setImage] = useState<string>('');
@@ -56,6 +49,7 @@ export const AddItemScreen = ({route}: RouteProps) => {
         })
             .then(response => {
                 console.log(response.data);
+                navigation.pop();
             })
             .catch(error => {
                 console.log(error);

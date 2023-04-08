@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingHorizontal: 10,
         gap: 10,
-        maxWidth: 150,
+        maxWidth: 200
     },
     itemText: {
         textAlign: 'center'

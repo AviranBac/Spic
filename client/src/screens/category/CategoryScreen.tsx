@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { StackScreenProps } from "@react-navigation/stack";
-import { HomeStackParamList } from "../../utils/navigation-stack";
-import { getItems, recordItemChosen } from "../../services/items.service";
-import { ClickableBox } from "../../components/ClickableBox";
-import { Item } from "../../models/item";
-import { ScrollView, StyleSheet, View } from "react-native";
-import { FullActionModal } from "./FullActionModal";
-import { CircleIcon } from "../../components/icons/CircleIcon";
+import React, {useEffect, useState} from "react";
+import {StackScreenProps} from "@react-navigation/stack";
+import {HomeStackParamList} from "../../utils/navigation-stack";
+import {getItems, recordItemChosen} from "../../services/items.service";
+import {ClickableBox} from "../../components/ClickableBox";
+import {Item} from "../../models/item";
+import {ScrollView, StyleSheet, View} from "react-native";
+import {FullActionModal} from "./FullActionModal";
+import {CircleIcon} from "../../components/icons/CircleIcon";
+import {useIsFocused} from "@react-navigation/native";
 
 type CategoryScreenProps = StackScreenProps<HomeStackParamList, 'Category'>;
 
@@ -16,6 +17,7 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
     const [activeItem, setActiveItem] = useState<Item | null>(null);
     const {category} = route.params;
     const {_id: categoryId, sentenceBeginning} = category;
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         navigation.setOptions({
@@ -24,9 +26,11 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
     }, [navigation]);
 
     useEffect(() => {
-        getItems(categoryId)
-            .then(setItems);
-    }, []);
+        if (isFocused) {
+            getItems(categoryId)
+                .then(setItems);
+        }
+    }, [isFocused]);
 
     const onItemPress = (item: Item) => {
         recordItemChosen(item)

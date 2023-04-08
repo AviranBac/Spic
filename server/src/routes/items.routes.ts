@@ -1,13 +1,13 @@
 import { authenticate, AuthenticatedRequest } from "../auth/auth-middleware";
 import { Request, Response, Router } from "express";
-import { getItemsByCategoryAndUserId } from "../db/dal/items.dal";
+import {addItem, getItemsByCategoryAndUserId} from "../db/dal/items.dal";
 import { validationResult } from "express-validator/check";
 import HttpStatus, { StatusCodes } from "http-status-codes";
 import { addRecord } from "../db/dal/chosen-item-records.dal";
 import mongoose from "mongoose";
 import { ChosenItemRecord } from "../db/schemas/chosen-item-record.schema";
 import { Item } from "../db/schemas/item.schema";
-import { validateRecordRequest } from "../validation/items.validation";
+import {validateAddItemRequest, validateRecordRequest} from "../validation/items.validation";
 
 const router = Router();
 
@@ -48,10 +48,10 @@ router.post('/record', authenticate, validateRecordRequest(), async (req: Reques
             requestTime
         });
 
-        console.log(`Recorded chosen item. itemId: ${itemId}, requestTime: ${requestTime}, email: ${email}`);
+        console.log(`Recorded chosen item. itemId: ${itemId}, userId: ${userId}, requestTime: ${requestTime}`);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-        response = `Failed while trying to add chosen item record. itemId: ${itemId}, requestTime: ${requestTime}, email: ${email}. Error: ${error}`;
+        response = `Failed while trying to add chosen item record. itemId: ${itemId}, userId: ${userId}, requestTime: ${requestTime}. Error: ${error}`;
         console.log(response);
     }
 
@@ -74,14 +74,14 @@ router.post('/', authenticate, validateAddItemRequest(), async (req: Request, re
         response = await addItem({
             name,
             imageUrl,
-            categoryId,
+            categoryId:new mongoose.Types.ObjectId(categoryId),
             userId: new mongoose.Types.ObjectId(userId)
         });
 
         console.log(`Added new item for userId ${userId}. Item: ${JSON.stringify(response)}`);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-        response = `Failed while trying to add chosen item record. itemId: ${itemId}, userId: ${userId}, requestTime: ${requestTime}. Error: ${error}`;
+        response = `Failed while trying to add new item. Name: ${name}, imageUrl: ${imageUrl}, categoryId: ${categoryId}, userId: ${userId}. Error: ${error}`;
         console.log(response);
     }
 
