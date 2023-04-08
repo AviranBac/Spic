@@ -1,19 +1,13 @@
-import { authenticate, AuthenticatedRequest } from "../auth/auth-middleware";
-import { Request, Response, Router } from "express";
-import { addItem, getItemsByCategoryAndUserId } from "../db/dal/items.dal";
-import HttpStatus, { StatusCodes } from "http-status-codes";
-import { Item } from "../db/schemas/item.schema";
+import {authenticate, AuthenticatedRequest} from "../auth/auth-middleware";
+import {Request, Response, Router} from "express";
+import {addItem, getAllItems, getItemsByCategoryAndUserId} from "../db/dal/items.dal";
+import HttpStatus, {StatusCodes} from "http-status-codes";
+import {Item} from "../db/schemas/item.schema";
 import mongoose from "mongoose";
-import { getAllItems } from "../db/dal/items.dal";
-import { validationResult } from "express-validator/check";
-import HttpStatus, { StatusCodes } from "http-status-codes";
-import { addRecord } from "../db/dal/chosen-item-records.dal";
-import mongoose from "mongoose";
-import { ChosenItemRecord } from "../db/schemas/chosen-item-record.schema";
-import { Item } from "../db/schemas/item.schema";
-import { validateRecordRequest } from "../validation/items.validation";
-import { validationResult } from "express-validator/check";
-import { validateAddItemRequest } from "../validation/items.validation";
+import {validationResult} from "express-validator/check";
+import {addRecord} from "../db/dal/chosen-item-records.dal";
+import {ChosenItemRecord} from "../db/schemas/chosen-item-record.schema";
+import {validateAddItemRequest, validateRecordRequest} from "../validation/items.validation";
 
 const router = Router();
 
@@ -33,7 +27,8 @@ router.get('/:categoryId/', authenticate, async (req: Request, res: Response) =>
     }
 
     res.status(statusCode).send(response);
-router.get('/:categoryId/:email', authenticate, async (req: Request, res:Response) => {
+});
+router.get('/:categoryId/:email', authenticate, async (req: Request, res: Response) => {
     const {categoryId, email} = req.params;
 
     let response: Item[] | string;
@@ -55,13 +50,13 @@ router.get('/:categoryId/:email', authenticate, async (req: Request, res:Respons
 router.post('/record', authenticate, validateRecordRequest(), async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        res.status(HttpStatus.BAD_REQUEST).json({ errors: errors.array() });
+        res.status(HttpStatus.BAD_REQUEST).json({errors: errors.array()});
         return;
     }
 
     let response: ChosenItemRecord | string;
     let statusCode = HttpStatus.OK;
-    const { itemId, requestTime, email } = req.body;
+    const {itemId, requestTime, email} = req.body;
 
     try {
         response = await addRecord({

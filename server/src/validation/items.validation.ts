@@ -1,6 +1,7 @@
-import { body } from "express-validator/check";
-import { UserModel } from "../db/schemas/user.schema";
-import { ItemModel } from "../db/schemas/item.schema";
+import {body} from "express-validator/check";
+import {UserModel} from "../db/schemas/user.schema";
+import {ItemModel} from "../db/schemas/item.schema";
+import {CategoryModel} from "../db/schemas/category.schema";
 
 export const validateRecordRequest = () => {
     return [
@@ -20,8 +21,8 @@ export const validateRecordRequest = () => {
                     return true;
                 }
                 throw new Error('email does not exist');
-import { CategoryModel } from "../db/schemas/category.schema";
-
+            })]
+}
 export const validateAddItemRequest = () => {
     return [
         body('name', 'Invalid name')

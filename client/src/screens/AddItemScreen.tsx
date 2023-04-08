@@ -1,4 +1,4 @@
-import {NativeSyntheticEvent, ScrollView, TextInputChangeEventData, TouchableOpacity, View} from "react-native";
+import {Image, NativeSyntheticEvent, ScrollView, TextInputChangeEventData, TouchableOpacity, View} from "react-native";
 import React, {useState} from "react";
 import axiosInstance from "../services/axios.service";
 import {
@@ -16,7 +16,8 @@ interface RouteProps {
     route: {
         params: {
             category: {
-                name: string
+                _id: string
+                name: string,
             }
         }
     }
@@ -25,8 +26,8 @@ interface RouteProps {
 const defaultColor = '#2196f3';
 
 export const AddItemScreen = ({route}: RouteProps) => {
-
     const category = route?.params?.category.name;
+    const categoryId = route?.params?.category._id;
     const [itemName, setItemName] = useState<string>('');
     const [searchItem, setSearchItem] = useState<string>('');
     const [image, setImage] = useState<string>('');
@@ -48,7 +49,17 @@ export const AddItemScreen = ({route}: RouteProps) => {
     };
 
     const handleSave = () => {
-        console.log('save')
+        axiosInstance.post('/items/', {
+            name: itemName,
+            imageUrl: image,
+            categoryId,
+        })
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
     };
 
     return (
@@ -85,7 +96,7 @@ export const AddItemScreen = ({route}: RouteProps) => {
                 {
                     image !== '' && <SelectedImageWrapper>
                         <StyledText>התמונה שנבחרה:</StyledText>
-                        <StyledImage source={{uri: image}}/>
+                        <Image source={{uri: image}} style={{width: 300, height: 300}}/>
                     </SelectedImageWrapper>
                 }
             </AddItemScreenWrapper>
