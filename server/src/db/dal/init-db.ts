@@ -2,60 +2,60 @@ import { addCategory } from "./categories.dal";
 import { Category } from "../schemas/category.schema";
 
 const categories: Category[] = [{
-    name: 'להתלבש',
+    name: 'לבוש',
     sentenceBeginning: 'אני רוצה ללבוש',
     imageUrl: 'https://i.ibb.co/bB4TzqW/clothes.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
     name: 'רגשות',
     sentenceBeginning: 'אני מרגיש',
     imageUrl: 'https://i.ibb.co/B4Vdk8P/emotions.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
-    name: 'לאכול',
+    name: 'אוכל',
     sentenceBeginning: 'אני רוצה',
     imageUrl: 'https://i.ibb.co/qCKxqfs/food.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
-    name: 'לשחק',
+    name: 'משחק',
     sentenceBeginning: 'אני רוצה לשחק',
     imageUrl: 'https://i.ibb.co/PNfDnJM/games.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
     name: 'היגיינה',
     sentenceBeginning: 'אני רוצה',
     imageUrl: 'https://i.ibb.co/Y7NQ03j/hygiene.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
     name: 'ספורט',
     sentenceBeginning: 'אני רוצה',
     imageUrl: 'https://i.ibb.co/SK6rnBQ/sport.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
     name: 'משפחה וחברים',
     sentenceBeginning: '',
     imageUrl: 'https://i.ibb.co/Gn7QZfr/family.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
     name: 'מקומות',
     sentenceBeginning: 'אני רוצה ללכת ל',
     imageUrl: 'https://i.ibb.co/XLdy7rp/locations.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
     name: 'לימודים',
     sentenceBeginning: 'אני רוצה את ה',
     imageUrl: 'https://i.ibb.co/d2qNZXP/study.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
     name: 'צפייה',
     sentenceBeginning: 'אני רוצה לראות',
     imageUrl: 'https://i.ibb.co/8cbj9VF/watch.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 },{
     name: 'שיחה',
     sentenceBeginning: '',
     imageUrl: 'https://i.ibb.co/x6KsbCF/chat.jpg',
-    items: []
+    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים'
 }];
 
 export const initCategoriesDb = async () => {

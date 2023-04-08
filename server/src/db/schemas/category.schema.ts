@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
-import { Item, ItemModelSchema } from "./item.schema";
 
 const Schema = mongoose.Schema;
 
-export interface Category{
-    id?: mongoose.ObjectId
+export interface Category {
+    id?: mongoose.Types.ObjectId
     name: string,
     sentenceBeginning: string,
     imageUrl: string
