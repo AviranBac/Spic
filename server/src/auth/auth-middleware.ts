@@ -1,7 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { NextFunction, Request, Response } from "express";
-import { verifyToken } from "../utils/jwt";
-import { UserIDJwtPayload } from "../utils/jwt";
+import { UserIDJwtPayload, verifyToken } from "../utils/jwt";
 
 export interface AuthenticatedRequest extends Request {
   token: UserIDJwtPayload;

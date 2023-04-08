@@ -3,4 +3,5 @@ export interface Item {
     name: string;
     imageUrl: string;
     categoryId: string;
+    userId?: string;
 }

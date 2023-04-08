@@ -14,11 +14,6 @@ export const selectUsername = createSelector(
     (userSession: IUserSession | null) => userSession?.username
 );
 
-export const selectEmail = createSelector(
-    [selectUserSession],
-    (userSession: IUserSession | null) => userSession?.email
-);
-
 export const selectGender = createSelector(
     [selectUserSession],
     (userSession: IUserSession | null) => userSession?.gender
