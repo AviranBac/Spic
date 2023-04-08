@@ -21,8 +21,8 @@ export const ItemModelSchema = new Schema<Item>({
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: UserModel.modelName, 
-        optional: true 
+        ref: UserModel.modelName,
+        optional: true
     },
 });
 

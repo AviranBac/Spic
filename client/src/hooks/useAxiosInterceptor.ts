@@ -32,7 +32,7 @@ const useAxiosInterceptor = () => {
                 const originalConfig = err.config;
 
                 if (originalConfig.url !== "/auth/login") {
-                    if (err.response.status === HttpStatusCode.Unauthorized && !originalConfig._retry) {
+                    if (err.response?.status === HttpStatusCode.Unauthorized && !originalConfig._retry) {
                         originalConfig._retry = true;
 
                         const refreshResponse: AxiosResponse<RefreshResponse> = await axiosInstance.post("/auth/refresh", {
@@ -45,7 +45,7 @@ const useAxiosInterceptor = () => {
                             await UserSessionService.setLocalRefreshToken(refresh_token);
                             return axiosInstance(originalConfig);
                         }
-                    } else if (err.response.status === HttpStatusCode.Forbidden) {
+                    } else if (err.response?.status === HttpStatusCode.Forbidden) {
                         await dispatch(logoutThunk());
                         return Promise.reject('Refresh token expired');
                     }
