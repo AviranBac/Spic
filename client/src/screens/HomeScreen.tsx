@@ -71,7 +71,7 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
         getCategories(gender).then((response) => {
             setCategories(response);
         })
-    }, []);
+    }, [gender]);
 
     const userGenderString = gender === 'FEMALE' ? 'תרצי' : 'תרצה';
 
