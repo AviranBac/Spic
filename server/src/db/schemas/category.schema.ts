@@ -5,8 +5,8 @@ const Schema = mongoose.Schema;
 export interface Category {
     id?: mongoose.Types.ObjectId
     name: string,
-    imageUrl: string,
-    sentenceBeginning: string
+    sentenceBeginning: string,
+    imageUrl: string
 }
 const CategoryModelSchema = new Schema<Category>({
     name: String,

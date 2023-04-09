@@ -21,7 +21,7 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
 
     useEffect(() => {
         navigation.setOptions({
-            title: sentenceBeginning + '...'
+            title: sentenceBeginning ? sentenceBeginning.trim() + '...' : ''
         });
     }, [navigation]);
 

@@ -22,7 +22,7 @@ export const FullActionModal = ({
                                     visible
                                 }: FullActionModalProps) => {
     const userGender = useAppSelector(selectGender);
-    const fullActionText: string = `${sentenceBeginning} ${item?.name}`;
+    const fullActionText: string = `${sentenceBeginning}${item?.name}`;
 
     return (
         <Modal animationType="fade"

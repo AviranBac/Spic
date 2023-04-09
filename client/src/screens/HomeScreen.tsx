@@ -1,13 +1,14 @@
-import {ScrollView} from "react-native";
-import React, {useEffect, useState} from "react";
-import {ClickableBox} from "../components/ClickableBox";
+import { ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ClickableBox } from "../components/ClickableBox";
 import styled from "styled-components/native";
-import {getCategories} from "../services/categories.service";
-import {useAppSelector} from "../store/hooks";
-import {selectGender, selectUsername} from "../store/auth/auth.selectors";
-import {StackScreenProps} from "@react-navigation/stack";
-import {HomeStackParamList} from "../utils/navigation-stack";
-import {Category} from "../models/category";
+import { getCategories } from "../services/categories.service";
+import { useAppSelector } from "../store/hooks";
+import { selectGender, selectUsername } from "../store/auth/auth.selectors";
+import { StackScreenProps } from "@react-navigation/stack";
+import { HomeStackParamList } from "../utils/navigation-stack";
+import { Category } from "../models/category";
+import { Gender } from "../store/auth/auth.model";
 
 const Wrapper = styled.View`
   flex: 1;
@@ -60,17 +61,17 @@ const getTimeString = () => {
     return timeString;
 }
 
-export const HomeScreen = ({navigation}: HomeScreenProps) => {
+export const HomeScreen = ({ navigation }: HomeScreenProps) => {
     const [categories, setCategories] = useState<Category[]>([]);
     const username: string | undefined = useAppSelector(selectUsername);
-    const gender: string | undefined = useAppSelector(selectGender);
+    const gender: Gender | undefined = useAppSelector(selectGender);
     const timeString = getTimeString();
 
     useEffect(() => {
-        getCategories().then((response) => {
+        getCategories(gender).then((response) => {
             setCategories(response);
         })
-    }, []);
+    }, [gender]);
 
     const userGenderString = gender === 'FEMALE' ? 'תרצי' : 'תרצה';
 
@@ -93,10 +94,10 @@ export const HomeScreen = ({navigation}: HomeScreenProps) => {
                     {
                         categories?.map((category: Category) => {
                             return <ClickableBox name={category.name}
-                                                 imageUrl={category.imageUrl}
-                                                 onPress={() => navigation.navigate('Category', {category})}
-                                                 hasTtsIcon={false}
-                                                 key={category._id}/>
+                                imageUrl={category.imageUrl}
+                                onPress={() => navigation.navigate('Category', { category })}
+                                hasTtsIcon={false}
+                                key={category._id} />
                         })
                     }
                 </CategoriesWrapper>
