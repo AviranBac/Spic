@@ -7,6 +7,7 @@ import { useAppSelector } from "../store/hooks";
 interface ClickableBoxProps {
     name: string,
     imageUrl: string;
+    onPress?: () => void;
     hasTtsIcon?: boolean;
 }
 
@@ -22,7 +23,7 @@ const StyledImage = styled.Image`
   height: 150px;
 `;
 
-export const ClickableBox = ({name, imageUrl, hasTtsIcon = true}: ClickableBoxProps) => {
+export const ClickableBox = ({name, imageUrl, onPress = () => {}, hasTtsIcon = true}: ClickableBoxProps) => {
     const userGender = useAppSelector(selectGender);
 
     return (
@@ -33,9 +34,9 @@ export const ClickableBox = ({name, imageUrl, hasTtsIcon = true}: ClickableBoxPr
                                       gender={userGender!}
                                       style={{position: 'absolute', top: 3, left: 6, zIndex: 1}}/>
                 }
-                <TouchableOpacity>
+                <TouchableOpacity onPress={onPress}>
                     <StyledImage source={{uri: imageUrl}}/>
-                    <Button title={name}/>
+                    <Button title={name} onPress={onPress}/>
                 </TouchableOpacity>
             </RelativeView>
         </View>

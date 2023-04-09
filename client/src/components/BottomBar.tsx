@@ -5,6 +5,9 @@ import { FavoritesScreen } from "../screens/FavoritesScreen";
 import { HomeScreen } from "../screens/HomeScreen";
 import { CommonlyUsedScreen } from "../screens/CommonlyUsedScreen";
 import { SettingsScreen } from "../screens/SettingsScreen";
+import { HomeStack } from "../utils/navigation-stack";
+import { CategoryScreen } from "../screens/category/CategoryScreen";
+import { AddItemScreen } from "../screens/AddItemScreen";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -14,6 +17,20 @@ const TABS = {
     FAVORITES: 'מועדפים',
     SETTINGS: 'הגדרות משתמש'
 }
+
+const HomeStackContainer = () => (
+    <HomeStack.Navigator screenOptions={{title: ''}}>
+        <HomeStack.Screen name="Home"
+                          component={HomeScreen}
+                          options={{headerTransparent: true}}/>
+        <HomeStack.Screen name="Category"
+                          component={CategoryScreen}
+                          options={{headerTitleAlign: 'center', headerStyle: {backgroundColor: '#f2f2f2'}}}/>
+        <HomeStack.Screen name="AddItem"
+                          component={AddItemScreen}
+                          options={{headerTransparent: true}}/>
+    </HomeStack.Navigator>
+);
 
 export const BottomBar = () => {
     return (
@@ -29,7 +46,7 @@ export const BottomBar = () => {
                     tabBarLabel: TABS.SETTINGS,
                     tabBarIcon: ({color}) => (
                         <MaterialCommunityIcons name="account" color={color} size={25}/>
-                    ),
+                    )
                 }}
             />
             <Tab.Screen
@@ -38,7 +55,7 @@ export const BottomBar = () => {
                     tabBarLabel: TABS.FAVORITES,
                     tabBarIcon: ({color}) => (
                         <MaterialCommunityIcons name="star" color={color} size={25}/>
-                    ),
+                    )
                 }}
             />
             <Tab.Screen
@@ -47,16 +64,16 @@ export const BottomBar = () => {
                     tabBarLabel: TABS.COMMONLY_USED,
                     tabBarIcon: ({color}) => (
                         <MaterialCommunityIcons name="clock" color={color} size={25}/>
-                    ),
+                    )
                 }}
             />
             <Tab.Screen
-                name={TABS.HOME} component={HomeScreen}
+                name={TABS.HOME} component={HomeStackContainer}
                 options={{
                     tabBarLabel: TABS.HOME,
                     tabBarIcon: ({color}) => (
                         <MaterialCommunityIcons name="home" color={color} size={25}/>
-                    ),
+                    )
                 }}
             />
         </Tab.Navigator>

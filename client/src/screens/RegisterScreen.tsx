@@ -13,7 +13,7 @@ import {
 import { registerThunk } from "../store/auth/auth.slice";
 import { useAppDispatch } from "../store/hooks";
 import * as yup from "yup";
-import { AxiosResponse } from "axios/index";
+import { AxiosResponse } from "axios";
 import { HttpStatusCode } from "axios";
 import { Formik } from "formik";
 import { Gender } from "../store/auth/auth.model";
@@ -30,7 +30,7 @@ export interface RegisterFormDetails {
     confirmPassword: string,
     age: number,
     gender: Gender
-};
+}
 
 export const RegisterScreen = () => {
     const dispatch = useAppDispatch();

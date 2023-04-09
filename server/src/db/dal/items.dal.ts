@@ -1,4 +1,4 @@
-import { Item, ItemModel } from "../schemas/item.schema";
+import {Item, ItemModel} from "../schemas/item.schema";
 import mongoose from "mongoose";
 
 export const getAllItems = async (): Promise<Item[]> => ItemModel.find();
@@ -11,7 +11,6 @@ export const getItemsByCategoryAndUserId = async (categoryId: mongoose.Types.Obj
     $or: [{ userId }, { userId: { $exists: false } }]
   };
 
-  const items = await ItemModel.find(query).exec();
-  return items;
+  return await ItemModel.find(query).exec();
 };
   

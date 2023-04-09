@@ -1,18 +1,14 @@
 import React, { FC } from 'react';
 import { useAppSelector } from "../store/hooks";
 import { selectUserSession } from "../store/auth/auth.selectors";
-import { Stack } from '../utils/navigation-stack';
+import { UnauthenticatedStack } from '../utils/navigation-stack';
 import { LoginScreen } from "../screens/LoginScreen";
 import { RegisterScreen } from "../screens/RegisterScreen";
 import { IUserSession } from "../store/auth/auth.model";
 import { BottomBar } from "./BottomBar";
 import MainAppBar from "./MainAppBar";
 import { NavigationContainer } from "@react-navigation/native";
-import styled from "styled-components/native";
-
-const Wrapper = styled.Modal`
-  direction: rtl;
-`
+import { View } from "react-native";
 
 const NavigationManager: FC = () => {
     const userSession: IUserSession | null = useAppSelector(selectUserSession);
@@ -20,15 +16,15 @@ const NavigationManager: FC = () => {
     return (
         <NavigationContainer>
             {userSession ? (
-                <Wrapper>
+                <View style={{flex: 1}}>
                     <MainAppBar/>
                     <BottomBar/>
-                </Wrapper>
+                </View>
             ) : (
-                <Stack.Navigator screenOptions={{headerTransparent: true, title: ''}}>
-                    <Stack.Screen name="Login" component={LoginScreen}/>
-                    <Stack.Screen name="Register" component={RegisterScreen}/>
-                </Stack.Navigator>
+                <UnauthenticatedStack.Navigator screenOptions={{headerTransparent: true, title: ''}}>
+                    <UnauthenticatedStack.Screen name="Login" component={LoginScreen}/>
+                    <UnauthenticatedStack.Screen name="Register" component={RegisterScreen}/>
+                </UnauthenticatedStack.Navigator>
             )}
         </NavigationContainer>
     );

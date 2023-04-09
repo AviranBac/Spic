@@ -20,7 +20,7 @@ const getPhotos = async (searchQuery: string): Promise<string[]> => {
     photos = response.response?.results.map((result: PhotoApi.Basic) => result.urls.regular) ?? [];
     console.log(`Got ${photos.length} photos from Unsplash API, searchQuery: ${searchQuery}`);
   } catch (error) {
-    console.log(`Failed while fetching photos: ${error}`);
+    console.log(`Failed while fetching photos with searchQuery ${searchQuery}. Error: ${JSON.stringify(error)}`);
   }
   return photos;
 };

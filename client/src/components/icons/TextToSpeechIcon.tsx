@@ -2,21 +2,27 @@ import useTextToSpeech, { UseTextToSpeechOutput } from "../../hooks/useTextToSpe
 import SpeakerSvgIcon from "./SpeakerSvgIcon";
 import { Gender } from "../../store/auth/auth.model";
 import { StyleProp, ViewStyle } from "react-native";
+import { useEffect } from "react";
 
 type TextToSpeechIconProps = {
     text: string;
     gender: Gender;
     style?: StyleProp<ViewStyle>;
+    initialPlay?: boolean
 }
 
-const TextToSpeechIcon = ({text, gender, style}: TextToSpeechIconProps): JSX.Element => {
-    const {playing, loadAndPlayAudioFn}: UseTextToSpeechOutput = useTextToSpeech({text, gender});
+const TextToSpeechIcon = ({text, gender, style, initialPlay = false}: TextToSpeechIconProps): JSX.Element => {
+    const {loading, playing, loadAndPlayAudioFn, forceStopFn}: UseTextToSpeechOutput = useTextToSpeech({text, gender});
 
     const pressHandler: () => void = async () => {
         await loadAndPlayAudioFn();
     }
 
-    return <SpeakerSvgIcon playing={playing} onPress={pressHandler} style={style} />;
+    useEffect(() => {
+        initialPlay ? pressHandler() : forceStopFn();
+    }, [initialPlay]);
+
+    return <SpeakerSvgIcon loading={loading} playing={playing} onPress={pressHandler} style={style} />;
 };
 
 export default TextToSpeechIcon;

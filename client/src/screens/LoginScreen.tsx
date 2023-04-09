@@ -10,14 +10,14 @@ import {
     View,
 } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamList } from "../utils/navigation-stack";
+import { UnauthenticatedStackParamList } from "../utils/navigation-stack";
 import { loginThunk } from "../store/auth/auth.slice";
 import { useAppDispatch } from "../store/hooks";
 import { Formik } from "formik";
 import * as yup from 'yup';
 import { AxiosResponse } from "axios";
 
-type LoginScreenProps = StackScreenProps<RootStackParamList>;
+type LoginScreenProps = StackScreenProps<UnauthenticatedStackParamList>;
 export interface LoginFormDetails {
     email: string,
     password: string
