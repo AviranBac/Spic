@@ -7,13 +7,11 @@ export interface Category {
     name: string,
     sentenceBeginning: string,
     imageUrl: string
-    items: Array<Item>
 }
 const CategoryModelSchema = new Schema<Category>({
     name: String,
     imageUrl: String,
-    sentenceBeginning: String,
-    items: [ItemModelSchema]
+    sentenceBeginning: String
 });
 
 export const CategoryModel = mongoose.model<Category>("Category", CategoryModelSchema);
