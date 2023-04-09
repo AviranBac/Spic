@@ -38,7 +38,7 @@ const categoriesWithItems: CategoryWithItems[] = [{
     name: 'ספורט',
     sentenceBeginning: 'אני רוצה',
     imageUrl: 'https://i.ibb.co/SK6rnBQ/sport.jpg',
-    itemNames: ['כדורסל', 'כדורגל', 'ריצה', 'קפיצה', 'התעמלות', 'כדורעף']
+    itemNames: ['לשחק כדורסל', 'לשחק כדורגל', 'לרוץ', 'לקפוץ', 'להתעמל', 'לשחק כדורעף']
 },{
     name: 'משפחה וחברים',
     sentenceBeginning: '',
@@ -51,7 +51,7 @@ const categoriesWithItems: CategoryWithItems[] = [{
     itemNames: ['בית', 'בית ספר', 'יער', 'חוג', 'משחקיה', 'קניון', 'מגרש']
 },{
     name: 'לימודים',
-    sentenceBeginning: 'אני רוצה את ה',
+    sentenceBeginning: 'אני רוצה',
     imageUrl: 'https://i.ibb.co/d2qNZXP/study.jpg',
     itemNames: ['מחק', 'עיפרון', 'ספר', 'מחברת', 'מורה', 'שיעור', 'הפסקה']
 },{
