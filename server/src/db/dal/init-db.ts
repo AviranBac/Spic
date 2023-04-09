@@ -11,34 +11,34 @@ interface CategoryWithItems extends Category {
 
 const categoriesWithItems: CategoryWithItems[] = [{
     name: 'לבוש',
-    sentenceBeginning: 'אני רוצה ללבוש',
+    sentenceBeginning: 'אני רוצה ללבוש ',
     imageUrl: 'https://i.ibb.co/bB4TzqW/clothes.jpg',
     itemNames: ['חולצה', 'מכנס', 'שמלה', 'חצאית', 'נעליים', 'כובע', 'מעיל']
 },{
     name: 'רגשות',
-    sentenceBeginning: 'אני מרגיש',
+    sentenceBeginning: 'אני מרגיש ',
     imageUrl: 'https://i.ibb.co/B4Vdk8P/emotions.jpg',
     itemNames: ['בלבול', 'רעב', 'עייפות', 'עצב', 'כעס', 'שנאה', 'אהבה']
 },{
     name: 'אוכל',
-    sentenceBeginning: 'אני רוצה',
+    sentenceBeginning: 'אני רוצה ',
     imageUrl: 'https://i.ibb.co/qCKxqfs/food.jpg',
     itemNames: ['פיצה', 'המבורגר', 'קולה', 'בננה', 'גלידה', 'שוקולד', 'מלפפון']
 },{
     name: 'משחק',
-    sentenceBeginning: 'אני רוצה לשחק',
+    sentenceBeginning: 'אני רוצה לשחק ',
     imageUrl: 'https://i.ibb.co/PNfDnJM/games.jpg',
     itemNames: ['כדורסל', 'כדורגל', 'לגו', 'פאזל', 'מחשב', 'בובות', 'קוביות']
 },{
     name: 'היגיינה',
-    sentenceBeginning: 'אני רוצה',
+    sentenceBeginning: 'אני רוצה ',
     imageUrl: 'https://i.ibb.co/Y7NQ03j/hygiene.jpg',
     itemNames: ['לנקות', 'להתקלח', 'לשטוף ידיים', 'לצחצח שיניים', 'שירותים']
 },{
     name: 'ספורט',
-    sentenceBeginning: 'אני רוצה',
+    sentenceBeginning: 'אני רוצה ',
     imageUrl: 'https://i.ibb.co/SK6rnBQ/sport.jpg',
-    itemNames: ['לשחק כדורסל', 'לשחק כדורגל', 'לרוץ', 'לקפוץ', 'להתעמל', 'לשחק כדורעף']
+    itemNames: ['לשחק ', 'לשחק כדורגל', 'לרוץ', 'לקפוץ', 'להתעמל', 'לשחק כדורעף']
 },{
     name: 'משפחה וחברים',
     sentenceBeginning: '',
@@ -51,12 +51,12 @@ const categoriesWithItems: CategoryWithItems[] = [{
     itemNames: ['בית', 'בית ספר', 'יער', 'חוג', 'משחקיה', 'קניון', 'מגרש']
 },{
     name: 'לימודים',
-    sentenceBeginning: 'אני רוצה',
+    sentenceBeginning: 'אני רוצה ',
     imageUrl: 'https://i.ibb.co/d2qNZXP/study.jpg',
     itemNames: ['מחק', 'עיפרון', 'ספר', 'מחברת', 'מורה', 'שיעור', 'הפסקה']
 },{
     name: 'צפייה',
-    sentenceBeginning: 'אני רוצה לראות',
+    sentenceBeginning: 'אני רוצה לראות ',
     imageUrl: 'https://i.ibb.co/8cbj9VF/watch.jpg',
     itemNames: ['טלוויזיה', 'סרט', 'סדרה', 'מופע', 'כוכבים']
 },{
