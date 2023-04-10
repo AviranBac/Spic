@@ -20,7 +20,7 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
         console.log(`Sending ${response.length} favorite items. userId: ${userId}`);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-        response = `Failed while trying to get items. userId: ${userId}. Error: ${error}`;
+        response = `Failed while trying to get favorite items. userId: ${userId}. Error: ${error}`;
         console.log(response);
     }
 
