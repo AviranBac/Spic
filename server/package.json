@@ -19,6 +19,7 @@
     "express-validator": "^6.15.0",
     "http-status-codes": "^2.2.0",
     "jsonwebtoken": "^9.0.0",
+    "lodash": "^4.17.21",
     "mongoose": "^6.8.3",
     "node-fetch": "^2.6.9",
     "unsplash-js": "^7.0.15"
@@ -28,6 +29,7 @@
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.15",
     "@types/jsonwebtoken": "^9.0.1",
+    "@types/lodash": "^4.14.192",
     "@types/mongoose": "^5.11.97",
     "@types/node": "^18.11.18",
     "@types/node-fetch": "^2.6.3",
