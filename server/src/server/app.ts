@@ -10,6 +10,7 @@ import categoriesRouters from "../routes/categories.routes";
 import itemsRouters from "../routes/items.routes";
 import photosRouters from "../routes/photos.routes";
 import ttsRouters from '../routes/text-to-speech.routes';
+import favoriteRouters from "../routes/favorites.routes";
 
 export const app = express();
 
@@ -26,6 +27,7 @@ app.use(
 app.use("/auth", authRouters);
 app.use("/categories", categoriesRouters);
 app.use("/items", itemsRouters);
+app.use("/favorites", favoriteRouters);
 app.use('/photos', photosRouters);
 app.use('/tts', ttsRouters);
 

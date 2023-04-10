@@ -13,4 +13,3 @@ export const getItemsByCategoryAndUserId = async (categoryId: mongoose.Types.Obj
 
   return await ItemModel.find(query).exec();
 };
-  
