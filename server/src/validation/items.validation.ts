@@ -11,7 +11,7 @@ export const validateRecordRequest = () => {
         body('itemId', 'Invalid itemId')
             .isString()
             .custom(async (itemId: string) => {
-                if (await ItemModel.findById(itemId)) {
+                if (await ItemModel.findById(itemId).lean()) {
                     return true;
                 }
                 throw new Error('itemId does not exist');
@@ -27,8 +27,8 @@ export const validateRecordRequest = () => {
 
                    const recommendedItemIdsInDb: string[] = (await ItemModel.find({
                        id: { $in: recommendedItemIds.map(id => new mongoose.Types.ObjectId(id))}
-                   }))
-                       .map(item => item.id.toString());
+                   }).lean())
+                       .map(item => item._id.toString());
 
                    const idsDifference: string[] = difference(recommendedItemIds, recommendedItemIdsInDb);
 
@@ -38,7 +38,8 @@ export const validateRecordRequest = () => {
                }
 
                return true;
-            })]
+            })
+    ]
 }
 export const validateAddItemRequest = () => {
     return [
@@ -51,7 +52,7 @@ export const validateAddItemRequest = () => {
         body('categoryId', 'Invalid categoryId')
             .isString()
             .custom(async (categoryId: string) => {
-                if (await CategoryModel.findById(categoryId)) {
+                if (await CategoryModel.findById(categoryId).lean()) {
                     return true;
                 }
                 throw new Error('categoryId does not exist');

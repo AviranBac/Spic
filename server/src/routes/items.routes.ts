@@ -5,7 +5,6 @@ import { validationResult } from "express-validator/check";
 import HttpStatus, { StatusCodes } from "http-status-codes";
 import { addRecord } from "../db/dal/chosen-item-records.dal";
 import mongoose from "mongoose";
-import { ChosenItemRecord } from "../db/schemas/chosen-item-record.schema";
 import { Item } from "../db/schemas/item.schema";
 import { validateAddItemRequest, validateRecordRequest } from "../validation/items.validation";
 import { upsertFeedbacks } from "../services/feedback";
@@ -37,7 +36,7 @@ router.post('/record', authenticate, validateRecordRequest(), async (req: Reques
         return;
     }
 
-    let response: ChosenItemRecord | string;
+    let response: string = "";
     let statusCode = HttpStatus.OK;
     const {
         itemId,
@@ -47,20 +46,22 @@ router.post('/record', authenticate, validateRecordRequest(), async (req: Reques
     const {userId}: { userId: string } = (req as AuthenticatedRequest).token;
 
     try {
-        response = await addRecord({
-            itemId: new mongoose.Types.ObjectId(itemId),
-            userId: new mongoose.Types.ObjectId(userId),
-            requestTime
-        });
-        console.log(`Recorded chosen item. itemId: ${itemId}, userId: ${userId}, requestTime: ${requestTime}`);
+        const handleAddRecord: () => Promise<void> = async () => {
+            await addRecord({
+                itemId: new mongoose.Types.ObjectId(itemId),
+                userId: new mongoose.Types.ObjectId(userId),
+                requestTime
+            });
+            console.log(`Recorded chosen item. itemId: ${itemId}, userId: ${userId}, requestTime: ${requestTime}`);
+        };
 
-        if (recommendedItemIds) {
-            await upsertFeedbacks(
-                recommendedItemIds,
-                itemId,
-                new mongoose.Types.ObjectId(userId),
-            );
-        }
+        const handleUpsertFeedbacks: () => Promise<void> = async () => {
+            if (recommendedItemIds) {
+                await upsertFeedbacks(recommendedItemIds, itemId, new mongoose.Types.ObjectId(userId));
+            }
+        };
+
+        await Promise.all([handleAddRecord(), handleUpsertFeedbacks()]);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
         response = `Failed while trying to add chosen item record or update feedbacks. ` +

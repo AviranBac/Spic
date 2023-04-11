@@ -1,5 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { Require_id } from "mongoose";
 import { Feedback, FeedbackModel } from "../db/schemas/feedback.schema";
+
+type FeedbackWithId = Feedback & Require_id<Feedback>;
 
 export const upsertFeedbacks = async (recommendedItemIds: string[],
                                       chosenItemId: string,
@@ -19,21 +21,19 @@ export const upsertFeedbacks = async (recommendedItemIds: string[],
 const calculateUpdatedFeedbacks: (recommendedItemIds: string[],
                                   chosenItemId: string,
                                   userId: mongoose.Types.ObjectId) => Promise<Feedback[]> = async (recommendedItemIds, chosenItemId, userId) => {
-    const itemIdToUserFeedbackRecord: Record<string, Feedback> = (await FeedbackModel
-        .find({
-            userId,
-            itemId: {$in: recommendedItemIds.map(id => new mongoose.Types.ObjectId(id))}
-        })
+    const itemIdToUserFeedbackRecord: Record<string, FeedbackWithId> = (await FeedbackModel
+        .find({userId, itemId: {$in: recommendedItemIds.map(id => new mongoose.Types.ObjectId(id))}})
+        .lean()
         .exec())
-        .reduce((acc: Record<string, Feedback>, feedback: Feedback) => ({
+        .reduce((acc: Record<string, FeedbackWithId>, feedback: FeedbackWithId) => ({
             ...acc,
             [feedback.itemId.toString()]: feedback
         }), {});
 
     return recommendedItemIds.map((currentItemId: string) => {
-        const existingItemFeedback: Feedback | undefined = itemIdToUserFeedbackRecord[currentItemId];
+        const existingItemFeedback: FeedbackWithId | undefined = itemIdToUserFeedbackRecord[currentItemId];
         const updatedFeedback: Feedback = {
-            id: existingItemFeedback?.id || new mongoose.Types.ObjectId(),
+            id: existingItemFeedback?._id || new mongoose.Types.ObjectId(),
             itemId: new mongoose.Types.ObjectId(currentItemId),
             userId,
             positiveCounter: existingItemFeedback?.positiveCounter || 0,
