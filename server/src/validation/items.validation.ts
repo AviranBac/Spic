@@ -1,7 +1,6 @@
-import {body} from "express-validator/check";
-import {UserModel} from "../db/schemas/user.schema";
-import {ItemModel} from "../db/schemas/item.schema";
-import {CategoryModel} from "../db/schemas/category.schema";
+import { body } from "express-validator/check";
+import { ItemModel } from "../db/schemas/item.schema";
+import { CategoryModel } from "../db/schemas/category.schema";
 
 export const validateRecordRequest = () => {
     return [
