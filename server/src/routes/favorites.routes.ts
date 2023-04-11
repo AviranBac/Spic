@@ -34,17 +34,16 @@ router.post('/', authenticate, validateFavoriteItemRequest(), async (req: Reques
         return;
     }
 
-    let response: string;
+    let response: string | Favorite | null;
     let statusCode = HttpStatus.OK;
     const { itemId, action } = req.body;
     const { userId } = (req as AuthenticatedRequest).token;
 
     try {
-        const favoriteItem = { itemId: new mongoose.Types.ObjectId(itemId), userId: new mongoose.Types.ObjectId(userId) };
-        action === 'ADD' ? await addFavoriteItem(favoriteItem) : await removeFavoriteItem(favoriteItem);
+        const favoriteItem = { userId: new mongoose.Types.ObjectId(userId), itemId: new mongoose.Types.ObjectId(itemId) };
+        response = action === 'ADD' ? await addFavoriteItem(favoriteItem) : await removeFavoriteItem(favoriteItem);
 
-        response = `${action} favorite item. itemId: ${itemId}, userId: ${userId}`;
-        console.log(response);
+        console.log(`${action} favorite item. itemId: ${itemId}, userId: ${userId}`);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
         response = `Failed while trying to ${action} chosen favorite item record. itemId: ${itemId}, userId: ${userId}. Error: ${error}`;

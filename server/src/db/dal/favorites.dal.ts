@@ -2,30 +2,31 @@
 import mongoose from "mongoose";
 import { Favorite, FavoriteModel } from "../schemas/favorites.schema";
 import { Item, ItemModel } from "../schemas/item.schema";
-import { resolve } from "path";
+
+interface favoriteItem {
+    userId: mongoose.Types.ObjectId,
+    itemId: mongoose.Types.ObjectId
+} 
 
 export const getFavoriteItemsByUserId = async (userId: mongoose.Types.ObjectId): Promise<Item[]> => {
-    return FavoriteModel.aggregate([
-        { $match: { userId } },
-        { $group: {
-            "_id": "$itemId",
-        }},
-        {
-            $lookup: {
-                from: ItemModel.collection.name,
-                localField: "_id",
-                foreignField: "_id",
-                as: "item"
-            }
-        },
-        { $unwind: "$item" },
-        { $replaceWith: { $mergeObjects: ["$$ROOT", "$item"] } },
-        { $project: { item: 0 } },
-    ]);
+    const favoriteItems = await FavoriteModel.findOne({ userId });
+    return ItemModel.find({ _id: { $in: favoriteItems?.favoriteItemsId || [] } });
 }
 
-export const addFavoriteItem = async (favoriteItem: Favorite): Promise<Favorite | null>  => {
-    return FavoriteModel.findOneAndUpdate(favoriteItem, favoriteItem, {upsert: true });
+export const addFavoriteItem = async ({ userId, itemId }: favoriteItem): Promise<Favorite | null> => {
+    return FavoriteModel.findOneAndUpdate({ userId }, { $addToSet: { favoriteItemsId: itemId } }, { upsert: true, new: true });
 }
 
-export const removeFavoriteItem = async (favoriteItem: Favorite): Promise<Favorite> => FavoriteModel.remove(favoriteItem);
+export const removeFavoriteItem = async ({ userId, itemId }: favoriteItem): Promise<Favorite | null> => {
+    let updatedfavoriteItems = await FavoriteModel.findOneAndUpdate(
+        { userId },
+        { $pullAll: { favoriteItemsId: [itemId] } },
+        { new: true }
+    );
+
+    if (!updatedfavoriteItems?.favoriteItemsId.length) {
+        updatedfavoriteItems = await FavoriteModel.findByIdAndDelete(updatedfavoriteItems?._id);
+    }
+
+    return updatedfavoriteItems;
+}
