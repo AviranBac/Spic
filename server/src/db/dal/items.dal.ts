@@ -1,4 +1,4 @@
-import {Item, ItemModel} from "../schemas/item.schema";
+import { Item, ItemModel } from "../schemas/item.schema";
 import mongoose from "mongoose";
 
 export const getAllItems = async (): Promise<Item[]> => ItemModel.find();

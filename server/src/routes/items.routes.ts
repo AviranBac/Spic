@@ -1,13 +1,13 @@
 import { authenticate, AuthenticatedRequest } from "../auth/auth-middleware";
 import { Request, Response, Router } from "express";
-import {addItem, getItemsByCategoryAndUserId} from "../db/dal/items.dal";
+import { addItem, getItemsByCategoryAndUserId } from "../db/dal/items.dal";
 import { validationResult } from "express-validator/check";
 import HttpStatus, { StatusCodes } from "http-status-codes";
 import { addRecord } from "../db/dal/chosen-item-records.dal";
 import mongoose from "mongoose";
 import { ChosenItemRecord } from "../db/schemas/chosen-item-record.schema";
 import { Item } from "../db/schemas/item.schema";
-import {validateAddItemRequest, validateRecordRequest} from "../validation/items.validation";
+import { validateAddItemRequest, validateRecordRequest } from "../validation/items.validation";
 
 const router = Router();
 

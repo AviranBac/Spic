@@ -40,8 +40,9 @@ router.post('/', authenticate, validateFavoriteItemRequest(), async (req: Reques
     const { userId } = (req as AuthenticatedRequest).token;
 
     try {
-        const favoriteItem = { userId: new mongoose.Types.ObjectId(userId), itemId: new mongoose.Types.ObjectId(itemId) };
-        response = action === 'ADD' ? await addFavoriteItem(favoriteItem) : await removeFavoriteItem(favoriteItem);
+        response = action === 'ADD' ?
+            await addFavoriteItem(new mongoose.Types.ObjectId(userId), new mongoose.Types.ObjectId(itemId)) :
+            await removeFavoriteItem(new mongoose.Types.ObjectId(userId), new mongoose.Types.ObjectId(itemId));
 
         console.log(`${action} favorite item. itemId: ${itemId}, userId: ${userId}`);
     } catch (error) {

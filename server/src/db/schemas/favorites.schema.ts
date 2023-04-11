@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 export interface Favorite {
     id?: mongoose.Types.ObjectId
     userId: mongoose.Types.ObjectId,
-    favoriteItemsId: [mongoose.Types.ObjectId],
+    itemIds: [mongoose.Types.ObjectId]
 }
 
 const FavoriteModelSchema = new Schema<Favorite>({
@@ -15,10 +15,10 @@ const FavoriteModelSchema = new Schema<Favorite>({
         type: mongoose.Schema.Types.ObjectId,
         ref: UserModel.modelName
     },
-    favoriteItemsId: [{
+    itemIds: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: ItemModel.modelName
-    }],
+    }]
 });
 
 export const FavoriteModel = mongoose.model<Favorite>("favorite", FavoriteModelSchema);

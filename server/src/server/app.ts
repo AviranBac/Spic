@@ -26,8 +26,8 @@ app.use(
 
 app.use("/auth", authRouters);
 app.use("/categories", categoriesRouters);
-app.use("/items", itemsRouters);
 app.use("/favorites", favoriteRouters);
+app.use("/items", itemsRouters);
 app.use('/photos', photosRouters);
 app.use('/tts', ttsRouters);
 

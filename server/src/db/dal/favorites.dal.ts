@@ -1,32 +1,30 @@
-
 import mongoose from "mongoose";
 import { Favorite, FavoriteModel } from "../schemas/favorites.schema";
 import { Item, ItemModel } from "../schemas/item.schema";
 
-interface favoriteItem {
-    userId: mongoose.Types.ObjectId,
-    itemId: mongoose.Types.ObjectId
-} 
-
 export const getFavoriteItemsByUserId = async (userId: mongoose.Types.ObjectId): Promise<Item[]> => {
     const favoriteItems = await FavoriteModel.findOne({ userId });
-    return ItemModel.find({ _id: { $in: favoriteItems?.favoriteItemsId || [] } });
+    return ItemModel.find({ _id: { $in: favoriteItems?.itemIds || [] } });
 }
 
-export const addFavoriteItem = async ({ userId, itemId }: favoriteItem): Promise<Favorite | null> => {
-    return FavoriteModel.findOneAndUpdate({ userId }, { $addToSet: { favoriteItemsId: itemId } }, { upsert: true, new: true });
-}
-
-export const removeFavoriteItem = async ({ userId, itemId }: favoriteItem): Promise<Favorite | null> => {
-    let updatedfavoriteItems = await FavoriteModel.findOneAndUpdate(
+export const addFavoriteItem = async (userId: mongoose.Types.ObjectId, itemId: mongoose.Types.ObjectId): Promise<Favorite | null> => {
+    return FavoriteModel.findOneAndUpdate(
         { userId },
-        { $pullAll: { favoriteItemsId: [itemId] } },
+        { $addToSet: { itemIds: itemId } },
+        { upsert: true, new: true }
+    );
+}
+
+export const removeFavoriteItem = async (userId: mongoose.Types.ObjectId, itemId: mongoose.Types.ObjectId): Promise<Favorite | null> => {
+    let updatedFavoriteItems = await FavoriteModel.findOneAndUpdate(
+        { userId },
+        { $pullAll: { itemIds: [itemId] } },
         { new: true }
     );
 
-    if (!updatedfavoriteItems?.favoriteItemsId.length) {
-        updatedfavoriteItems = await FavoriteModel.findByIdAndDelete(updatedfavoriteItems?._id);
+    if (!updatedFavoriteItems?.itemIds.length) {
+        updatedFavoriteItems = await FavoriteModel.findByIdAndDelete(updatedFavoriteItems?._id);
     }
 
-    return updatedfavoriteItems;
+    return updatedFavoriteItems;
 }
