@@ -9,6 +9,11 @@ export const selectUserSession = createSelector(
     (authState: AuthState) => authState?.userSession
 );
 
+export const selectEmail = createSelector(
+    [selectUserSession],
+    (userSession: IUserSession | null) => userSession?.email
+);
+
 export const selectUsername = createSelector(
     [selectUserSession],
     (userSession: IUserSession | null) => userSession?.username
@@ -17,4 +22,9 @@ export const selectUsername = createSelector(
 export const selectGender = createSelector(
     [selectUserSession],
     (userSession: IUserSession | null) => userSession?.gender
+);
+
+export const selectAge = createSelector(
+    [selectUserSession],
+    (userSession: IUserSession | null) => userSession?.age
 );

@@ -65,11 +65,11 @@ export const login = async (req: Request, res: Response) => {
 
         user.refreshTokens = jwtUtils.updateRefreshTokensList(user.refreshTokens, refresh_token);
         user.refreshTokens = jwtUtils.clearExpiredTokens(user.refreshTokens);
-        const { email, username, gender } = user;
+        const { email, username, gender, age } = user;
         await user.save();
 
         status = StatusCodes.OK;
-        response = { email, username, gender, access_token, refresh_token };
+        response = { email, username, age, gender, access_token, refresh_token };
       } else {
         status = StatusCodes.BAD_REQUEST;
         response = "Invalid Credentials";

@@ -1,6 +1,6 @@
 import {Image, NativeSyntheticEvent, ScrollView, TextInputChangeEventData, TouchableOpacity, View} from "react-native";
 import React, {useState} from "react";
-import axiosInstance from "../services/axios.service";
+import axiosInstance from "../../services/axios.service";
 import {
     AddItemScreenWrapper,
     ContentWrapper,
@@ -10,9 +10,9 @@ import {
     StyledImage,
     StyledText,
     StyledTextInput
-} from "../styles/AddItemScreenStyles";
+} from "./AddItemScreenStyles";
 import {StackScreenProps} from "@react-navigation/stack";
-import {HomeStackParamList} from "../utils/navigation-stack";
+import {HomeStackParamList} from "../../utils/navigation-stack";
 
 const defaultColor = '#2196f3';
 type AddItemScreenProps = StackScreenProps<HomeStackParamList, 'AddItem'>;

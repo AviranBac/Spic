@@ -6,7 +6,7 @@ import { LoginScreen } from "../screens/LoginScreen";
 import { RegisterScreen } from "../screens/RegisterScreen";
 import { IUserSession } from "../store/auth/auth.model";
 import { BottomBar } from "./BottomBar";
-import MainAppBar from "./MainAppBar";
+import MainAppBar from "./MainAppBar/MainAppBar";
 import { NavigationContainer } from "@react-navigation/native";
 import { View } from "react-native";
 

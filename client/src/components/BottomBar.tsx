@@ -4,10 +4,10 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import { FavoritesScreen } from "../screens/FavoritesScreen";
 import { HomeScreen } from "../screens/HomeScreen";
 import { CommonlyUsedScreen } from "../screens/CommonlyUsedScreen";
-import { SettingsScreen } from "../screens/SettingsScreen";
+import { SettingsScreen } from "../screens/SettingsScreen/SettingsScreen";
 import { HomeStack } from "../utils/navigation-stack";
 import { CategoryScreen } from "../screens/category/CategoryScreen";
-import { AddItemScreen } from "../screens/AddItemScreen";
+import { AddItemScreen } from "../screens/AddItemScreen/AddItemScreen";
 
 const Tab = createMaterialBottomTabNavigator();
 

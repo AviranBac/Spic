@@ -8,7 +8,8 @@ export interface IUserSession {
     refresh_token: string,
     email: string,
     username: string,
-    gender: Gender
+    gender: Gender,
+    age: string
 }
 
 export interface AuthState {

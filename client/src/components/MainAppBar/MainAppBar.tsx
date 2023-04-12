@@ -1,9 +1,9 @@
 import React from "react";
-import { useAppDispatch } from "../store/hooks";
-import { logoutThunk } from "../store/auth/auth.slice";
-import { ImageWrapper, StyledAppBar, StyledIcon, StyledImage, Wrapper } from "../styles/MainAppBarStyles";
+import { useAppDispatch } from "../../store/hooks";
+import { logoutThunk } from "../../store/auth/auth.slice";
+import { ImageWrapper, StyledAppBar, StyledIcon, StyledImage, Wrapper } from "./MainAppBarStyles";
 
-const logo = require('../../assets/logo-spic.png');
+const logo = require('../../../assets/logo-spic.png');
 export const MainAppBar = () => {
     const dispatch = useAppDispatch();
 
