@@ -5,9 +5,9 @@ import { validationResult } from "express-validator/check";
 import HttpStatus, { StatusCodes } from "http-status-codes";
 import { addRecord } from "../db/dal/chosen-item-records.dal";
 import mongoose from "mongoose";
-import { ChosenItemRecord } from "../db/schemas/chosen-item-record.schema";
 import { Item } from "../db/schemas/item.schema";
 import { validateAddItemRequest, validateRecordRequest } from "../validation/items.validation";
+import { upsertFeedbacks } from "../services/feedback";
 
 const router = Router();
 
@@ -36,22 +36,37 @@ router.post('/record', authenticate, validateRecordRequest(), async (req: Reques
         return;
     }
 
-    let response: ChosenItemRecord | string;
+    let response: string = "";
     let statusCode = HttpStatus.OK;
-    const {itemId, requestTime} = req.body;
-    const {userId} = (req as AuthenticatedRequest).token;
+    const {
+        itemId,
+        requestTime,
+        recommendedItemIds
+    }: { itemId: string, requestTime: Date, recommendedItemIds: string[] | undefined } = req.body;
+    const {userId}: { userId: string } = (req as AuthenticatedRequest).token;
 
     try {
-        response = await addRecord({
-            itemId: new mongoose.Types.ObjectId(itemId),
-            userId: new mongoose.Types.ObjectId(userId),
-            requestTime
-        });
+        const handleAddRecord: () => Promise<void> = async () => {
+            await addRecord({
+                itemId: new mongoose.Types.ObjectId(itemId),
+                userId: new mongoose.Types.ObjectId(userId),
+                requestTime
+            });
+            console.log(`Recorded chosen item. itemId: ${itemId}, userId: ${userId}, requestTime: ${requestTime}`);
+        };
 
-        console.log(`Recorded chosen item. itemId: ${itemId}, userId: ${userId}, requestTime: ${requestTime}`);
+        const handleUpsertFeedbacks: () => Promise<void> = async () => {
+            if (recommendedItemIds) {
+                await upsertFeedbacks(recommendedItemIds, itemId, new mongoose.Types.ObjectId(userId));
+            }
+        };
+
+        await Promise.all([handleAddRecord(), handleUpsertFeedbacks()]);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-        response = `Failed while trying to add chosen item record. itemId: ${itemId}, userId: ${userId}, requestTime: ${requestTime}. Error: ${error}`;
+        response = `Failed while trying to add chosen item record or update feedbacks. ` +
+            `itemId: ${itemId}, userId: ${userId}, requestTime: ${requestTime}` +
+            `${recommendedItemIds ?? `, recommendedItemIds: ${recommendedItemIds}`}. Error: ${error}`;
         console.log(response);
     }
 
@@ -74,7 +89,7 @@ router.post('/', authenticate, validateAddItemRequest(), async (req: Request, re
         response = await addItem({
             name,
             imageUrl,
-            categoryId:new mongoose.Types.ObjectId(categoryId),
+            categoryId: new mongoose.Types.ObjectId(categoryId),
             userId: new mongoose.Types.ObjectId(userId)
         });
 

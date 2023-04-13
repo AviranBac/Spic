@@ -8,7 +8,7 @@ export const validateFavoriteItemRequest = () => {
         body('itemId', 'Invalid itemId')
             .isString()
             .custom(async (itemId: string) => {
-                if (await ItemModel.findById(itemId)) {
+                if (await ItemModel.findById(itemId).lean()) {
                     return true;
                 }
                 throw new Error('itemId does not exist');
