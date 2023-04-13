@@ -1,7 +1,6 @@
-import mongoose, { Require_id } from "mongoose";
+import mongoose from "mongoose";
 import { Feedback, FeedbackModel } from "../db/schemas/feedback.schema";
-
-type FeedbackWithId = Feedback & Require_id<Feedback>;
+import { FeedbackWithId, getFeedbacksByUserIdAndItemIds } from "../db/dal/feedbacks.dal";
 
 export const upsertFeedbacks = async (recommendedItemIds: string[],
                                       chosenItemId: string,
@@ -21,10 +20,8 @@ export const upsertFeedbacks = async (recommendedItemIds: string[],
 const calculateUpdatedFeedbacks: (recommendedItemIds: string[],
                                   chosenItemId: string,
                                   userId: mongoose.Types.ObjectId) => Promise<Feedback[]> = async (recommendedItemIds, chosenItemId, userId) => {
-    const itemIdToUserFeedbackRecord: Record<string, FeedbackWithId> = (await FeedbackModel
-        .find({userId, itemId: {$in: recommendedItemIds.map(id => new mongoose.Types.ObjectId(id))}})
-        .lean()
-        .exec())
+    const recommendedItemIdsObjectIds: mongoose.Types.ObjectId[] = recommendedItemIds.map(id => new mongoose.Types.ObjectId(id));
+    const itemIdToUserFeedbackRecord: Record<string, FeedbackWithId> = (await getFeedbacksByUserIdAndItemIds(userId, recommendedItemIdsObjectIds))
         .reduce((acc: Record<string, FeedbackWithId>, feedback: FeedbackWithId) => ({
             ...acc,
             [feedback.itemId.toString()]: feedback
