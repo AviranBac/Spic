@@ -28,7 +28,7 @@ export const getCommonlyUsedItems: (userId: mongoose.Types.ObjectId, currentTime
 
     const userFeedbacks: FeedbackWithId[] = await getFeedbacksByUserIdAndItemIds(userId, uniqueItemIds);
 
-    const commonlyUsedItemIds: mongoose.Types.ObjectId[] = uniqueUserRecords
+    const sortedCommonlyUsedItemIds: mongoose.Types.ObjectId[] = uniqueUserRecords
         .map((record: ChosenItemRecord) => {
             const optionalRecordFeedback: FeedbackWithId | undefined = userFeedbacks.find(feedbackRecord => feedbackRecord.itemId.toString() === record.itemId.toString());
             const feedbackValue: number = optionalRecordFeedback ? calculateFeedbackValue(optionalRecordFeedback) : 0;
@@ -41,15 +41,14 @@ export const getCommonlyUsedItems: (userId: mongoose.Types.ObjectId, currentTime
         .map(([itemId]) => itemId)
         .slice(0, MAXIMUM_SUGGESTED_ITEMS_AMOUNT);
 
-    console.log(commonlyUsedItemIds)
-    const unorderedItems: Record<string, Item> = (await getItemsById(commonlyUsedItemIds))
-        .reduce((acc, item) => ({[item.id!.toString()]: item}), {});
-    return commonlyUsedItemIds.map((itemId: mongoose.Types.ObjectId) => unorderedItems[itemId.toString()]);
+    const unorderedItems: Record<string, Item> = (await getItemsById(sortedCommonlyUsedItemIds))
+        .reduce((acc, item) => ({...acc, [item.id!.toString()]: item}), {});
+    return sortedCommonlyUsedItemIds.map((itemId: mongoose.Types.ObjectId) => unorderedItems[itemId.toString()]);
 }
 
 const getFrequencies = (userRecords: ChosenItemRecord[]): Record<string, number> => {
     const frequencies: Record<string, number> = {};
-    for (const { itemId } of userRecords) {
+    for (const {itemId} of userRecords) {
         frequencies[itemId.toString()] = frequencies[itemId.toString()] || 0;
         frequencies[itemId.toString()]++;
     }
@@ -90,7 +89,7 @@ const weightFunc = (frequencies: Record<string, number>,
                     currentTime: Date,
                     feedbackValue: number): number => {
     const itemId: string = record.itemId.toString();
-    const {requestTime}: {requestTime: Date} = record;
+    const {requestTime}: { requestTime: Date } = record;
 
     const frequencyWeight: number = frequencies[itemId];
 
@@ -119,5 +118,5 @@ const weightFunc = (frequencies: Record<string, number>,
 
 const calculateFeedbackValue = (feedback: Feedback): number => {
     return POSITIVE_FEEDBACK_MULTIPLIER * (feedback.positiveCounter) +
-           NEGATIVE_FEEDBACK_MULTIPLIER * (feedback.negativeCounter);
+        NEGATIVE_FEEDBACK_MULTIPLIER * (feedback.negativeCounter);
 }
