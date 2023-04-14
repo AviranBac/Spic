@@ -11,6 +11,15 @@ const POSITIVE_FEEDBACK_MULTIPLIER = 1;
 const NEGATIVE_FEEDBACK_MULTIPLIER = -0.1;
 const MAXIMUM_SUGGESTED_ITEMS_AMOUNT = 10;
 
+interface WeightMetadata {
+    itemId: string,
+    requestTime: Date,
+    frequencyWeight: number,
+    recencyWeight: number,
+    timeOfDayWeight: number,
+    feedbackWeight: number
+}
+
 export const getCommonlyUsedItems: (userId: mongoose.Types.ObjectId, currentTime: Date) => Promise<Item[]> = async (userId, currentTime) => {
     const userRecords: ChosenItemRecord[] = await getUserRecords(userId);
 
@@ -28,22 +37,15 @@ export const getCommonlyUsedItems: (userId: mongoose.Types.ObjectId, currentTime
 
     const userFeedbacks: FeedbackWithId[] = await getFeedbacksByUserIdAndItemIds(userId, uniqueItemIds);
 
-    const sortedCommonlyUsedItemIds: mongoose.Types.ObjectId[] = uniqueUserRecords
-        .map((record: ChosenItemRecord) => {
-            const optionalRecordFeedback: FeedbackWithId | undefined = userFeedbacks.find(feedbackRecord => feedbackRecord.itemId.toString() === record.itemId.toString());
-            const feedbackValue: number = optionalRecordFeedback ? calculateFeedbackValue(optionalRecordFeedback) : 0;
-            return [
-                record.itemId,
-                weightFunc(frequencies, weightsBySlidingTimeWindow, record, currentTime, feedbackValue)
-            ] as [mongoose.Types.ObjectId, number];
-        })
-        .sort(([itemId1, weight1], [itemId2, weight2]) => weight2 - weight1)
-        .map(([itemId]) => itemId)
-        .slice(0, MAXIMUM_SUGGESTED_ITEMS_AMOUNT);
+    const weightMetadatas: WeightMetadata[] = uniqueUserRecords.map((record: ChosenItemRecord) => {
+        const optionalRecordFeedback: FeedbackWithId | undefined = userFeedbacks.find(feedbackRecord => feedbackRecord.itemId.toString() === record.itemId.toString());
+        const feedbackValue: number = optionalRecordFeedback ? calculateFeedbackValue(optionalRecordFeedback) : 0;
+        return getWeightMetadata(frequencies, weightsBySlidingTimeWindow, record, currentTime, feedbackValue);
+    });
+    const normalizedWeightMetadatas: WeightMetadata[] = normalizeWeights(weightMetadatas);
+    console.log(normalizedWeightMetadatas);
 
-    const unorderedItems: Record<string, Item> = (await getItemsById(sortedCommonlyUsedItemIds))
-        .reduce((acc, item) => ({...acc, [item.id!.toString()]: item}), {});
-    return sortedCommonlyUsedItemIds.map((itemId: mongoose.Types.ObjectId) => unorderedItems[itemId.toString()]);
+    return await getSortedCommonlyUsedItems(normalizedWeightMetadatas);
 }
 
 const getFrequencies = (userRecords: ChosenItemRecord[]): Record<string, number> => {
@@ -66,7 +68,7 @@ const getWeightsBySlidingTimeWindow = (userRecords: ChosenItemRecord[],
         weightsBySlidingTimeWindow[itemId] = weightsBySlidingTimeWindow[itemId] || 0;
 
         // Count the number of occurrences of the same action in the sliding time window around the request time
-        const count = userRecords
+        weightsBySlidingTimeWindow[itemId] = userRecords
             .filter(currRecord => currRecord.itemId.toString() === itemId)
             .filter(currRecord => {
                 const {requestTime} = currRecord;
@@ -75,19 +77,16 @@ const getWeightsBySlidingTimeWindow = (userRecords: ChosenItemRecord[],
                 return Math.abs(currentTime.getTime() - currRecordTimeOfDayEpoch) <= SLIDING_WINDOW_SIZE;
             })
             .length;
-
-        // Adding +1 to avoid zero weight
-        weightsBySlidingTimeWindow[itemId] = (count + 1);
     }
 
     return weightsBySlidingTimeWindow;
 };
 
-const weightFunc = (frequencies: Record<string, number>,
-                    weightsBySlidingTimeWindow: Record<string, number>,
-                    record: ChosenItemRecord,
-                    currentTime: Date,
-                    feedbackValue: number): number => {
+const getWeightMetadata = (frequencies: Record<string, number>,
+                           weightsBySlidingTimeWindow: Record<string, number>,
+                           record: ChosenItemRecord,
+                           currentTime: Date,
+                           feedbackValue: number): WeightMetadata => {
     const itemId: string = record.itemId.toString();
     const {requestTime}: { requestTime: Date } = record;
 
@@ -104,19 +103,57 @@ const weightFunc = (frequencies: Record<string, number>,
     // x0: The midpoint parameter, which determines the value of x at which the function has a value of 0.5. Larger values of x0 shift the curve to the right.
     const feedbackWeight: number = 1 / (1 + Math.exp(-1 * feedbackValue));
 
-    console.log({
+    const weightMetadata: WeightMetadata = {
         itemId,
         requestTime,
         frequencyWeight,
         recencyWeight,
         timeOfDayWeight,
-        feedbackWeight,
-        result: frequencyWeight * recencyWeight * timeOfDayWeight * feedbackWeight
-    });
-    return (frequencyWeight * recencyWeight * timeOfDayWeight * feedbackWeight);
+        feedbackWeight
+    };
+
+    console.log(weightMetadata);
+    return weightMetadata;
 };
 
 const calculateFeedbackValue = (feedback: Feedback): number => {
     return POSITIVE_FEEDBACK_MULTIPLIER * (feedback.positiveCounter) +
         NEGATIVE_FEEDBACK_MULTIPLIER * (feedback.negativeCounter);
+}
+
+const normalizeWeights = (weightMetadatas: WeightMetadata[]): WeightMetadata[] => {
+    const minFrequencyWeight: number = Math.min(...weightMetadatas.map(metadata => metadata.frequencyWeight));
+    const maxFrequencyWeight: number = Math.max(...weightMetadatas.map(metadata => metadata.frequencyWeight));
+    const minTimeOfDayWeight: number = Math.min(...weightMetadatas.map(metadata => metadata.timeOfDayWeight));
+    const maxTimeOfDayWeight: number = Math.max(...weightMetadatas.map(metadata => metadata.timeOfDayWeight));
+
+    return weightMetadatas.map((metadata: WeightMetadata) => ({
+        ...metadata,
+        frequencyWeight: minMaxNormalize(metadata.frequencyWeight, maxFrequencyWeight, minFrequencyWeight, 1, Number.EPSILON),
+        timeOfDayWeight: minMaxNormalize(metadata.timeOfDayWeight, maxTimeOfDayWeight, minTimeOfDayWeight, 1, Number.EPSILON)
+    }));
+}
+
+const minMaxNormalize = (valueToNormalize: number, maxValue: number, minValue: number, desiredMaxValue: number, desiredMinValue: number): number => {
+    const normalizedValue: number = (valueToNormalize - minValue) / (maxValue - minValue) * (desiredMaxValue - desiredMinValue) + desiredMinValue;
+    return Math.min(normalizedValue, desiredMaxValue);
+};
+
+const getSortedCommonlyUsedItems = async (normalizedWeightMetadatas: WeightMetadata[]): Promise<Item[]> => {
+    const sortedCommonlyUsedItemIds: mongoose.Types.ObjectId[] = normalizedWeightMetadatas
+        .map((weightMetadata: WeightMetadata) => [
+            new mongoose.Types.ObjectId(weightMetadata.itemId),
+            calculateFinalWeight(weightMetadata),
+        ] as [mongoose.Types.ObjectId, number])
+        .sort(([itemId1, weight1], [itemId2, weight2]) => weight2 - weight1)
+        .map(([itemId]) => itemId)
+        .slice(0, MAXIMUM_SUGGESTED_ITEMS_AMOUNT);
+
+    const unorderedItems: Record<string, Item> = (await getItemsById(sortedCommonlyUsedItemIds))
+        .reduce((acc, item) => ({...acc, [item.id!.toString()]: item}), {});
+    return sortedCommonlyUsedItemIds.map((itemId: mongoose.Types.ObjectId) => unorderedItems[itemId.toString()]);
+}
+
+const calculateFinalWeight = (weightMetadata: WeightMetadata): number => {
+    return (weightMetadata.frequencyWeight * weightMetadata.recencyWeight * weightMetadata.timeOfDayWeight * weightMetadata.feedbackWeight);
 }
