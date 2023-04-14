@@ -8,8 +8,26 @@ import mongoose from "mongoose";
 import { Item } from "../db/schemas/item.schema";
 import { validateAddItemRequest, validateRecordRequest } from "../validation/items.validation";
 import { upsertFeedbacks } from "../services/feedback";
+import { getCommonlyUsedItems } from "../services/commonly-used-items";
 
 const router = Router();
+
+router.get('/commonlyUsed', authenticate, async (req: Request, res: Response) => {
+    const {userId} = (req as AuthenticatedRequest).token;
+    let response: Item[] | string;
+    let statusCode = StatusCodes.OK;
+
+    try {
+        response = await getCommonlyUsedItems(new mongoose.Types.ObjectId(userId), new Date());
+        console.log(`Sending ${response.length} commonly used items. userId: ${userId}`);
+    } catch (error) {
+        statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+        response = `Failed while trying to get commonly used items. userId: ${userId}. Error: ${error}`;
+        console.log(response);
+    }
+
+    res.status(statusCode).send(response);
+});
 
 router.get('/:categoryId/', authenticate, async (req: Request, res: Response) => {
     const categoryId = req.params.categoryId;
