@@ -4,7 +4,7 @@ import {FavoritesState} from "./favorites.model";
 
 const selectFavoritesState: (state: RootState) => FavoritesState = (state: RootState) => state.favorites;
 
-export const selectFavorites = createSelector(
+export const selectFavoriteIds = createSelector(
     [selectFavoritesState],
-    (favoritesState) => favoritesState?.favorites
+    (favoritesState) => favoritesState?.favoriteIds
 );

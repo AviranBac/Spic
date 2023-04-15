@@ -94,7 +94,7 @@ export const HomeScreen = ({navigation}: HomeScreenProps) => {
                     {
                         categories?.map((category: Category) => {
                             return <ClickableBox name={category.name}
-                                                 itemId={category._id}
+                                                 id={category._id}
                                                  imageUrl={category.imageUrl}
                                                  onPress={() => navigation.navigate('Category', {category})}
                                                  hasTtsIcon={false}

@@ -7,7 +7,7 @@ import {FavoriteIcon} from "./icons/FavoriteIcon";
 
 interface ClickableBoxProps {
     name: string,
-    itemId: string,
+    id: string,
     imageUrl: string;
     onPress?: () => void;
     hasTtsIcon?: boolean;
@@ -26,25 +26,25 @@ const StyledImage = styled.Image`
 `;
 
 export const ClickableBox = ({
-                                 name, itemId, imageUrl, onPress = () => {
-    }, hasTtsIcon = true
+                                 name, id, imageUrl, onPress = () => {
+    }, hasTtsIcon: hasIcon = true
                              }: ClickableBoxProps) => {
     const userGender = useAppSelector(selectGender);
 
     return (
         <View style={{marginVertical: 10, marginHorizontal: 10}}>
             <RelativeView>
-                {hasTtsIcon &&
-                    <TextToSpeechIcon text={name}
-                                      gender={userGender!}
-                                      style={{position: 'absolute', top: 3, left: 6, zIndex: 1}}/>
+                {hasIcon &&
+                    <>
+                        <TextToSpeechIcon text={name}
+                                          gender={userGender!}
+                                          style={{position: 'absolute', top: 3, left: 6, zIndex: 1}}/>
+
+                        <View style={{position: 'absolute', top: 3, right: 6, zIndex: 1}}>
+                            <FavoriteIcon key={id} itemId={id}/>
+                        </View>
+                    </>
                 }
-                {
-                hasTtsIcon &&
-                <View style={{position: 'absolute', top: 3, right: 6, zIndex: 1}}>
-                    <FavoriteIcon key={itemId} itemId={itemId}/>
-                </View>
-            }
                 <TouchableOpacity onPress={onPress}>
                     <StyledImage source={{uri: imageUrl}}/>
                     <Button title={name} onPress={onPress}/>

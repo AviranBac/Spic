@@ -2,8 +2,9 @@ import React, {useEffect} from "react";
 import {useAppDispatch} from "../store/hooks";
 import {logoutThunk} from "../store/auth/auth.slice";
 import {ImageWrapper, StyledAppBar, StyledIcon, StyledImage, Wrapper} from "../styles/MainAppBarStyles";
-import {addFavoriteThunk} from "../store/favorites/favorites.slice";
-import {getFavorites} from "../services/favorites.servise";
+import {upsertFavoritesThunk} from "../store/favorites/favorites.slice";
+import {getFavorites} from "../services/favorites.service";
+import {Item} from "../models/item";
 
 const logo = require('../../assets/logo-spic.png');
 export const MainAppBar = () => {
@@ -11,11 +12,11 @@ export const MainAppBar = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const favorites = await getFavorites();
-            const filteredFavorites = favorites.map((item: { _id: string; }) => item._id);
-            dispatch(addFavoriteThunk(filteredFavorites));
+            const favorites: Item[] = await getFavorites();
+            const filteredFavorites: string[] = favorites.map((item: { _id: string; }) => item._id);
+            dispatch(upsertFavoritesThunk(filteredFavorites));
         };
-        fetchData().then(r => console.log(r));
+        fetchData();
     }, []);
 
     const logoutHandler = () => {

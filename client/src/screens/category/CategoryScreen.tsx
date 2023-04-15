@@ -52,7 +52,7 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
                     {
                         items?.map((item: Item) => {
                             return <ClickableBox name={item.name}
-                                                 itemId={item._id}
+                                                 id={item._id}
                                                  imageUrl={item.imageUrl}
                                                  onPress={() => onItemPress(item)}
                                                  key={item._id}/>

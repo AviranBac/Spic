@@ -1,9 +1,9 @@
 import {StyleSheet, TouchableOpacity, View} from "react-native";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
-import {updateFavorites} from "../../services/favorites.servise";
+import {ActionType, updateFavorites} from "../../services/favorites.service";
 import {useAppDispatch, useAppSelector} from "../../store/hooks";
-import {selectFavorites} from "../../store/favorites/favorites.selectors";
-import {addFavoriteThunk} from "../../store/favorites/favorites.slice";
+import {selectFavoriteIds} from "../../store/favorites/favorites.selectors";
+import {upsertFavoritesThunk} from "../../store/favorites/favorites.slice";
 
 interface Props {
     itemId: string
@@ -24,6 +24,7 @@ export const IconsStyles = StyleSheet.create({
         width: "170%",
         height: "170%",
         backgroundColor: "white",
+        zIndex: -1,
         borderWidth: 2,
         borderColor: "black",
         borderRadius: 50,
@@ -33,13 +34,13 @@ export const IconsStyles = StyleSheet.create({
     },
 });
 export const FavoriteIcon = ({itemId}: Props) => {
-    const favorites = useAppSelector(selectFavorites);
+    const favorites = useAppSelector(selectFavoriteIds);
     const dispatch = useAppDispatch();
 
     const handleOnPress = async () => {
-        const action = favorites?.includes(itemId) ? 'REMOVE' : 'ADD';
+        const action: ActionType = favorites?.includes(itemId) ? 'REMOVE' : 'ADD';
         const newFavorites = await updateFavorites({itemId, action})
-        dispatch(addFavoriteThunk(newFavorites?.itemIds));
+        dispatch(upsertFavoritesThunk(newFavorites?.itemIds));
     }
 
     return (

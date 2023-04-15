@@ -5,13 +5,11 @@ export const getFavorites = () => {
         .then((response) => response.data)
         .catch(console.error);
 }
+export type ActionType = 'ADD' | 'REMOVE';
 
-export const updateFavorites = (data: { itemId: string, action: string }) => {
+export const updateFavorites = (data: { itemId: string, action: ActionType }) => {
     return axiosInstance.post('/favorites/', data)
-        .then(response => {
-            console.log('Response:', response.data);
-            return response.data
-        })
+        .then(response => response.data)
         .catch(error => {
             console.error('Error:', error);
         });

@@ -9,6 +9,7 @@ type SpeakerIconProps = {
     style?: StyleProp<ViewStyle>;
     width?: number;
     height?: number;
+    backgroundColor: string
 }
 
 const SpeakerSvgIcon = ({
@@ -17,14 +18,15 @@ const SpeakerSvgIcon = ({
                             onPress,
                             style = {},
                             width = 30,
-                            height = 30
+                            height = 30,
+                            backgroundColor
                         }: SpeakerIconProps): JSX.Element => {
     const color: string = playing ? '#009dff' : 'black';
 
     return (
         <Pressable onPress={onPress} style={style} disabled={loading}>
             <View style={IconsStyles.iconCircleWrapper}>
-                <View style={IconsStyles.iconCirclePaper}/>
+                <View style={[IconsStyles.iconCirclePaper, {backgroundColor: backgroundColor}]}/>
                 <Svg width={width} height={height} viewBox='0 0 75 75'>
                     <Path
                         d='M39.389,13.769 L22.235,28.606 L6,28.606 L6,47.699 L21.989,47.699 L39.389,62.75 L39.389,13.769z'

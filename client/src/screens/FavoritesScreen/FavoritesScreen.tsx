@@ -2,8 +2,8 @@ import {useAppSelector} from "../../store/hooks";
 import {useEffect, useState} from "react";
 import { Text, View} from 'react-native';
 import {Item} from "../../models/item";
-import {selectFavorites} from "../../store/favorites/favorites.selectors";
-import {getFavorites} from "../../services/favorites.servise";
+import {selectFavoriteIds} from "../../store/favorites/favorites.selectors";
+import {getFavorites} from "../../services/favorites.service";
 import {ClickableBox} from "../../components/ClickableBox";
 import styled from "styled-components/native";
 
@@ -23,7 +23,7 @@ const HeadLinedWrapper = styled.View`
 
 export const FavoritesScreen = () => {
     const [favoritesList, setFavoritesList] = useState([]);
-    const favorites = useAppSelector(selectFavorites);
+    const favorites = useAppSelector(selectFavoriteIds);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -39,7 +39,7 @@ export const FavoritesScreen = () => {
             <ItemsWrapper>
                 {favoritesList?.map((item: Item, id) => (
                     <View key={id}>
-                        <ClickableBox name={item.name} imageUrl={item.imageUrl} itemId={item._id}/>
+                        <ClickableBox name={item.name} imageUrl={item.imageUrl} id={item._id}/>
                     </View>
                 ))}
             </ItemsWrapper>

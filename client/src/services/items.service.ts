@@ -1,12 +1,6 @@
 import axiosInstance from './axios.service';
 import {Item} from "../models/item";
 
-export const getAllItems = () => {
-    return axiosInstance.get('/items')
-        .then((response) => response.data)
-        .catch(console.error);
-}
-
 export const getItems = (categoryId: string) => {
     return axiosInstance.get(`/items/${categoryId}`)
         .then((response) => response.data)
