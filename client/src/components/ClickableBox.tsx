@@ -27,7 +27,7 @@ const StyledImage = styled.Image`
 
 export const ClickableBox = ({
                                  name, id, imageUrl, onPress = () => {
-    }, hasIcon: hasIcon = true
+    }, hasIcon = true
                              }: ClickableBoxProps) => {
     const userGender = useAppSelector(selectGender);
 
