@@ -10,7 +10,7 @@ interface ClickableBoxProps {
     id: string,
     imageUrl: string;
     onPress?: () => void;
-    hasTtsIcon?: boolean;
+    hasIcon?: boolean;
 }
 
 const RelativeView = styled.View`
@@ -27,7 +27,7 @@ const StyledImage = styled.Image`
 
 export const ClickableBox = ({
                                  name, id, imageUrl, onPress = () => {
-    }, hasTtsIcon: hasIcon = true
+    }, hasIcon: hasIcon = true
                              }: ClickableBoxProps) => {
     const userGender = useAppSelector(selectGender);
 

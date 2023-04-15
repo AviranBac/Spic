@@ -97,7 +97,7 @@ export const HomeScreen = ({navigation}: HomeScreenProps) => {
                                                  id={category._id}
                                                  imageUrl={category.imageUrl}
                                                  onPress={() => navigation.navigate('Category', {category})}
-                                                 hasTtsIcon={false}
+                                                 hasIcon={false}
                                                  key={category._id}/>
                         })
                     }
