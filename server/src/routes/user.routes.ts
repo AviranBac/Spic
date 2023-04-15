@@ -17,7 +17,11 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
 
     try {
         response = await getUserDetails(new mongoose.Types.ObjectId(userId));
-        console.log(`Sending user details. userId: ${userId}`);
+        if (!response) {
+            statusCode = HttpStatus.NOT_FOUND;
+            response = `Failed while trying to find user with id: ${userId}`;
+            console.log(response);
+        } else { console.log(`Sending user details. userId: ${userId}`); }
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
         response = `Failed while trying to get user details. userId: ${userId}. Error: ${error}`;
@@ -39,7 +43,7 @@ router.post('/', authenticate, validateUpdateUserRequest(), async (req: Request,
     const { email, username, gender, age, password } = req.body;
     const { userId } = (req as AuthenticatedRequest).token;
 
-    const salt = await bcrypt.genSalt(10);  
+    const salt = await bcrypt.genSalt(10);
     const userDetails = {
         ...(email && { email }),
         ...(username && { username }),
@@ -49,7 +53,11 @@ router.post('/', authenticate, validateUpdateUserRequest(), async (req: Request,
     }
     try {
         response = await setUserDetails(new mongoose.Types.ObjectId(userId), userDetails);
-        console.log(`Updated user details. userId: ${userId}`);
+        if (!response) {
+            statusCode = HttpStatus.NOT_FOUND;
+            response = `Failed while trying to find user with id: ${userId}`;
+            console.log(response);
+        } else { console.log(`Updated user details. userId: ${userId}`); }
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
         response = `Failed while trying to update user details. userId: ${userId}. Error: ${error}`;
