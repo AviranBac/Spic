@@ -11,58 +11,58 @@ interface CategoryWithItems extends Category {
 
 const categoriesWithItems: CategoryWithItems[] = [{
     name: 'לבוש',
+    sentenceBeginning: 'אני רוצה ללבוש ',
     imageUrl: 'https://i.ibb.co/bB4TzqW/clothes.jpg',
-    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים',
     itemNames: ['חולצה', 'מכנס', 'שמלה', 'חצאית', 'נעליים', 'כובע', 'מעיל']
 },{
     name: 'רגשות',
+    sentenceBeginning: 'אני מרגיש ',
     imageUrl: 'https://i.ibb.co/B4Vdk8P/emotions.jpg',
-    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים',
     itemNames: ['בלבול', 'רעב', 'עייפות', 'עצב', 'כעס', 'שנאה', 'אהבה']
 },{
     name: 'אוכל',
+    sentenceBeginning: 'אני רוצה ',
     imageUrl: 'https://i.ibb.co/qCKxqfs/food.jpg',
-    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים',
     itemNames: ['פיצה', 'המבורגר', 'קולה', 'בננה', 'גלידה', 'שוקולד', 'מלפפון']
 },{
     name: 'משחק',
+    sentenceBeginning: 'אני רוצה לשחק ',
     imageUrl: 'https://i.ibb.co/PNfDnJM/games.jpg',
-    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים',
     itemNames: ['כדורסל', 'כדורגל', 'לגו', 'פאזל', 'מחשב', 'בובות', 'קוביות']
 },{
     name: 'היגיינה',
+    sentenceBeginning: 'אני רוצה ',
     imageUrl: 'https://i.ibb.co/Y7NQ03j/hygiene.jpg',
-    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים',
     itemNames: ['לנקות', 'להתקלח', 'לשטוף ידיים', 'לצחצח שיניים', 'שירותים']
 },{
     name: 'ספורט',
+    sentenceBeginning: 'אני רוצה ',
     imageUrl: 'https://i.ibb.co/SK6rnBQ/sport.jpg',
-    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים',
-    itemNames: ['כדורסל', 'כדורגל', 'ריצה', 'קפיצה', 'התעמלות', 'כדורעף']
+    itemNames: ['לשחק ', 'לשחק כדורגל', 'לרוץ', 'לקפוץ', 'להתעמל', 'לשחק כדורעף']
 },{
     name: 'משפחה וחברים',
+    sentenceBeginning: '',
     imageUrl: 'https://i.ibb.co/Gn7QZfr/family.jpg',
-    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים',
     itemNames: ['סבתא','סבא', 'אחות', 'אח', 'אבא', 'אמא', 'חברה', 'חבר']
 },{
     name: 'מקומות',
+    sentenceBeginning: 'אני רוצה ללכת ל',
     imageUrl: 'https://i.ibb.co/XLdy7rp/locations.jpg',
-    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים',
     itemNames: ['בית', 'בית ספר', 'יער', 'חוג', 'משחקיה', 'קניון', 'מגרש']
 },{
     name: 'לימודים',
+    sentenceBeginning: 'אני רוצה ',
     imageUrl: 'https://i.ibb.co/d2qNZXP/study.jpg',
-    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים',
     itemNames: ['מחק', 'עיפרון', 'ספר', 'מחברת', 'מורה', 'שיעור', 'הפסקה']
 },{
     name: 'צפייה',
+    sentenceBeginning: 'אני רוצה לראות ',
     imageUrl: 'https://i.ibb.co/8cbj9VF/watch.jpg',
-    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים',
     itemNames: ['טלוויזיה', 'סרט', 'סדרה', 'מופע', 'כוכבים']
 },{
     name: 'שיחה',
+    sentenceBeginning: '',
     imageUrl: 'https://i.ibb.co/x6KsbCF/chat.jpg',
-    sentenceBeginning: 'מחכה ששוקר תסיים לעשות התחלות משפטים',
     itemNames: ['שלום', 'מה שלומך?', 'אני', 'אתה', 'רוצה?', 'יודע?', 'איפה?']
 }];
 

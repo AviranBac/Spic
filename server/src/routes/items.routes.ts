@@ -1,15 +1,34 @@
-import { authenticate, AuthenticatedRequest } from "../auth/auth-middleware";
-import { Request, Response, Router } from "express";
+import {authenticate, AuthenticatedRequest} from "../auth/auth-middleware";
+import {Request, Response, Router} from "express";
 import {addItem, getItemsByCategoryAndUserId} from "../db/dal/items.dal";
-import { validationResult } from "express-validator/check";
-import HttpStatus, { StatusCodes } from "http-status-codes";
-import { addRecord } from "../db/dal/chosen-item-records.dal";
+import {validationResult} from "express-validator/check";
+import HttpStatus, {StatusCodes} from "http-status-codes";
+import {addRecord} from "../db/dal/chosen-item-records.dal";
 import mongoose from "mongoose";
-import { ChosenItemRecord } from "../db/schemas/chosen-item-record.schema";
-import { Item } from "../db/schemas/item.schema";
+
+import {Item} from "../db/schemas/item.schema";
 import {validateAddItemRequest, validateRecordRequest} from "../validation/items.validation";
+import {upsertFeedbacks} from "../services/feedback";
+import {getCommonlyUsedItems} from "../services/commonly-used-items";
 
 const router = Router();
+
+router.get('/commonlyUsed', authenticate, async (req: Request, res: Response) => {
+    const {userId} = (req as AuthenticatedRequest).token;
+    let response: Item[] | string;
+    let statusCode = StatusCodes.OK;
+
+    try {
+        response = await getCommonlyUsedItems(new mongoose.Types.ObjectId(userId), new Date());
+        console.log(`Sending ${response.length} commonly used items. userId: ${userId}`);
+    } catch (error) {
+        statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+        response = `Failed while trying to get commonly used items. userId: ${userId}. Error: ${error}`;
+        console.log(response);
+    }
+
+    res.status(statusCode).send(response);
+});
 
 router.get('/:categoryId/', authenticate, async (req: Request, res: Response) => {
     const categoryId = req.params.categoryId;
@@ -36,22 +55,37 @@ router.post('/record', authenticate, validateRecordRequest(), async (req: Reques
         return;
     }
 
-    let response: ChosenItemRecord | string;
+    let response: string = "";
     let statusCode = HttpStatus.OK;
-    const {itemId, requestTime} = req.body;
-    const {userId} = (req as AuthenticatedRequest).token;
+    const {
+        itemId,
+        requestTime,
+        recommendedItemIds
+    }: { itemId: string, requestTime: Date, recommendedItemIds: string[] | undefined } = req.body;
+    const {userId}: { userId: string } = (req as AuthenticatedRequest).token;
 
     try {
-        response = await addRecord({
-            itemId: new mongoose.Types.ObjectId(itemId),
-            userId: new mongoose.Types.ObjectId(userId),
-            requestTime
-        });
+        const handleAddRecord: () => Promise<void> = async () => {
+            await addRecord({
+                itemId: new mongoose.Types.ObjectId(itemId),
+                userId: new mongoose.Types.ObjectId(userId),
+                requestTime
+            });
+            console.log(`Recorded chosen item. itemId: ${itemId}, userId: ${userId}, requestTime: ${requestTime}`);
+        };
 
-        console.log(`Recorded chosen item. itemId: ${itemId}, userId: ${userId}, requestTime: ${requestTime}`);
+        const handleUpsertFeedbacks: () => Promise<void> = async () => {
+            if (recommendedItemIds) {
+                await upsertFeedbacks(recommendedItemIds, itemId, new mongoose.Types.ObjectId(userId));
+            }
+        };
+
+        await Promise.all([handleAddRecord(), handleUpsertFeedbacks()]);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-        response = `Failed while trying to add chosen item record. itemId: ${itemId}, userId: ${userId}, requestTime: ${requestTime}. Error: ${error}`;
+        response = `Failed while trying to add chosen item record or update feedbacks. ` +
+            `itemId: ${itemId}, userId: ${userId}, requestTime: ${requestTime}` +
+            `${recommendedItemIds ?? `, recommendedItemIds: ${recommendedItemIds}`}. Error: ${error}`;
         console.log(response);
     }
 
@@ -74,7 +108,7 @@ router.post('/', authenticate, validateAddItemRequest(), async (req: Request, re
         response = await addItem({
             name,
             imageUrl,
-            categoryId:new mongoose.Types.ObjectId(categoryId),
+            categoryId: new mongoose.Types.ObjectId(categoryId),
             userId: new mongoose.Types.ObjectId(userId)
         });
 

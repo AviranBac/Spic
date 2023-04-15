@@ -21,7 +21,7 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
 
     useEffect(() => {
         navigation.setOptions({
-            title: sentenceBeginning + '...'
+            title: sentenceBeginning ? sentenceBeginning.trim() + '...' : ''
         });
     }, [navigation]);
 
@@ -52,6 +52,7 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
                     {
                         items?.map((item: Item) => {
                             return <ClickableBox name={item.name}
+                                                 id={item._id}
                                                  imageUrl={item.imageUrl}
                                                  onPress={() => onItemPress(item)}
                                                  key={item._id}/>
