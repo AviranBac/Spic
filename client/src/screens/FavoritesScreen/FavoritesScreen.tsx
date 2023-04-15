@@ -30,7 +30,7 @@ export const FavoritesScreen = () => {
             const favorites = await getFavorites();
             setFavoritesList(favorites);
         };
-        fetchData().then(r => console.log(r));
+        fetchData();
     }, [favorites]);
 
     return (
