@@ -11,6 +11,7 @@ import itemsRouters from "../routes/items.routes";
 import photosRouters from "../routes/photos.routes";
 import ttsRouters from '../routes/text-to-speech.routes';
 import favoriteRouters from "../routes/favorites.routes";
+import UserRouters from "../routes/user.routes";
 
 export const app = express();
 
@@ -30,6 +31,7 @@ app.use("/favorites", favoriteRouters);
 app.use("/items", itemsRouters);
 app.use('/photos', photosRouters);
 app.use('/tts', ttsRouters);
+app.use('/user', UserRouters);
 
 (async () => {
     await initializeApplication();
