@@ -1,14 +1,16 @@
-import { Button, TouchableOpacity, View } from "react-native";
+import {Button, TouchableOpacity, View} from "react-native";
 import styled from "styled-components/native";
 import TextToSpeechIcon from "./icons/TextToSpeechIcon";
-import { selectGender } from "../store/auth/auth.selectors";
-import { useAppSelector } from "../store/hooks";
+import {selectGender} from "../store/auth/auth.selectors";
+import {useAppSelector} from "../store/hooks";
+import {FavoriteIcon} from "./icons/FavoriteIcon";
 
 interface ClickableBoxProps {
     name: string,
+    id: string,
     imageUrl: string;
     onPress?: () => void;
-    hasTtsIcon?: boolean;
+    hasIcon?: boolean;
 }
 
 const RelativeView = styled.View`
@@ -23,16 +25,25 @@ const StyledImage = styled.Image`
   height: 150px;
 `;
 
-export const ClickableBox = ({name, imageUrl, onPress = () => {}, hasTtsIcon = true}: ClickableBoxProps) => {
+export const ClickableBox = ({
+                                 name, id, imageUrl, onPress = () => {
+    }, hasIcon = true
+                             }: ClickableBoxProps) => {
     const userGender = useAppSelector(selectGender);
 
     return (
         <View style={{marginVertical: 10, marginHorizontal: 10}}>
             <RelativeView>
-                {hasTtsIcon &&
-                    <TextToSpeechIcon text={name}
-                                      gender={userGender!}
-                                      style={{position: 'absolute', top: 3, left: 6, zIndex: 1}}/>
+                {hasIcon &&
+                    <>
+                        <TextToSpeechIcon text={name}
+                                          gender={userGender!}
+                                          style={{position: 'absolute', top: 3, left: 6, zIndex: 1}}/>
+
+                        <View style={{position: 'absolute', top: 3, right: 6, zIndex: 1}}>
+                            <FavoriteIcon key={id} itemId={id}/>
+                        </View>
+                    </>
                 }
                 <TouchableOpacity onPress={onPress}>
                     <StyledImage source={{uri: imageUrl}}/>

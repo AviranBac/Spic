@@ -1,10 +1,10 @@
-import { Image, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {Image, Modal, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import React from "react";
-import { Item } from "../../models/item";
+import {Item} from "../../models/item";
 import TextToSpeechIcon from "../../components/icons/TextToSpeechIcon";
-import { useAppSelector } from "../../store/hooks";
-import { selectGender } from "../../store/auth/auth.selectors";
-import { CircleIcon } from "../../components/icons/CircleIcon";
+import {useAppSelector} from "../../store/hooks";
+import {selectGender} from "../../store/auth/auth.selectors";
+import {CircleIcon} from "../../components/icons/CircleIcon";
 
 export type FullActionModalProps = {
     sentenceBeginning: string,
@@ -40,7 +40,7 @@ export const FullActionModal = ({
                         <View style={styles.itemTextContainer}>
                             <TextToSpeechIcon text={fullActionText}
                                               gender={userGender!}
-                                              initialPlay={visible}/>
+                                              initialPlay={visible} backgroundColor={'transparent'}/>
                             <Text style={styles.itemText}>{fullActionText}</Text>
                         </View>
                         <CircleIcon style={styles.closeModalIcon} iconColor="white" name="close"
