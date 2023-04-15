@@ -10,7 +10,7 @@ import {
     StyledImage,
     StyledText,
     StyledTextInput
-} from "./AddItemScreenStyles";
+} from "./styles";
 import {StackScreenProps} from "@react-navigation/stack";
 import {HomeStackParamList} from "../../utils/navigation-stack";
 

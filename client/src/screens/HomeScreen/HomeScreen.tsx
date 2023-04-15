@@ -1,39 +1,15 @@
 import {ScrollView} from "react-native";
 import React, {useEffect, useState} from "react";
-import {ClickableBox} from "../components/ClickableBox";
-import styled from "styled-components/native";
-import {getCategories} from "../services/categories.service";
-import {useAppSelector} from "../store/hooks";
-import {selectGender, selectUsername} from "../store/auth/auth.selectors";
+import {ClickableBox} from "../../components/ClickableBox";
+import {getCategories} from "../../services/categories.service";
+import {useAppSelector} from "../../store/hooks";
 import {StackScreenProps} from "@react-navigation/stack";
-import {HomeStackParamList} from "../utils/navigation-stack";
-import {Category} from "../models/category";
-import {Gender} from "../store/auth/auth.model";
-
-const Wrapper = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  padding-top: 10px;
-`;
-
-const HeadLinedWrapper = styled.View`
-  flex: 0 0 15%;
-  justify-content: center;
-  align-items: center;
-`;
-
-const StyledText = styled.Text`
-  font-size: 25px;
-`;
-
-const CategoriesWrapper = styled.View`
-  flex: 1;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: center;
-  padding-top: 10px;
-`;
+import {HomeStackParamList} from "../../utils/navigation-stack";
+import {Category} from "../../models/category";
+import {Gender} from "../../store/auth/auth.model";
+import {selectGender, selectUsername} from "../../store/user-details/user-details.selectors";
+import {StyledText, Wrapper} from "./styles";
+import {HeadLinedWrapper, ItemsWrapper} from "../../styles/shared-styles";
 
 type HomeScreenProps = StackScreenProps<HomeStackParamList>;
 
@@ -90,7 +66,7 @@ export const HomeScreen = ({navigation}: HomeScreenProps) => {
                         מה {userGenderString} לעשות היום ?
                     </StyledText>
                 </HeadLinedWrapper>
-                <CategoriesWrapper>
+                <ItemsWrapper>
                     {
                         categories?.map((category: Category) => {
                             return <ClickableBox name={category.name}
@@ -101,7 +77,7 @@ export const HomeScreen = ({navigation}: HomeScreenProps) => {
                                                  key={category._id}/>
                         })
                     }
-                </CategoriesWrapper>
+                </ItemsWrapper>
             </Wrapper>
         </ScrollView>
     );

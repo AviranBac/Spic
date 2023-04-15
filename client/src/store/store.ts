@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import audioReducer from './audio/audio.slice';
 import authReducer from './auth/auth.slice';
 import favoritesReducer from './favorites/favorites.slice';
+import userDetailsReducer from './user-details/user-details.slice';
 import { persistReducer, persistStore } from 'redux-persist';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import UserSessionService from "../services/user-session.service";
@@ -9,6 +10,7 @@ import UserSessionService from "../services/user-session.service";
 const rootReducer = combineReducers({
     audio: audioReducer,
     favorites: favoritesReducer,
+    userDetails: userDetailsReducer,
     auth: persistReducer({ key: UserSessionService.storageKey, storage: AsyncStorage }, authReducer)
 });
 

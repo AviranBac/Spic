@@ -2,9 +2,11 @@ import React, {useEffect} from "react";
 import {useAppDispatch} from "../../store/hooks";
 import {logoutThunk} from "../../store/auth/auth.slice";
 import {ImageWrapper, StyledAppBar, StyledIcon, StyledImage, Wrapper} from "./MainAppBarStyles";
-import {upsertFavoritesThunk} from "../store/favorites/favorites.slice";
-import {getFavorites} from "../services/favorites.service";
-import {Item} from "../models/item";
+import {Item} from "../../models/item";
+import {getFavorites} from "../../services/favorites.service";
+import {upsertFavoritesThunk} from "../../store/favorites/favorites.slice";
+import {getUserDetails, UserDetails} from "../../services/user-settiings.service";
+import {updateUserDetailsThunk} from "../../store/user-details/user-details.slice";
 
 const logo = require('../../../assets/logo-spic.png');
 export const MainAppBar = () => {
@@ -13,8 +15,13 @@ export const MainAppBar = () => {
     useEffect(() => {
         const fetchData = async () => {
             const favorites: Item[] = await getFavorites();
-            const filteredFavorites: string[] = favorites.map((item: { _id: string; }) => item._id);
+            const filteredFavorites: string[] = favorites?.map((item: { _id: string; }) => item._id);
+
+            const userDetails: UserDetails = await getUserDetails();
+
             dispatch(upsertFavoritesThunk(filteredFavorites));
+            dispatch(updateUserDetailsThunk(userDetails));
+
         };
         fetchData();
     }, []);
