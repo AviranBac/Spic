@@ -1,13 +1,13 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 import React from "react";
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { FavoritesScreen } from "../screens/FavoritesScreen";
-import { HomeScreen } from "../screens/HomeScreen";
-import { CommonlyUsedScreen } from "../screens/CommonlyUsedScreen";
-import { SettingsScreen } from "../screens/SettingsScreen";
-import { HomeStack } from "../utils/navigation-stack";
-import { CategoryScreen } from "../screens/category/CategoryScreen";
-import { AddItemScreen } from "../screens/AddItemScreen";
+import {createMaterialBottomTabNavigator} from "@react-navigation/material-bottom-tabs";
+import {HomeScreen} from "../screens/HomeScreen";
+import {CommonlyUsedScreen} from "../screens/CommonlyUsedScreen";
+import {SettingsScreen} from "../screens/SettingsScreen";
+import {HomeStack} from "../utils/navigation-stack";
+import {CategoryScreen} from "../screens/category/CategoryScreen";
+import {AddItemScreen} from "../screens/AddItemScreen";
+import {FavoritesScreen} from "../screens/FavoritesScreen/FavoritesScreen";
 
 const Tab = createMaterialBottomTabNavigator();
 

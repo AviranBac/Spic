@@ -1,11 +1,13 @@
-import { Button, TouchableOpacity, View } from "react-native";
+import {Button, TouchableOpacity, View} from "react-native";
 import styled from "styled-components/native";
 import TextToSpeechIcon from "./icons/TextToSpeechIcon";
-import { selectGender } from "../store/auth/auth.selectors";
-import { useAppSelector } from "../store/hooks";
+import {selectGender} from "../store/auth/auth.selectors";
+import {useAppSelector} from "../store/hooks";
+import {FavoriteIcon} from "./icons/FavoriteIcon";
 
 interface ClickableBoxProps {
     name: string,
+    itemId: string,
     imageUrl: string;
     onPress?: () => void;
     hasTtsIcon?: boolean;
@@ -23,7 +25,10 @@ const StyledImage = styled.Image`
   height: 150px;
 `;
 
-export const ClickableBox = ({name, imageUrl, onPress = () => {}, hasTtsIcon = true}: ClickableBoxProps) => {
+export const ClickableBox = ({
+                                 name, itemId, imageUrl, onPress = () => {
+    }, hasTtsIcon = true
+                             }: ClickableBoxProps) => {
     const userGender = useAppSelector(selectGender);
 
     return (
@@ -34,6 +39,12 @@ export const ClickableBox = ({name, imageUrl, onPress = () => {}, hasTtsIcon = t
                                       gender={userGender!}
                                       style={{position: 'absolute', top: 3, left: 6, zIndex: 1}}/>
                 }
+                {
+                hasTtsIcon &&
+                <View style={{position: 'absolute', top: 3, right: 6, zIndex: 1}}>
+                    <FavoriteIcon key={itemId} itemId={itemId}/>
+                </View>
+            }
                 <TouchableOpacity onPress={onPress}>
                     <StyledImage source={{uri: imageUrl}}/>
                     <Button title={name} onPress={onPress}/>

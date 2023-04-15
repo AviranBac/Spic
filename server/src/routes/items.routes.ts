@@ -1,13 +1,13 @@
-import { authenticate, AuthenticatedRequest } from "../auth/auth-middleware";
-import { Request, Response, Router } from "express";
-import { addItem, getItemsByCategoryAndUserId } from "../db/dal/items.dal";
-import { validationResult } from "express-validator/check";
-import HttpStatus, { StatusCodes } from "http-status-codes";
-import { addRecord } from "../db/dal/chosen-item-records.dal";
+import {authenticate, AuthenticatedRequest} from "../auth/auth-middleware";
+import {Request, Response, Router} from "express";
+import {addItem, getAllItems, getItemsByCategoryAndUserId} from "../db/dal/items.dal";
+import {validationResult} from "express-validator/check";
+import HttpStatus, {StatusCodes} from "http-status-codes";
+import {addRecord} from "../db/dal/chosen-item-records.dal";
 import mongoose from "mongoose";
-import { ChosenItemRecord } from "../db/schemas/chosen-item-record.schema";
-import { Item } from "../db/schemas/item.schema";
-import { validateAddItemRequest, validateRecordRequest } from "../validation/items.validation";
+import {ChosenItemRecord} from "../db/schemas/chosen-item-record.schema";
+import {Item} from "../db/schemas/item.schema";
+import {validateAddItemRequest, validateRecordRequest} from "../validation/items.validation";
 
 const router = Router();
 
@@ -23,6 +23,23 @@ router.get('/:categoryId/', authenticate, async (req: Request, res: Response) =>
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
         response = `Failed while trying to get items. categoryId: ${categoryId}, userId: ${userId}. Error: ${error}`;
+        console.log(response);
+    }
+
+    res.status(statusCode).send(response);
+});
+
+router.get('/', authenticate, async (req: Request, res: Response) => {
+    const {userId} = (req as AuthenticatedRequest).token;
+    let response: Item[] | string;
+    let statusCode = StatusCodes.OK;
+
+    try {
+        response = await getAllItems();
+        console.log(`Sending ${response.length} items. userId: ${userId}`);
+    } catch (error) {
+        statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+        response = `Failed while trying to get items. userId: ${userId}. Error: ${error}`;
         console.log(response);
     }
 
@@ -74,7 +91,7 @@ router.post('/', authenticate, validateAddItemRequest(), async (req: Request, re
         response = await addItem({
             name,
             imageUrl,
-            categoryId:new mongoose.Types.ObjectId(categoryId),
+            categoryId: new mongoose.Types.ObjectId(categoryId),
             userId: new mongoose.Types.ObjectId(userId)
         });
 
