@@ -6,8 +6,8 @@ import {useAppDispatch} from "../../store/hooks";
 import * as yup from "yup";
 import {AxiosResponse, HttpStatusCode} from "axios";
 import {Formik} from "formik";
-import {Gender} from "../../store/auth/auth.model";
 import {styles} from "./styles";
+import {Gender} from "../../store/user-details/user-details.model";
 
 const data = [
     {label: 'זכר', value: Gender.MALE},

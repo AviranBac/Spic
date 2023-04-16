@@ -1,12 +1,13 @@
 import axiosInstance from "./axios.service";
 
 export interface UserDetails {
-    username:string;
+    email:string;
+    username: string;
     gender: string;
-    age: string;
+    age: number;
 }
 
-export const updateUserDetails = (data: Partial<UserDetails>) => {
+export const updateUserDetails = (data: Partial<UserDetails>): Promise<UserDetails> => {
     return axiosInstance.post('/user/', data)
         .then(response => response.data)
         .catch(error => {
@@ -14,7 +15,7 @@ export const updateUserDetails = (data: Partial<UserDetails>) => {
         });
 }
 
-export const getUserDetails = () => {
+export const getUserDetails = (): Promise<UserDetails> => {
     return axiosInstance.get('/user/')
         .then(response => response.data)
         .catch(error => {

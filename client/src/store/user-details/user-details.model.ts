@@ -1,7 +1,10 @@
-import {Gender} from "../auth/auth.model";
-
+export enum Gender {
+    MALE = 'MALE',
+    FEMALE = 'FEMALE'
+}
 export interface UserDetailsState {
+    email: string;
     username: string;
-    gender: Gender;
-    age: string;
+    gender: Gender | string;
+    age: number;
 }

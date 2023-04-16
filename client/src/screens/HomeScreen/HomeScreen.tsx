@@ -6,10 +6,10 @@ import {useAppSelector} from "../../store/hooks";
 import {StackScreenProps} from "@react-navigation/stack";
 import {HomeStackParamList} from "../../utils/navigation-stack";
 import {Category} from "../../models/category";
-import {Gender} from "../../store/auth/auth.model";
 import {selectGender, selectUsername} from "../../store/user-details/user-details.selectors";
 import {StyledText, Wrapper} from "./styles";
 import {HeadLinedWrapper, ItemsWrapper} from "../../styles/shared-styles";
+import {Gender} from "../../store/user-details/user-details.model";
 
 type HomeScreenProps = StackScreenProps<HomeStackParamList>;
 
@@ -40,7 +40,7 @@ const getTimeString = () => {
 export const HomeScreen = ({navigation}: HomeScreenProps) => {
     const [categories, setCategories] = useState<Category[]>([]);
     const username: string | undefined = useAppSelector(selectUsername);
-    const gender: Gender | undefined = useAppSelector(selectGender);
+    const gender: Gender | string | undefined = useAppSelector(selectGender);
     const timeString = getTimeString();
 
     useEffect(() => {

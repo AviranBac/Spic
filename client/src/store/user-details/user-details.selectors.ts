@@ -4,6 +4,11 @@ import {UserDetailsState} from "./user-details.model";
 
 const selectUserDetailsState: (state: RootState) => UserDetailsState = (state: RootState) => state.userDetails;
 
+export const selectEmail = createSelector(
+    [selectUserDetailsState],
+    (userDetailsState) => userDetailsState?.email
+);
+
 export const selectUsername = createSelector(
     [selectUserDetailsState],
     (userDetailsState) => userDetailsState?.username

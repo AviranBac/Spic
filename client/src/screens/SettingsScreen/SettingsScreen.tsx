@@ -2,13 +2,13 @@ import React, {useRef, useState} from 'react'
 import {View} from 'react-native'
 import {DisabledTextInput, StyledButton, StyledTextInput} from "../../styles/shared-styles";
 import {Dropdown} from "react-native-element-dropdown";
-import {Gender} from "../../store/auth/auth.model";
 import {useAppDispatch, useAppSelector} from "../../store/hooks";
-import {selectEmail} from "../../store/auth/auth.selectors";
 import {Avatar, Body, BodyContent, Header, styles} from "./styles";
-import {updateUserDetails} from "../../services/user-settiings.service";
-import {selectAge, selectGender, selectUsername} from "../../store/user-details/user-details.selectors";
+import {updateUserDetails} from "../../services/user-settings.service";
+import {selectAge, selectEmail, selectGender, selectUsername} from "../../store/user-details/user-details.selectors";
 import {updateUserDetailsThunk} from "../../store/user-details/user-details.slice";
+import {Gender} from "../../store/user-details/user-details.model";
+import Toast from "react-native-toast-message";
 
 const data = [
     {label: 'זכר', value: Gender.MALE},
@@ -20,31 +20,36 @@ const femaleUrl = 'https://bootdey.com/img/Content/avatar/avatar8.png';
 const maleUrl = 'https://bootdey.com/img/Content/avatar/avatar6.png';
 export const SettingsScreen = () => {
 
-    const defaultValues = useRef({
-        username: useAppSelector(selectUsername),
-        gender: useAppSelector(selectGender),
-        age: useAppSelector(selectAge)
-    });
+    const storedUsername  = useAppSelector(selectUsername);
+    const storedGender  = useAppSelector(selectGender);
+    const storedAge  = useAppSelector(selectAge);
 
-    const [username, setUsername] = useState(defaultValues.current.username);
-    const [gender, setGender] = useState(defaultValues.current.gender);
-    const [age, setAge] = useState(defaultValues.current.age);
+    const [username, setUsername] = useState(storedUsername);
+    const [gender, setGender] = useState(storedGender);
+    const [age, setAge] = useState(storedAge);
     const mail = useRef(useAppSelector(selectEmail));
+
     const avatar = gender === Gender.FEMALE ? femaleUrl : maleUrl;
     const dispatch = useAppDispatch();
     const handleCancel = () => {
-        setUsername(defaultValues.current.username);
-        setGender(defaultValues.current.gender);
-        setAge(defaultValues.current.age);
+        setUsername(storedUsername);
+        setGender(storedGender)
+        setAge(storedAge);
     }
 
     const handleSave = async () => {
         await updateUserDetails({username, gender, age});
-        dispatch(updateUserDetailsThunk({username, gender, age}));
+        dispatch(updateUserDetailsThunk({email: mail.current, username, gender, age}));
+        Toast.show({
+            type: 'success',
+            text1: 'שמירה בוצעה בהצלחה',
+            text2: 'הפרטים שהזנת נשמרו במערכת ⭐️',
+        });
     }
 
     return (
-        <View style={{direction: 'rtl'}}>
+
+        <View style={{direction: 'rtl', flex: 1}}>
             <Header/>
             <Avatar
                 source={{uri: avatar}}
@@ -55,8 +60,8 @@ export const SettingsScreen = () => {
                                        value={mail.current}/>
                     <StyledTextInput label={'שם משתמש'} variant="outlined" color={defaultColor}
                                      value={username} onChange={(e) => setUsername(e.nativeEvent.text)}/>
-                    <StyledTextInput label={'גיל'} variant="outlined" color={defaultColor}
-                                     value={age && age.toString()} onChange={(e) => setAge(e.nativeEvent.text)}/>
+                    <StyledTextInput label={'גיל'} variant="outlined" color={defaultColor} keyboardType={'numeric'}
+                                     value={String(age)} onChange={(e) => setAge(Number(e.nativeEvent.text))}/>
                     <Dropdown style={styles.dropDown} data={data} labelField="label"
                               itemTextStyle={{textAlign: 'center'}}
                               value={gender}

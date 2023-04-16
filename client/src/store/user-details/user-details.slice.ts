@@ -1,11 +1,12 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {UserDetailsState} from "./user-details.model";
-import {UserDetails} from "../../services/user-settiings.service";
+import {Gender, UserDetailsState} from "./user-details.model";
+import {UserDetails} from "../../services/user-settings.service";
 
 const userDetailsInitialState: UserDetailsState = {
+    email: '',
     username: '',
-    gender: '',
-    age: ''
+    gender: Gender.MALE,
+    age: 0
 }
 
 export const updateUserDetailsThunk = createAsyncThunk<{ userDetails: UserDetails }, UserDetails>(
@@ -20,16 +21,14 @@ export const updateUserDetailsThunk = createAsyncThunk<{ userDetails: UserDetail
     }
 );
 
-
 const userDetailsSlice = createSlice({
     name: "userDetails",
     initialState: userDetailsInitialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder
-            .addCase(updateUserDetailsThunk.fulfilled, (state, action) =>
-                action.payload.userDetails
-            );
+        builder.addCase(updateUserDetailsThunk.fulfilled, (state, action) => {
+            return action.payload.userDetails;
+        });
     },
 });
 

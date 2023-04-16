@@ -3,9 +3,10 @@ import React from "react";
 import {Item} from "../../models/item";
 import TextToSpeechIcon from "../../components/icons/TextToSpeechIcon";
 import {useAppSelector} from "../../store/hooks";
-import {selectGender} from "../../store/auth/auth.selectors";
 import {CircleIcon} from "../../components/icons/CircleIcon";
 import {styles} from "./styles";
+import {selectGender} from "../../store/user-details/user-details.selectors";
+import {Gender} from "../../store/user-details/user-details.model";
 
 export type FullActionModalProps = {
     sentenceBeginning: string,
@@ -40,7 +41,7 @@ export const FullActionModal = ({
                                style={styles.activeItemImage}/>
                         <View style={styles.itemTextContainer}>
                             <TextToSpeechIcon text={fullActionText}
-                                              gender={userGender!}
+                                              gender={userGender as Gender}
                                               initialPlay={visible} backgroundColor={'transparent'}/>
                             <Text style={styles.itemText}>{fullActionText}</Text>
                         </View>
