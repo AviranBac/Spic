@@ -1,11 +1,11 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {Gender, UserDetailsState} from "./user-details.model";
-import {UserDetails} from "../../services/user-settings.service";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { UserDetailsState } from "./user-details.model";
+import { UserDetails } from "../../services/user-settings.service";
 
 const userDetailsInitialState: UserDetailsState = {
     email: '',
     username: '',
-    gender: Gender.MALE,
+    gender: undefined,
     age: 0
 }
 

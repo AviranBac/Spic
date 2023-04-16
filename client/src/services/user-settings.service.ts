@@ -1,9 +1,10 @@
 import axiosInstance from "./axios.service";
+import { Gender } from "../store/user-details/user-details.model";
 
 export interface UserDetails {
-    email:string;
+    email: string;
     username: string;
-    gender: string;
+    gender: Gender | undefined;
     age: number;
 }
 

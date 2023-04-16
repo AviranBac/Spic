@@ -1,14 +1,14 @@
-import React, {useEffect} from "react";
-import {useAppDispatch} from "../../store/hooks";
-import {logoutThunk} from "../../store/auth/auth.slice";
-import {ImageWrapper, StyledAppBar, StyledIcon, StyledImage, Wrapper} from "./MainAppBarStyles";
-import {Item} from "../../models/item";
-import {getFavorites} from "../../services/favorites.service";
-import {upsertFavoritesThunk} from "../../store/favorites/favorites.slice";
-import {getUserDetails, UserDetails} from "../../services/user-settings.service";
-import {updateUserDetailsThunk} from "../../store/user-details/user-details.slice";
+import React, { useEffect } from "react";
+import { useAppDispatch } from "../../store/hooks";
+import { logoutThunk } from "../../store/auth/auth.slice";
+import { ImageWrapper, StyledAppBar, StyledIcon, StyledImage, Wrapper } from "./MainAppBarStyles";
+import { Item } from "../../models/item";
+import { getFavorites } from "../../services/favorites.service";
+import { upsertFavoritesThunk } from "../../store/favorites/favorites.slice";
+import { getUserDetails, UserDetails } from "../../services/user-settings.service";
+import { updateUserDetailsThunk } from "../../store/user-details/user-details.slice";
 import Toast from "react-native-toast-message";
-import {toastConfig} from "../../styles/toast-confing";
+import { toastConfig } from "../../styles/toast-confing";
 
 const logo = require('../../../assets/logo-spic.png');
 export const MainAppBar = () => {
@@ -23,7 +23,6 @@ export const MainAppBar = () => {
 
             dispatch(upsertFavoritesThunk(filteredFavorites));
             dispatch(updateUserDetailsThunk(userDetails));
-
         };
         fetchData();
     }, []);

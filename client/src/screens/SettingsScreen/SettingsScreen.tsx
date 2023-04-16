@@ -1,13 +1,13 @@
-import React, {useRef, useState} from 'react'
-import {View} from 'react-native'
-import {DisabledTextInput, StyledButton, StyledTextInput} from "../../styles/shared-styles";
-import {Dropdown} from "react-native-element-dropdown";
-import {useAppDispatch, useAppSelector} from "../../store/hooks";
-import {Avatar, Body, BodyContent, Header, styles} from "./styles";
-import {updateUserDetails} from "../../services/user-settings.service";
-import {selectAge, selectEmail, selectGender, selectUsername} from "../../store/user-details/user-details.selectors";
-import {updateUserDetailsThunk} from "../../store/user-details/user-details.slice";
-import {Gender} from "../../store/user-details/user-details.model";
+import React, { useRef, useState } from 'react'
+import { View } from 'react-native'
+import { DisabledTextInput, StyledButton, StyledTextInput } from "../../styles/shared-styles";
+import { Dropdown } from "react-native-element-dropdown";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { Avatar, Body, BodyContent, Header, styles } from "./styles";
+import { updateUserDetails } from "../../services/user-settings.service";
+import { selectAge, selectEmail, selectGender, selectUsername } from "../../store/user-details/user-details.selectors";
+import { updateUserDetailsThunk } from "../../store/user-details/user-details.slice";
+import { Gender } from "../../store/user-details/user-details.model";
 import Toast from "react-native-toast-message";
 
 const data = [
@@ -19,7 +19,6 @@ const defaultColor = '#2196f3';
 const femaleUrl = 'https://bootdey.com/img/Content/avatar/avatar8.png';
 const maleUrl = 'https://bootdey.com/img/Content/avatar/avatar6.png';
 export const SettingsScreen = () => {
-
     const storedUsername  = useAppSelector(selectUsername);
     const storedGender  = useAppSelector(selectGender);
     const storedAge  = useAppSelector(selectAge);
@@ -48,7 +47,6 @@ export const SettingsScreen = () => {
     }
 
     return (
-
         <View style={{direction: 'rtl', flex: 1}}>
             <Header/>
             <Avatar

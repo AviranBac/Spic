@@ -5,6 +5,6 @@ export enum Gender {
 export interface UserDetailsState {
     email: string;
     username: string;
-    gender: Gender | string;
+    gender: Gender | undefined
     age: number;
 }
