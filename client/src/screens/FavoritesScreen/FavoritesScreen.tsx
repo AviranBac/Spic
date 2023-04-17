@@ -5,21 +5,7 @@ import {Item} from "../../models/item";
 import {selectFavoriteIds} from "../../store/favorites/favorites.selectors";
 import {getFavorites} from "../../services/favorites.service";
 import {ClickableBox} from "../../components/ClickableBox";
-import styled from "styled-components/native";
-
-const ItemsWrapper = styled.View`
-  flex: 1;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: center;
-  padding-top: 10px;
-`;
-
-const HeadLinedWrapper = styled.View`
-  flex: 0 0 15%;
-  justify-content: center;
-  align-items: center;
-`;
+import {HeadLinedWrapper, ItemsWrapper} from "../../styles/shared-styles";
 
 export const FavoritesScreen = () => {
     const [favoritesList, setFavoritesList] = useState([]);

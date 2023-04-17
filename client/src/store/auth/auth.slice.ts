@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import AuthService from "../../services/auth.service";
 import { AuthState, IUserSession } from "./auth.model";
-import { RegisterFormDetails } from "../../screens/RegisterScreen";
-import { LoginFormDetails } from "../../screens/LoginScreen";
+import { RegisterFormDetails } from "../../screens/RegisterScreen/RegisterScreen";
+import { LoginFormDetails } from "../../screens/LoginScreen/LoginScreen";
 
 export const loginThunk = createAsyncThunk<{ userSession: IUserSession }, LoginFormDetails>(
     'auth/login',
