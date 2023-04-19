@@ -13,22 +13,25 @@ const categoriesWithItems: CategoryWithItems[] = [{
     name: 'לבוש',
     sentenceBeginning: 'אני רוצה ללבוש ',
     imageUrl: 'https://i.ibb.co/bB4TzqW/clothes.jpg',
-    itemNames: ['חולצה', 'מכנס', 'שמלה', 'חצאית', 'נעליים', 'כובע', 'מעיל']
+    itemNames: ['חולצה', 'מכנס', 'שמלה', 'חצאית', 'נעלי ספורט', 'כובע מצחיה', 'מעיל', 'חגורה', 'צעיף', 'סוודר', 'בגדי ספורט', 'טייץ',
+        'מגפיים',  'סנדלים',  'כפכפים',  'גרביון', 'גופיה',  'זקט',  'כובע גרב',  'גרביים']
 },{
     name: 'רגשות',
     sentenceBeginning: 'אני מרגיש ',
     imageUrl: 'https://i.ibb.co/B4Vdk8P/emotions.jpg',
-    itemNames: ['בלבול', 'רעב', 'עייפות', 'עצב', 'כעס', 'שנאה', 'אהבה']
+    itemNames: ['בלבול', 'רעב', 'עייפות', 'עצב', 'כעס', 'שנאה', 'אהבה', 'שמחה', 'תסכול', 'יאוש', 'נחת', 'סיפוק', 'הצלחה']
 },{
     name: 'אוכל',
     sentenceBeginning: 'אני רוצה ',
     imageUrl: 'https://i.ibb.co/qCKxqfs/food.jpg',
-    itemNames: ['פיצה', 'המבורגר', 'קולה', 'בננה', 'גלידה', 'שוקולד', 'מלפפון']
+    itemNames: ['פיצה', 'המבורגר', 'קולה', 'בננה', 'גלידה', 'שוקולד', 'מלפפון', 'עגבניה', 'פלפל', 'אננס', 'תות', 'אפרסק', 'כריך'
+    , 'חביתה', 'ביצה', 'קציצה', 'פסטה', 'אורז', 'פירה', 'פתיתים', 'סושי', 'נודלס', 'מים', 'מיץ', 'סודה', 'שניצל', 'בשר'
+    , 'לחם', 'לחמניה', 'שוקו', 'חלב', 'שקשוקה', 'חומוס', 'סלט', 'גזר', 'תפוח', 'אגס', 'קינוח', 'עוגה', 'עוגיה', 'גבינה']
 },{
     name: 'משחק',
-    sentenceBeginning: 'אני רוצה לשחק ',
+    sentenceBeginning: ' אני רוצה לשחק ב ',
     imageUrl: 'https://i.ibb.co/PNfDnJM/games.jpg',
-    itemNames: ['כדורסל', 'כדורגל', 'לגו', 'פאזל', 'מחשב', 'בובות', 'קוביות']
+    itemNames: ['כדורסל', 'כדורגל', 'לגו', 'פאזל', 'מחשב', 'בובות', 'קוביות', 'משחק קופסה', 'כדור', 'חברים', 'חול']
 },{
     name: 'היגיינה',
     sentenceBeginning: 'אני רוצה ',
@@ -43,17 +46,17 @@ const categoriesWithItems: CategoryWithItems[] = [{
     name: 'משפחה וחברים',
     sentenceBeginning: '',
     imageUrl: 'https://i.ibb.co/Gn7QZfr/family.jpg',
-    itemNames: ['סבתא','סבא', 'אחות', 'אח', 'אבא', 'אמא', 'חברה', 'חבר']
+    itemNames: ['סבתא','סבא', 'אחות', 'אח', 'אבא', 'אמא', 'חברה', 'חבר', 'דוד', 'דודה', 'בן דוד', 'בת דודה', 'אחיין', 'אחיינית']
 },{
     name: 'מקומות',
     sentenceBeginning: 'אני רוצה ללכת ל',
     imageUrl: 'https://i.ibb.co/XLdy7rp/locations.jpg',
-    itemNames: ['בית', 'בית ספר', 'יער', 'חוג', 'משחקיה', 'קניון', 'מגרש']
+    itemNames: ['בית', 'בית ספר', 'יער', 'חוג', 'משחקיה', 'קניון', 'מגרש', 'חברים', 'כיתה', 'קייטנה', 'סבא וסבתא']
 },{
     name: 'לימודים',
     sentenceBeginning: 'אני רוצה ',
     imageUrl: 'https://i.ibb.co/d2qNZXP/study.jpg',
-    itemNames: ['מחק', 'עיפרון', 'ספר', 'מחברת', 'מורה', 'שיעור', 'הפסקה']
+    itemNames: ['מחק', 'עיפרון', 'ספר', 'מחברת', 'מורה', 'שיעור', 'הפסקה', 'מחדד', 'עט', 'צבעים']
 },{
     name: 'צפייה',
     sentenceBeginning: 'אני רוצה לראות ',
@@ -64,6 +67,11 @@ const categoriesWithItems: CategoryWithItems[] = [{
     sentenceBeginning: '',
     imageUrl: 'https://i.ibb.co/x6KsbCF/chat.jpg',
     itemNames: ['שלום', 'מה שלומך?', 'אני', 'אתה', 'רוצה?', 'יודע?', 'איפה?']
+},{
+    name: 'פעולות',
+    sentenceBeginning: 'אני רוצה',
+    imageUrl: 'https://i.ibb.co/x6KsbCF/chat.jpg',
+    itemNames: ['ללכת לישון', 'לשחק', 'לנקות', 'ללכת', 'לטייל']
 }];
 
 export const initCategoriesAndItemsInDb = async () => {
