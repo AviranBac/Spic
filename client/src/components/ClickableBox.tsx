@@ -1,9 +1,10 @@
 import {Button, TouchableOpacity, View} from "react-native";
 import styled from "styled-components/native";
 import TextToSpeechIcon from "./icons/TextToSpeechIcon";
-import {selectGender} from "../store/auth/auth.selectors";
 import {useAppSelector} from "../store/hooks";
 import {FavoriteIcon} from "./icons/FavoriteIcon";
+import {selectGender} from "../store/user-details/user-details.selectors";
+import {Gender} from "../store/user-details/user-details.model";
 
 interface ClickableBoxProps {
     name: string,
@@ -37,7 +38,7 @@ export const ClickableBox = ({
                 {hasIcon &&
                     <>
                         <TextToSpeechIcon text={name}
-                                          gender={userGender!}
+                                          gender={userGender as Gender}
                                           style={{position: 'absolute', top: 3, left: 6, zIndex: 1}}/>
 
                         <View style={{position: 'absolute', top: 3, right: 6, zIndex: 1}}>

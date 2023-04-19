@@ -1,12 +1,12 @@
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import React from "react";
 import {createMaterialBottomTabNavigator} from "@react-navigation/material-bottom-tabs";
-import {HomeScreen} from "../screens/HomeScreen";
-import {CommonlyUsedScreen} from "../screens/CommonlyUsedScreen";
-import {SettingsScreen} from "../screens/SettingsScreen";
+import {HomeScreen} from "../screens/HomeScreen/HomeScreen";
+import {CommonlyUsedScreen} from "../screens/CommonlyUsedScreen/CommonlyUsedScreen";
+import {SettingsScreen} from "../screens/SettingsScreen/SettingsScreen";
 import {HomeStack} from "../utils/navigation-stack";
 import {CategoryScreen} from "../screens/category/CategoryScreen";
-import {AddItemScreen} from "../screens/AddItemScreen";
+import {AddItemScreen} from "../screens/AddItemScreen/AddItemScreen";
 import {FavoritesScreen} from "../screens/FavoritesScreen/FavoritesScreen";
 
 const Tab = createMaterialBottomTabNavigator();

@@ -1,8 +1,8 @@
 import useTextToSpeech, {UseTextToSpeechOutput} from "../../hooks/useTextToSpeech";
 import SpeakerSvgIcon from "./SpeakerSvgIcon";
-import {Gender} from "../../store/auth/auth.model";
 import {StyleProp, ViewStyle} from "react-native";
 import {useEffect} from "react";
+import {Gender} from "../../store/user-details/user-details.model";
 
 type TextToSpeechIconProps = {
     text: string;

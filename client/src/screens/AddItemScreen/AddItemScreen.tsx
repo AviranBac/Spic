@@ -1,6 +1,6 @@
 import {Image, NativeSyntheticEvent, ScrollView, TextInputChangeEventData, TouchableOpacity, View} from "react-native";
 import React, {useState} from "react";
-import axiosInstance from "../services/axios.service";
+import axiosInstance from "../../services/axios.service";
 import {
     AddItemScreenWrapper,
     ContentWrapper,
@@ -10,9 +10,10 @@ import {
     StyledImage,
     StyledText,
     StyledTextInput
-} from "../styles/AddItemScreenStyles";
+} from "./styles";
 import {StackScreenProps} from "@react-navigation/stack";
-import {HomeStackParamList} from "../utils/navigation-stack";
+import {HomeStackParamList} from "../../utils/navigation-stack";
+import Toast from "react-native-toast-message";
 
 const defaultColor = '#2196f3';
 type AddItemScreenProps = StackScreenProps<HomeStackParamList, 'AddItem'>;
@@ -50,9 +51,19 @@ export const AddItemScreen = ({navigation, route}: AddItemScreenProps) => {
         })
             .then(response => {
                 console.log(response.data);
+                Toast.show({
+                    type: 'success',
+                    text1: 'הפריט נשמר בהצלחה',
+                    text2: 'הפריט שהוספת נשמר במערכת ⭐️',
+                });
                 navigation.pop();
             })
             .catch(error => {
+                Toast.show({
+                    type: 'error',
+                    text1: 'השמירה נכשלה',
+                    text2: 'הפרטים שהזנת לא נשמרו במערכת ⛔️',
+                });
                 console.log(error);
             });
     };
