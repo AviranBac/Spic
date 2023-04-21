@@ -8,6 +8,6 @@ export interface Item {
     userId?: string;
 }
 
-export interface ItemWithCategory extends Omit<Item, 'categoryId'> {
+export interface ItemWithCategory extends Item {
     category: Category
 }

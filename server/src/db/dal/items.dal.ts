@@ -2,7 +2,7 @@ import { Item, ItemModel } from "../schemas/item.schema";
 import mongoose from "mongoose";
 import { Category, CategoryModel } from "../schemas/category.schema";
 
-export interface ItemWithCategory extends Omit<Item, 'categoryId'> {
+export interface ItemWithCategory extends Item {
     category: Category
 }
 
@@ -18,8 +18,7 @@ export const getItemsById = async (itemIds: mongoose.Types.ObjectId[]): Promise<
             as: "category"
         }
     },
-    {$unwind: "$category"},
-    {$project: {categoryId: 0}}
+    {$unwind: "$category"}
 ]);
 
 export const getItemsByCategoryAndUserId = async (categoryId: mongoose.Types.ObjectId, userId: mongoose.Types.ObjectId): Promise<Item[]> => {
