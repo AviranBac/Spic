@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import { Favorite, FavoriteModel } from "../schemas/favorites.schema";
-import { Item, ItemModel } from "../schemas/item.schema";
+import { getItemsById, ItemWithCategory } from "./items.dal";
 
-export const getFavoriteItemsByUserId = async (userId: mongoose.Types.ObjectId): Promise<Item[]> => {
+export const getFavoriteItemsByUserId = async (userId: mongoose.Types.ObjectId): Promise<ItemWithCategory[]> => {
     const favoriteItems = await FavoriteModel.findOne({ userId });
-    return ItemModel.find({ _id: { $in: favoriteItems?.itemIds || [] } });
+    return getItemsById(favoriteItems?.itemIds || []);
 }
 
 export const addFavoriteItem = async (userId: mongoose.Types.ObjectId, itemId: mongoose.Types.ObjectId): Promise<Favorite | null> => {

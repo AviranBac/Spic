@@ -1,10 +1,9 @@
-import { Item } from "../db/schemas/item.schema";
 import mongoose from "mongoose";
 import { ChosenItemRecord } from "../db/schemas/chosen-item-record.schema";
 import { getUserRecords } from "../db/dal/chosen-item-records.dal";
 import { Feedback } from "../db/schemas/feedback.schema";
 import { FeedbackWithId, getFeedbacksByUserIdAndItemIds } from "../db/dal/feedbacks.dal";
-import { getItemsById } from "../db/dal/items.dal";
+import { getItemsById, ItemWithCategory } from "../db/dal/items.dal";
 
 const SLIDING_WINDOW_SIZE = 1.5 * 60 * 60 * 1000; // 1.5 hours
 const POSITIVE_FEEDBACK_MULTIPLIER = 1;
@@ -20,7 +19,7 @@ interface WeightMetadata {
     feedbackWeight: number
 }
 
-export const getCommonlyUsedItems: (userId: mongoose.Types.ObjectId, currentTime: Date) => Promise<Item[]> = async (userId, currentTime) => {
+export const getCommonlyUsedItems: (userId: mongoose.Types.ObjectId, currentTime: Date) => Promise<ItemWithCategory[]> = async (userId, currentTime) => {
     const userRecords: ChosenItemRecord[] = await getUserRecords(userId);
 
     // Count the frequency of each record
@@ -139,7 +138,7 @@ const minMaxNormalize = (valueToNormalize: number, maxValue: number, minValue: n
     return Math.min(normalizedValue, desiredMaxValue);
 };
 
-const getSortedCommonlyUsedItems = async (normalizedWeightMetadatas: WeightMetadata[]): Promise<Item[]> => {
+const getSortedCommonlyUsedItems = async (normalizedWeightMetadatas: WeightMetadata[]): Promise<ItemWithCategory[]> => {
     const sortedCommonlyUsedItemIds: mongoose.Types.ObjectId[] = normalizedWeightMetadatas
         .map((weightMetadata: WeightMetadata) => [
             new mongoose.Types.ObjectId(weightMetadata.itemId),
@@ -149,7 +148,7 @@ const getSortedCommonlyUsedItems = async (normalizedWeightMetadatas: WeightMetad
         .map(([itemId]) => itemId)
         .slice(0, MAXIMUM_SUGGESTED_ITEMS_AMOUNT);
 
-    const unorderedItems: Record<string, Item> = (await getItemsById(sortedCommonlyUsedItemIds))
+    const unorderedItems: Record<string, ItemWithCategory> = (await getItemsById(sortedCommonlyUsedItemIds))
         .reduce((acc, item) => ({...acc, [item.id!.toString()]: item}), {});
     return sortedCommonlyUsedItemIds.map((itemId: mongoose.Types.ObjectId) => unorderedItems[itemId.toString()]);
 }
