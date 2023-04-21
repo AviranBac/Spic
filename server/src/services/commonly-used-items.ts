@@ -149,7 +149,7 @@ const getSortedCommonlyUsedItems = async (normalizedWeightMetadatas: WeightMetad
         .slice(0, MAXIMUM_SUGGESTED_ITEMS_AMOUNT);
 
     const unorderedItems: Record<string, ItemWithCategory> = (await getItemsById(sortedCommonlyUsedItemIds))
-        .reduce((acc, item) => ({...acc, [item.id!.toString()]: item}), {});
+        .reduce((acc, itemWithCategory) => ({...acc, [itemWithCategory._id!.toString()]: itemWithCategory}), {});
     return sortedCommonlyUsedItemIds.map((itemId: mongoose.Types.ObjectId) => unorderedItems[itemId.toString()]);
 }
 

@@ -7,11 +7,17 @@ export const getItems = (categoryId: string) => {
         .catch(console.error);
 }
 
+export const getCommonlyUsedItems = () => {
+    return axiosInstance.get(`/items/commonlyUsed`)
+        .then((response) => response.data)
+        .catch(console.error);
+}
+
 export const recordItemChosen = (item: Item, recommendedItemIds?: string[]) => {
     return axiosInstance.post(`/items/record`, {
         itemId: item._id,
         requestTime: new Date(),
-        ...(recommendedItemIds && { recommendedItemIds })
+        ...(recommendedItemIds && {recommendedItemIds})
     })
         .then((response) => response.data);
 }

@@ -10,7 +10,7 @@ import { recordItemChosen } from "../../services/items.service";
 import { FullActionModal } from "../../components/FullActionModal/FullActionModal";
 
 export const FavoritesScreen = () => {
-    const [favoritesList, setFavoritesList] = useState([] as ItemWithCategory[]);
+    const [favoriteItems, setFavoriteItems] = useState([] as ItemWithCategory[]);
     const [isModalVisible, setModalVisible] = useState<boolean>(false);
     const [activeItemWithCategory, setActiveItemWithCategory] = useState<ItemWithCategory | null>(null);
     const favorites = useAppSelector(selectFavoriteIds);
@@ -18,7 +18,7 @@ export const FavoritesScreen = () => {
     useEffect(() => {
         const fetchData = async () => {
             const favorites: ItemWithCategory[] = await getFavorites();
-            setFavoritesList(favorites);
+            setFavoriteItems(favorites);
         };
         fetchData();
     }, [favorites]);
@@ -42,7 +42,7 @@ export const FavoritesScreen = () => {
                 <Text style={{fontSize: 30 }}>המועדפים שלי: </Text>
 
                 <ItemsWrapper>
-                    {favoritesList?.map((itemWithCategory: ItemWithCategory, id) => (
+                    {favoriteItems?.map((itemWithCategory: ItemWithCategory, id) => (
                         <View key={id}>
                             <ClickableBox name={itemWithCategory.name}
                                           id={itemWithCategory._id}
