@@ -41,7 +41,7 @@ export const FavoritesScreen = () => {
             <HeadLinedWrapper>
                 <Text style={{fontSize: 30 }}>המועדפים שלי: </Text>
 
-                <ItemsWrapper>
+                <ItemsWrapper style={{direction: "rtl"}}>
                     {favoriteItems?.map((itemWithCategory: ItemWithCategory, id) => (
                         <View key={id}>
                             <ClickableBox name={itemWithCategory.name}

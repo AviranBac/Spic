@@ -42,7 +42,7 @@ export const CommonlyUsedScreen = () => {
             <HeadLinedWrapper>
                 <Text style={{fontSize: 30}}>פעולות בשימוש נפוץ: </Text>
 
-                <ItemsWrapper>
+                <ItemsWrapper style={{direction: "rtl"}}>
                     {commonlyUsedItems?.map((itemWithCategory: ItemWithCategory, id) => (
                         <View key={id}>
                             <ClickableBox name={itemWithCategory.name}
