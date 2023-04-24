@@ -6,6 +6,7 @@ import {selectFavoriteIds} from "../../store/favorites/favorites.selectors";
 import {getFavorites} from "../../services/favorites.service";
 import {ClickableBox} from "../../components/ClickableBox";
 import {HeadLinedWrapper, ItemsWrapper} from "../../styles/shared-styles";
+import {Wrapper} from "../HomeScreen/styles";
 
 export const FavoritesScreen = () => {
     const [favoritesList, setFavoritesList] = useState([]);
@@ -20,7 +21,7 @@ export const FavoritesScreen = () => {
     }, [favorites]);
 
     return (
-        <HeadLinedWrapper>
+        <Wrapper>
             <Text style={{fontSize: 30 }}>המועדפים שלי: </Text>
             <ItemsWrapper>
                 {favoritesList?.map((item: Item, id) => (
@@ -29,6 +30,6 @@ export const FavoritesScreen = () => {
                     </View>
                 ))}
             </ItemsWrapper>
-        </HeadLinedWrapper>
+        </Wrapper>
     );
 }

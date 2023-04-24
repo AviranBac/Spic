@@ -34,14 +34,14 @@ export const ClickableBox = ({
 
     return (
         <View style={{marginVertical: 10, marginHorizontal: 10}}>
-            <RelativeView>
+            <RelativeView style={{backgroundColor: '#f2f2f2'}}>
                 {hasIcon &&
                     <>
                         <TextToSpeechIcon text={name}
                                           gender={userGender as Gender}
                                           style={{position: 'absolute', top: 3, left: 6, zIndex: 1}}/>
 
-                        <View style={{position: 'absolute', top: 3, right: 6, zIndex: 1}}>
+                        <View style={{position: 'absolute', top: 3, right: 1, zIndex: 1}}>
                             <FavoriteIcon key={id} itemId={id}/>
                         </View>
                     </>
