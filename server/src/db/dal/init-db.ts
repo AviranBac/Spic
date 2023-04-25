@@ -125,7 +125,7 @@ const initItemsForCategoryDb = async (itemsNames: string[], categoryId: mongoose
     console.log('Finished initializing items for category in DB');
 }
 
-const getItemsFromUnsplash = async (itemsNames: string[], categoryId: mongoose.Types.ObjectId): Promise<Item[]>=> {
+const getItemsFromUnsplash = async (itemsNames: string[], categoryId: mongoose.Types.ObjectId): Promise<Item[]> => {
     const items: Item[] = [];
 
     for (const itemName of itemsNames) {
