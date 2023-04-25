@@ -57,7 +57,7 @@ const categoriesWithItems: CategoryWithItems[] = [{
     name: 'לימודים',
     sentenceBeginning: 'אני רוצה ',
     imageUrl: 'https://i.ibb.co/d2qNZXP/study.jpg',
-    itemNames: ['מחק', 'עפרון', 'ספר', 'מספרים', 'מחברת', 'מורה', 'מורה', 'שיעור', 'הפסקה', 'מחדד', 'עט', 'צבעים', 'קלמר', 'תיק']
+    itemNames: ['מחק', 'עפרון', 'ספר', 'מספריים', 'מחברת', 'מורה', 'מורה', 'שיעור', 'הפסקה', 'מחדד', 'עט', 'צבעים', 'קלמר', 'תיק']
 },{
     name: 'צפייה',
     sentenceBeginning: 'אני רוצה לראות ',
