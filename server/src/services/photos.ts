@@ -23,7 +23,7 @@ const getPhotos = async (searchQuery: string): Promise<string[]> => {
   let photos: string[] = [];
   try {
     const response = await unsplashInstances[currentKeyIndex].search.getPhotos({
-      query: `${searchQuery} cartoon`,
+      query: searchQuery,
       perPage: 10,
       contentFilter: 'high' as ContentFilter,
       lang: 'he' as Language
