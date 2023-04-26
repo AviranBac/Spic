@@ -57,7 +57,7 @@ const categoriesWithItems: CategoryWithItems[] = [{
     name: 'לימודים',
     sentenceBeginning: 'אני רוצה ',
     imageUrl: 'https://i.ibb.co/d2qNZXP/study.jpg',
-    itemNames: ['מחק', 'עפרון', 'ספר', 'מספריים', 'מחברת', 'מורה', 'מורה', 'שיעור', 'הפסקה', 'מחדד', 'עט', 'צבעים', 'קלמר', 'תיק']
+    itemNames: ['מחק', 'עפרון', 'ספר', 'מספריים', 'מחברת', 'מורה', 'שיעור', 'הפסקה', 'מחדד', 'עט', 'צבעים', 'קלמר', 'תיק']
 },{
     name: 'צפייה',
     sentenceBeginning: 'אני רוצה לראות ',
@@ -129,11 +129,16 @@ const getItemsFromUnsplash = async (itemsNames: string[], categoryId: mongoose.T
     const items: Item[] = [];
 
     for (const itemName of itemsNames) {
-        const photos: string[] = await getPhotos(itemName);
+        let photos: string[] = [];
+        try {
+            photos = await getPhotos(itemName);
+        } catch (error) {
+            console.error(`Failed while getting photos for ${itemName} from Unsplash. Error: ${JSON.stringify(error)}`);
+        }
 
         items.push({
             name: itemName,
-            imageUrl: photos[0],
+            imageUrl: photos[0] ?? '',
             categoryId
         });
     }
