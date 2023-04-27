@@ -70,7 +70,7 @@ const categoriesWithItems: CategoryWithItems[] = [{
     itemNames: ['שלום', 'מה שלומך?', 'אני', 'אתה', 'את', 'אנחנו', 'רוצה?', 'יודע?', 'איפה?', 'מתי?', 'כמה?', 'למה?', 'מה?', 'להתראות']
 },{
     name: 'פעולות',
-    sentenceBeginning: 'אני רוצה',
+    sentenceBeginning: 'אני רוצה ',
     imageUrl: 'https://i.ibb.co/x6KsbCF/chat.jpg',
     itemNames: ['ללכת לישון', 'לשחק', 'לנקות', 'ללכת', 'לטייל', 'לצייר', 'לנוח', 'לבשל', 'לשיר', 'לכתוב', 'לקנות']
 }];
