@@ -134,6 +134,10 @@ const normalizeWeights = (weightMetadatas: WeightMetadata[]): WeightMetadata[] =
 }
 
 const minMaxNormalize = (valueToNormalize: number, maxValue: number, minValue: number, desiredMaxValue: number, desiredMinValue: number): number => {
+    if (minValue === maxValue) {
+        return desiredMaxValue;
+    }
+
     const normalizedValue: number = (valueToNormalize - minValue) / (maxValue - minValue) * (desiredMaxValue - desiredMinValue) + desiredMinValue;
     return Math.min(normalizedValue, desiredMaxValue);
 };
