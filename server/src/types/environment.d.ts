@@ -11,7 +11,7 @@ declare global {
         ACCESS_TOKEN_EXPIRATION_IN_HOURS: string;
         REFRESH_TOKEN_EXPIRATION_IN_HOURS: string;
         GOOGLE_APPLICATION_CREDENTIALS: string;
-        UNSPLASH_API_KEY: string;
+        UNSPLASH_API_KEYS: string;
     }
   }
 }
