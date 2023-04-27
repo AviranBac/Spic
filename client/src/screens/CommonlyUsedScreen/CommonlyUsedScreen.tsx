@@ -8,7 +8,7 @@ import { FullActionModal } from "../../components/FullActionModal/FullActionModa
 import { useIsFocused } from "@react-navigation/native";
 
 export const CommonlyUsedScreen = () => {
-    const [commonlyUsedItems, setCommonlyUsedItems] = useState([] as ItemWithCategory[]);
+    const [commonlyUsedItems, setCommonlyUsedItems] = useState<ItemWithCategory[]>([]);
     const [isModalVisible, setModalVisible] = useState<boolean>(false);
     const [activeItemWithCategory, setActiveItemWithCategory] = useState<ItemWithCategory | null>(null);
     const isFocused = useIsFocused();
@@ -43,7 +43,7 @@ export const CommonlyUsedScreen = () => {
                 <Text style={{fontSize: 30}}>פעולות בשימוש נפוץ: </Text>
 
                 <ItemsWrapper style={{direction: "rtl"}}>
-                    {commonlyUsedItems?.map((itemWithCategory: ItemWithCategory, id) => (
+                    {commonlyUsedItems.map((itemWithCategory: ItemWithCategory, id) => (
                         <View key={id}>
                             <ClickableBox name={itemWithCategory.name}
                                           id={itemWithCategory._id}
