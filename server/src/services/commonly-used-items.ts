@@ -42,7 +42,6 @@ export const getCommonlyUsedItems: (userId: mongoose.Types.ObjectId, currentTime
         return getWeightMetadata(frequencies, weightsBySlidingTimeWindow, record, currentTime, feedbackValue);
     });
     const normalizedWeightMetadatas: WeightMetadata[] = normalizeWeights(weightMetadatas);
-    console.log(normalizedWeightMetadatas);
 
     return await getSortedCommonlyUsedItems(normalizedWeightMetadatas);
 }
@@ -111,7 +110,6 @@ const getWeightMetadata = (frequencies: Record<string, number>,
         feedbackWeight
     };
 
-    console.log(weightMetadata);
     return weightMetadata;
 };
 
@@ -145,11 +143,15 @@ const minMaxNormalize = (valueToNormalize: number, maxValue: number, minValue: n
 const getSortedCommonlyUsedItems = async (normalizedWeightMetadatas: WeightMetadata[]): Promise<ItemWithCategory[]> => {
     const sortedCommonlyUsedItemIds: mongoose.Types.ObjectId[] = normalizedWeightMetadatas
         .map((weightMetadata: WeightMetadata) => [
-            new mongoose.Types.ObjectId(weightMetadata.itemId),
             calculateFinalWeight(weightMetadata),
-        ] as [mongoose.Types.ObjectId, number])
-        .sort(([itemId1, weight1], [itemId2, weight2]) => weight2 - weight1)
-        .map(([itemId]) => itemId)
+            weightMetadata,
+            new mongoose.Types.ObjectId(weightMetadata.itemId),
+        ] as [number, WeightMetadata, mongoose.Types.ObjectId])
+        .sort(([weight1], [weight2]) => weight2 - weight1)
+        .map(([finalWeight, weightMetadata, itemId], index) => {
+            console.log(`Commonly used item #${index + 1}: ${JSON.stringify({...weightMetadata, finalWeight})}`);
+            return itemId;
+        })
         .slice(0, MAXIMUM_SUGGESTED_ITEMS_AMOUNT);
 
     const unorderedItems: Record<string, ItemWithCategory> = (await getItemsById(sortedCommonlyUsedItemIds))
