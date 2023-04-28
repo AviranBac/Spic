@@ -1,10 +1,10 @@
 import { initMongoConnection } from "../db/mongo-connection";
 import { app } from "./app";
-import { initCategoriesAndItemsInDb } from "../db/dal/init-db";
+import { initDb } from "../db/dal/init-db";
 
 export const initializeApplication: () => Promise<void> = async () => {
     await initMongoConnection();
-    await initCategoriesAndItemsInDb();
+    await initDb();
 
     const port = 8080;
     app.listen(port, () => {

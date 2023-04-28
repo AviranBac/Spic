@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { View } from 'react-native'
+import { ScrollView } from 'react-native'
 import { DisabledTextInput, StyledButton, StyledTextInput } from "../../styles/shared-styles";
 import { Dropdown } from "react-native-element-dropdown";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
@@ -47,7 +47,7 @@ export const SettingsScreen = () => {
     }
 
     return (
-        <View style={{direction: 'rtl', flex: 1}}>
+        <ScrollView style={{direction: 'rtl', flex: 1}}>
             <Header/>
             <Avatar
                 source={{uri: avatar}}
@@ -69,6 +69,6 @@ export const SettingsScreen = () => {
                     <StyledButton title={'ביטול'} onPress={handleCancel}/>
                 </BodyContent>
             </Body>
-        </View>
+        </ScrollView>
     )
 }

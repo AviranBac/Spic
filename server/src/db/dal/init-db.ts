@@ -4,6 +4,9 @@ import mongoose from "mongoose";
 import { Item, ItemModel } from "../schemas/item.schema";
 import { getPhotos } from "../../services/photos";
 import { addItem } from "./items.dal";
+import { ChosenItemRecordModel } from "../schemas/chosen-item-record.schema";
+import { FavoriteModel } from "../schemas/favorites.schema";
+import { FeedbackModel } from "../schemas/feedback.schema";
 
 interface CategoryWithItems extends Category {
     itemNames: string[]
@@ -75,12 +78,16 @@ const categoriesWithItems: CategoryWithItems[] = [{
     itemNames: ['ללכת לישון', 'לשחק', 'לנקות', 'ללכת', 'לטייל', 'לצייר', 'לנוח', 'לבשל', 'לשיר', 'לכתוב', 'לקנות']
 }];
 
-export const initCategoriesAndItemsInDb = async () => {
+export const initDb = async () => {
     const shouldInit: boolean = !(await CategoryModel.count().exec() && await ItemModel.count().exec());
 
     if (shouldInit) {
         await CategoryModel.deleteMany({});
+        await ChosenItemRecordModel.deleteMany({});
+        await FavoriteModel.deleteMany({});
+        await FeedbackModel.deleteMany({});
         await ItemModel.deleteMany({});
+
         await initCategoriesDb();
         await initItemsDb();
     } else {

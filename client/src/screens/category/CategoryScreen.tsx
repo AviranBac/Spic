@@ -3,23 +3,23 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../../utils/navigation-stack";
 import { getItems, recordItemChosen } from "../../services/items.service";
 import { ClickableBox } from "../../components/ClickableBox";
-import { Item } from "../../models/item";
+import { Item, ItemWithCategory } from "../../models/item";
 import { ScrollView, View } from "react-native";
-import { FullActionModal } from "./FullActionModal";
+import { FullActionModal } from "../../components/FullActionModal/FullActionModal";
 import { CircleIcon } from "../../components/icons/CircleIcon";
 import { useIsFocused } from "@react-navigation/native";
-import { styles } from "./styles";
 import useSentenceBeginning from "../../hooks/useSentenceBeginning";
+import { styles } from "./styles";
 
 type CategoryScreenProps = StackScreenProps<HomeStackParamList, 'Category'>;
 
 export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
     const [items, setItems] = useState<Item[]>([]);
     const [isModalVisible, setModalVisible] = useState<boolean>(false);
-    const [activeItem, setActiveItem] = useState<Item | null>(null);
+    const [activeItemWithCategory, setActiveItemWithCategory] = useState<ItemWithCategory | null>(null);
     const {category} = route.params;
     const {_id: categoryId} = category;
-    const sentenceBeginning = useSentenceBeginning(category);
+    const {sentenceBeginning} = useSentenceBeginning(category);
     const isFocused = useIsFocused();
 
     useEffect(() => {
@@ -38,14 +38,14 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
     const onItemPress = (item: Item) => {
         recordItemChosen(item)
             .then(() => {
+                setActiveItemWithCategory({...item, category});
                 setModalVisible(true);
-                setActiveItem(item);
             })
             .catch(console.error);
     };
 
     const onModalClose = () => {
-        setActiveItem(null);
+        setActiveItemWithCategory(null);
     };
 
     return (
@@ -63,8 +63,7 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
                     }
                 </View>
 
-                <FullActionModal sentenceBeginning={sentenceBeginning}
-                                 item={activeItem}
+                <FullActionModal itemWithCategory={activeItemWithCategory}
                                  onRequestClose={onModalClose}
                                  setVisible={setModalVisible}
                                  visible={isModalVisible}/>
