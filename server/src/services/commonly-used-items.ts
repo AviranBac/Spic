@@ -119,15 +119,13 @@ const calculateFeedbackValue = (feedback: Feedback): number => {
 }
 
 const normalizeWeights = (weightMetadatas: WeightMetadata[]): WeightMetadata[] => {
-    const minFrequencyWeight: number = Math.min(...weightMetadatas.map(metadata => metadata.frequencyWeight));
     const maxFrequencyWeight: number = Math.max(...weightMetadatas.map(metadata => metadata.frequencyWeight));
-    const minTimeOfDayWeight: number = Math.min(...weightMetadatas.map(metadata => metadata.timeOfDayWeight));
     const maxTimeOfDayWeight: number = Math.max(...weightMetadatas.map(metadata => metadata.timeOfDayWeight));
 
     return weightMetadatas.map((metadata: WeightMetadata) => ({
         ...metadata,
-        frequencyWeight: minMaxNormalize(metadata.frequencyWeight, maxFrequencyWeight, minFrequencyWeight, 1, Number.EPSILON),
-        timeOfDayWeight: minMaxNormalize(metadata.timeOfDayWeight, maxTimeOfDayWeight, minTimeOfDayWeight, 1, Number.EPSILON)
+        frequencyWeight: minMaxNormalize(metadata.frequencyWeight, maxFrequencyWeight, 1, 1, Number.EPSILON),
+        timeOfDayWeight: minMaxNormalize(metadata.timeOfDayWeight, maxTimeOfDayWeight, 0, 1, Number.EPSILON)
     }));
 }
 
