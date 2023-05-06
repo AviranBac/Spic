@@ -66,7 +66,7 @@ export const HomeScreen = ({navigation}: HomeScreenProps) => {
                         מה {userGenderString} לעשות היום ?
                     </StyledText>
                 </HeadLinedWrapper>
-                <ItemsWrapper>
+                <ItemsWrapper style={{direction: "rtl"}}>
                     {
                         categories?.map((category: Category) => {
                             return <ClickableBox name={category.name}

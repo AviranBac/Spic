@@ -1,5 +1,5 @@
 import styled from "styled-components/native";
-import {Button, TextInput} from "@react-native-material/core";
+import { Button, TextInput } from "@react-native-material/core";
 
 export const StyledButton = styled(Button)`
   color: white;
@@ -16,7 +16,7 @@ export const ItemsWrapper = styled.View`
 `;
 
 export const HeadLinedWrapper = styled.View`
-  flex: 0 0 15%;
+  flex: 1 0 15%;
   justify-content: center;
   align-items: center;
 `;

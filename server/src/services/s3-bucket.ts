@@ -1,4 +1,5 @@
 import AWS from 'aws-sdk';
+import { ItemWithCategory } from "../db/dal/items.dal";
 import { Item } from "../db/schemas/item.schema";
 
 AWS.config.update({
@@ -23,7 +24,7 @@ export const getS3SignedUrl = async (imageName : string, action : Action = Actio
     return url;
 };
 
-export const getAllItemsWithS3Images = async (items : Item[]) => {
+export const getAllItemsWithS3Images = async (items : ItemWithCategory[] | Item[]) => {
     const mappedItems = await Promise.all(items.map(async (item) => {
         if (!item.imageUrl.startsWith('https://')) {
             item.imageUrl = await getS3SignedUrl(item.imageUrl, Action.download);

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useAppDispatch } from "../../store/hooks";
 import { logoutThunk } from "../../store/auth/auth.slice";
 import { ImageWrapper, StyledAppBar, StyledIcon, StyledImage, Wrapper } from "./MainAppBarStyles";
-import { Item } from "../../models/item";
+import { ItemWithCategory } from "../../models/item";
 import { getFavorites } from "../../services/favorites.service";
 import { upsertFavoritesThunk } from "../../store/favorites/favorites.slice";
 import { getUserDetails, UserDetails } from "../../services/user-settings.service";
@@ -16,7 +16,7 @@ export const MainAppBar = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const favorites: Item[] = await getFavorites();
+            const favorites: ItemWithCategory[] = await getFavorites();
             const filteredFavorites: string[] = favorites?.map((item: { _id: string; }) => item._id);
 
             const userDetails: UserDetails = await getUserDetails();
