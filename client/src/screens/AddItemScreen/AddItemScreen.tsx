@@ -16,6 +16,8 @@ import { HomeStackParamList } from "../../utils/navigation-stack";
 import Toast from "react-native-toast-message";
 import PopUpMenu from "../../components/PopUpMenu";
 import Spinner from 'react-native-loading-spinner-overlay';
+import { selectEmail } from "../../store/user-details/user-details.selectors";
+import { useAppSelector } from "../../store/hooks";
 
 const defaultColor = '#2196f3';
 type AddItemScreenProps = StackScreenProps<HomeStackParamList, 'AddItem'>;
@@ -29,6 +31,7 @@ export const AddItemScreen = ({ navigation, route }: AddItemScreenProps) => {
     const [image, setImage] = useState<string>('');
     const [imagesList, setImagesList] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
+    const email: string | undefined = useAppSelector(selectEmail);
 
     const handleItemNameChanged = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
         setItemName(e.nativeEvent.text);
@@ -48,8 +51,8 @@ export const AddItemScreen = ({ navigation, route }: AddItemScreenProps) => {
 
     const uploadImageToS3 = async () => {
         const imageType = image.split('.')[1];
-        const imageName = `${Date.now()}.${imageType}`;
-        const response = await axiosInstance.post('/upload/', { imageName });
+        const imageName = `s3-${email}-${Date.now()}.${imageType}`;
+        const response = await axiosInstance.post('/photos/upload/', { imageName });
         const img = await fetch(image);
         const blob = await img.blob();
         await fetch(response.data.url, {
@@ -60,7 +63,6 @@ export const AddItemScreen = ({ navigation, route }: AddItemScreenProps) => {
     }
 
     const handleSave = async () => {
-        console.log(`image: ${image}`);
         if (!image) {
             alert('בבקשה בחר תמונה');
             return;

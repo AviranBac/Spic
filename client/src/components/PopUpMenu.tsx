@@ -17,7 +17,7 @@ const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
-        alert("You've refused to allow this appp to access your photos!");
+        alert("You've refused to allow this app to access your photos!");
     } else {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -25,7 +25,6 @@ const pickImage = async () => {
             aspect: [4, 3],
             quality: 1,
         });
-        console.log(result);
 
         if (!result.canceled) {
             image = result.assets[0].uri;
@@ -40,12 +39,11 @@ const openCamera = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
     if (permissionResult.granted === false) {
-        alert("You've refused to allow this appp to access your camera!");
+        alert("You've refused to allow this app to access your camera!");
     } else {
         const result: any = await ImagePicker.launchCameraAsync();
         if (!result.canceled) {
             image = result.uri;
-            console.log(result.uri);
         }
     }
 
