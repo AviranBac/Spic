@@ -49,7 +49,7 @@ export const FavoriteIcon = ({itemId}: Props) => {
                 <View style={IconsStyles.iconCircleWrapper}>
                     <View style={IconsStyles.iconCirclePaper}/>
                     <MaterialCommunityIcons name="star" color={favorites?.includes(itemId) ? '#ffde00' : 'gray'}
-                                            size={30}/>
+                                            size={32}/>
                 </View>
             </TouchableOpacity>
         </View>

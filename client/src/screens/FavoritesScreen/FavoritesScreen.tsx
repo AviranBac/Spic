@@ -1,12 +1,11 @@
 import {useAppSelector} from "../../store/hooks";
-import {useEffect, useState} from "react";
-import { Text, View} from 'react-native';
-import {Item} from "../../models/item";
+import React, {useEffect, useState} from "react";
+import {Text} from 'react-native';
 import {selectFavoriteIds} from "../../store/favorites/favorites.selectors";
 import {getFavorites} from "../../services/favorites.service";
-import {ClickableBox} from "../../components/ClickableBox";
-import {HeadLinedWrapper, ItemsWrapper} from "../../styles/shared-styles";
+import {ItemsWrapper} from "../../styles/shared-styles";
 import {Wrapper} from "../HomeScreen/styles";
+import {DragAndDrop} from "../../components/DragAndDrop/DragAndDrop";
 
 export const FavoritesScreen = () => {
     const [favoritesList, setFavoritesList] = useState([]);
@@ -22,13 +21,9 @@ export const FavoritesScreen = () => {
 
     return (
         <Wrapper>
-            <Text style={{fontSize: 30 }}>המועדפים שלי: </Text>
+            <Text style={{fontSize: 30}}>המועדפים שלי: </Text>
             <ItemsWrapper>
-                {favoritesList?.map((item: Item, id) => (
-                    <View key={id}>
-                        <ClickableBox name={item.name} imageUrl={item.imageUrl} id={item._id}/>
-                    </View>
-                ))}
+                <DragAndDrop items={favoritesList}/>
             </ItemsWrapper>
         </Wrapper>
     );

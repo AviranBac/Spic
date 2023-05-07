@@ -14,6 +14,7 @@ export const ItemsWrapper = styled.View`
   flex-direction: row;
   justify-content: center;
   padding-top: 10px;
+  gap: 40px;
 `;
 
 export const HeadLinedWrapper = styled.View`

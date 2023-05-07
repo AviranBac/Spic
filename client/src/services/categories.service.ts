@@ -5,3 +5,10 @@ export const getCategories = () => {
         .then(response => response.data)
         .catch(console.error);
 }
+
+export const updateCategoryItemListOrder = (data: any) => {
+    axiosInstance.post('/categories/update', data).then(response => response.data)
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}

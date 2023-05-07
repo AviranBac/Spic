@@ -3,7 +3,6 @@ import {StackScreenProps} from "@react-navigation/stack";
 import {HomeStackParamList} from "../../utils/navigation-stack";
 import {getItems, recordItemChosen} from "../../services/items.service";
 import {Item} from "../../models/item";
-import {ScrollView, View} from "react-native";
 import {FullActionModal} from "./FullActionModal";
 import {CircleIcon} from "../../components/icons/CircleIcon";
 import {useIsFocused} from "@react-navigation/native";
@@ -50,7 +49,7 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
 
     return (
         <>
-                <DragAndDrop items={items} onItemPress={onItemPress}/>
+                <DragAndDrop items={items} onItemPress={onItemPress} category={category}/>
                 <FullActionModal sentenceBeginning={sentenceBeginning}
                                  item={activeItem}
                                  onRequestClose={onModalClose}
