@@ -23,7 +23,7 @@ const pickImage = async () => {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4, 3],
-            quality: 1,
+            quality: 0,
         });
 
         if (!result.canceled) {
@@ -41,7 +41,7 @@ const openCamera = async () => {
     if (permissionResult.granted === false) {
         alert("You've refused to allow this app to access your camera!");
     } else {
-        const result: any = await ImagePicker.launchCameraAsync();
+        const result: any = await ImagePicker.launchCameraAsync({ quality: 0 });
         if (!result.canceled) {
             image = result.uri;
         }

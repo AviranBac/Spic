@@ -26,7 +26,7 @@ export const getS3SignedUrl = async (imageName : string, action : Action = Actio
 
 export const getAllItemsWithS3Images = async (items : ItemWithCategory[] | Item[]) => {
     const mappedItems = await Promise.all(items.map(async (item) => {
-        if (!item.imageUrl.startsWith('https://')) {
+        if (item.imageUrl.startsWith('s3')) {
             item.imageUrl = await getS3SignedUrl(item.imageUrl, Action.download);
         } 
         return item;
