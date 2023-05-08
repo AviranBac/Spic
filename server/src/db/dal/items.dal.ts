@@ -1,4 +1,6 @@
 import { Item, ItemModel } from "../schemas/item.schema";
+import { getAllItemsWithS3Images } from "../../services/s3-bucket";
+
 import mongoose, { Require_id } from "mongoose";
 import { Category, CategoryModel } from "../schemas/category.schema";
 
@@ -9,8 +11,8 @@ export interface ItemWithCategory extends ItemWithId {
 
 export const addItem = async (item: Item): Promise<Item> => ItemModel.create(item);
 
-export const getItemsById = async (itemIds: mongoose.Types.ObjectId[]): Promise<ItemWithCategory[]> => ItemModel
-    .aggregate([
+export const getItemsById = async (itemIds: mongoose.Types.ObjectId[]): Promise<ItemWithCategory[]> => {
+    const items : ItemWithCategory[] = await ItemModel.aggregate([
         {$match: {_id: {$in: itemIds}}},
         {
             $lookup: {
@@ -22,12 +24,14 @@ export const getItemsById = async (itemIds: mongoose.Types.ObjectId[]): Promise<
         },
         {$unwind: "$category"}
     ]);
-
+    return (await getAllItemsWithS3Images(items) as ItemWithCategory[]);
+}
 export const getItemsByCategoryAndUserId = async (categoryId: mongoose.Types.ObjectId, userId: mongoose.Types.ObjectId): Promise<Item[]> => {
     const query: mongoose.FilterQuery<Item> = {
         categoryId,
         $or: [{userId}, {userId: {$exists: false}}]
     };
 
-    return await ItemModel.find(query).exec();
+    const items : Item[] = await ItemModel.find(query).exec();
+  return await getAllItemsWithS3Images(items);
 };
