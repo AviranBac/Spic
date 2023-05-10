@@ -5,6 +5,9 @@ import {ClickableBox} from "../ClickableBox";
 import {ItemsWrapper} from "../../styles/shared-styles";
 import {styles} from "./styles";
 import {Category} from "../../models/category";
+import Toast from "react-native-toast-message";
+import {updateCategoryItemListOrder} from "../../services/categories.service";
+import {bool} from "yup";
 
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
@@ -16,9 +19,10 @@ interface Props {
     items: any[];
     onItemPress?: (item: any) => void;
     category?: Category;
+    isFavorites?: boolean;
 }
 
-export const DragAndDrop = ({items, onItemPress, category}: Props) => {
+export const DragAndDrop = ({items, onItemPress, category, isFavorites = false}: Props) => {
     const [scrollEnabled, setScrollEnabled] = useState(true);
     const [isEditState, setIsEdit] = useState(false);
     const setMap = useRef(new Map());
@@ -68,11 +72,18 @@ export const DragAndDrop = ({items, onItemPress, category}: Props) => {
         }
     }
 
-    const onEditClick = () => {
+    const onSaveChanges = () => {
         setIsEdit(false);
-        let sortedMap = new Map(Array.from(setMap.current.entries()).sort((a, b) => a[1] - b[1]));
-        console.log(category)
-        //TODO: send to back the map in the new order
+        const sortedMap = new Map(Array.from(setMap.current.entries()).sort((a, b) => a[1] - b[1]));
+        const categoryId = isFavorites ? 'favorites' : category?._id;
+        Toast.show({
+            type: 'success',
+            text1: 'שמירה בוצעה בהצלחה',
+            text2: 'סדר הפריטים במערכת ⭐️',
+        });
+
+        updateCategoryItemListOrder(Array.from(sortedMap.keys()), categoryId);
+
     }
 
     const handleReset = () => {
@@ -85,7 +96,7 @@ export const DragAndDrop = ({items, onItemPress, category}: Props) => {
             <ScrollView
                 scrollEnabled={scrollEnabled}>
                 {isEditState && <View style={styles.hurdle}>
-                    <TouchableOpacity style={styles.hurdle_edit} onPress={onEditClick}>
+                    <TouchableOpacity style={styles.hurdle_edit} onPress={onSaveChanges}>
                         <Text style={styles.hurdle_edit_text}>{'שמירת שינויים'}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.hurdle_edit} onPress={handleReset}>

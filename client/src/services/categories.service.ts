@@ -6,7 +6,7 @@ export const getCategories = () => {
         .catch(console.error);
 }
 
-export const updateCategoryItemListOrder = (data: any) => {
+export const updateCategoryItemListOrder = (data: string[], categoryId?: string) => {
     axiosInstance.post('/categories/update', data).then(response => response.data)
         .catch(error => {
             console.error('Error:', error);
