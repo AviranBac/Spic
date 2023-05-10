@@ -1,21 +1,15 @@
 import {useAppSelector} from "../../store/hooks";
 import React, {useEffect, useState} from "react";
-import {Text} from 'react-native';
+import {ScrollView, Text, View} from 'react-native';
 import {selectFavoriteIds} from "../../store/favorites/favorites.selectors";
 import {getFavorites} from "../../services/favorites.service";
-import {ItemsWrapper} from "../../styles/shared-styles";
+import {HeadLinedWrapper, ItemsWrapper} from "../../styles/shared-styles";
 import {Wrapper} from "../HomeScreen/styles";
 import {DragAndDrop} from "../../components/DragAndDrop/DragAndDrop";
-import { useAppSelector } from "../../store/hooks";
-import React, { useEffect, useState } from "react";
-import { ScrollView, Text, View } from 'react-native';
-import { ItemWithCategory } from "../../models/item";
-import { selectFavoriteIds } from "../../store/favorites/favorites.selectors";
-import { getFavorites } from "../../services/favorites.service";
-import { ClickableBox } from "../../components/ClickableBox";
-import { HeadLinedWrapper, ItemsWrapper } from "../../styles/shared-styles";
-import { recordItemChosen } from "../../services/items.service";
-import { FullActionModal } from "../../components/FullActionModal/FullActionModal";
+import {ItemWithCategory} from "../../models/item";
+import {ClickableBox} from "../../components/ClickableBox";
+import {recordItemChosen} from "../../services/items.service";
+import {FullActionModal} from "../../components/FullActionModal/FullActionModal";
 
 export const FavoritesScreen = () => {
     const [favoriteItems, setFavoriteItems] = useState([] as ItemWithCategory[]);
@@ -45,32 +39,16 @@ export const FavoritesScreen = () => {
     };
 
     return (
-        <ScrollView>
-            <HeadLinedWrapper>
-                <Text style={{fontSize: 30 }}>המועדפים שלי: </Text>
-
-                <ItemsWrapper style={{direction: "rtl"}}>
-                    {favoriteItems?.map((itemWithCategory: ItemWithCategory, id) => (
-                        <View key={id}>
-                            <ClickableBox name={itemWithCategory.name}
-                                          id={itemWithCategory._id}
-                                          imageUrl={itemWithCategory.imageUrl}
-                                          onPress={() => onItemPress(itemWithCategory)}/>
-                        </View>
-                    ))}
-                </ItemsWrapper>
-
-                <FullActionModal itemWithCategory={activeItemWithCategory}
-                                 onRequestClose={onModalClose}
-                                 setVisible={setModalVisible}
-                                 visible={isModalVisible}/>
-            </HeadLinedWrapper>
-        </ScrollView>
         <Wrapper>
             <Text style={{fontSize: 30}}>המועדפים שלי: </Text>
             <ItemsWrapper>
-                <DragAndDrop items={favoritesList}/>
+                <DragAndDrop items={favoriteItems}/>
             </ItemsWrapper>
+            <FullActionModal itemWithCategory={activeItemWithCategory}
+                             onRequestClose={onModalClose}
+                             setVisible={setModalVisible}
+                             visible={isModalVisible}/>
         </Wrapper>
-    );
+    )
+        ;
 }

@@ -8,7 +8,7 @@ import {CircleIcon} from "../../components/icons/CircleIcon";
 import {useIsFocused} from "@react-navigation/native";
 import useSentenceBeginning from "../../hooks/useSentenceBeginning";
 import {DragAndDrop} from "../../components/DragAndDrop/DragAndDrop";
-import { styles } from "./styles";
+import {styles} from "./styles";
 
 type CategoryScreenProps = StackScreenProps<HomeStackParamList, 'Category'>;
 
@@ -49,12 +49,12 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
 
     return (
         <>
-                <DragAndDrop items={items} onItemPress={onItemPress} category={category}/>
-                <FullActionModal sentenceBeginning={sentenceBeginning}
-                                 itemWithCategory={activeItemWithCategory}
-                                 onRequestClose={onModalClose}
-                                 setVisible={setModalVisible}
-                                 visible={isModalVisible}/>
+            <DragAndDrop items={items} onItemPress={onItemPress} category={category}/>
+            <FullActionModal
+                itemWithCategory={activeItemWithCategory}
+                onRequestClose={onModalClose}
+                setVisible={setModalVisible}
+                visible={isModalVisible}/>
             <CircleIcon style={styles.addItemIconContainer} iconColor="white" name="plus" size={40}
                         onPress={() => navigation.navigate('AddItem', {category})}/>
         </>
