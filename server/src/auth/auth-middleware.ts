@@ -11,7 +11,7 @@ export const authenticate = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(`Started authentication middleware`);
+  console.log(`Started authentication middleware in ${req.originalUrl}`);
   const accessToken = req.headers.authorization as string;
 
   if (!accessToken) {

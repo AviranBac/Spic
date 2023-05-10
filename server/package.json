@@ -10,7 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.325.0",
+    "@aws-sdk/s3-request-presigner": "^3.325.0",
     "@google-cloud/text-to-speech": "^4.2.1",
+    "aws-sdk": "^2.1369.0",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",

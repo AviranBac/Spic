@@ -4,6 +4,9 @@ import mongoose from "mongoose";
 import { Item, ItemModel } from "../schemas/item.schema";
 import { getPhotos } from "../../services/photos";
 import { addItem } from "./items.dal";
+import { ChosenItemRecordModel } from "../schemas/chosen-item-record.schema";
+import { FavoriteModel } from "../schemas/favorites.schema";
+import { FeedbackModel } from "../schemas/feedback.schema";
 
 interface CategoryWithItems extends Category {
     itemNames: string[]
@@ -13,22 +16,25 @@ const categoriesWithItems: CategoryWithItems[] = [{
     name: 'לבוש',
     sentenceBeginning: 'אני רוצה ללבוש ',
     imageUrl: 'https://i.ibb.co/bB4TzqW/clothes.jpg',
-    itemNames: ['חולצה', 'מכנס', 'שמלה', 'חצאית', 'נעליים', 'כובע', 'מעיל']
+    itemNames: ['חולצה', 'מכנס', 'שמלה', 'חצאית', 'נעלי ספורט', 'כובע מצחיה', 'מעיל', 'חגורה', 'צעיף', 'סוודר', 'בגדי ספורט', 'טייץ',
+    'מגפיים',  'סנדלים',  'כפכפים',  'גרביון', 'גופיה',  'ז\'קט',  'כובע גרב',  'גרבים']
 },{
     name: 'רגשות',
     sentenceBeginning: 'אני מרגיש ',
     imageUrl: 'https://i.ibb.co/B4Vdk8P/emotions.jpg',
-    itemNames: ['בלבול', 'רעב', 'עייפות', 'עצב', 'כעס', 'שנאה', 'אהבה']
+    itemNames: ['בלבול', 'רעב', 'עייפות', 'עצב', 'כעס', 'שנאה', 'אהבה', 'שמחה', 'יאוש', 'נחת', 'סיפוק', 'הצלחה']
 },{
     name: 'אוכל',
     sentenceBeginning: 'אני רוצה ',
     imageUrl: 'https://i.ibb.co/qCKxqfs/food.jpg',
-    itemNames: ['פיצה', 'המבורגר', 'קולה', 'בננה', 'גלידה', 'שוקולד', 'מלפפון']
+    itemNames: ['פיצה', 'המבורגר', 'קולה', 'בננה', 'גלידה', 'שוקולד', 'מלפפון', 'עגבניה', 'פלפל', 'אננס', 'תות', 'אפרסק', 'כריך'
+    , 'חביתה', 'ביצה', 'קציצה', 'פסטה', 'אורז', 'פירה', 'פתיתים', 'סושי', 'נודלס', 'מים', 'מיץ', 'סודה', 'שניצל', 'בשר', 'קורנפלקס'
+    , 'לחם', 'לחמניה', 'שוקו', 'חלב', 'שקשוקה', 'חומוס', 'סלט', 'גזר', 'תפוח', 'אגס', 'קינוח', 'עוגה', 'עוגיה', 'גבינה', 'טוסט']
 },{
     name: 'משחק',
-    sentenceBeginning: 'אני רוצה לשחק ',
+    sentenceBeginning: 'אני רוצה לשחק ב',
     imageUrl: 'https://i.ibb.co/PNfDnJM/games.jpg',
-    itemNames: ['כדורסל', 'כדורגל', 'לגו', 'פאזל', 'מחשב', 'בובות', 'קוביות']
+    itemNames: ['כדורסל', 'כדורגל', 'לגו', 'פאזל', 'מחשב', 'בובות', 'קוביות', 'משחק קופסה', 'כדור', 'חברים', 'חול']
 },{
     name: 'היגיינה',
     sentenceBeginning: 'אני רוצה ',
@@ -38,40 +44,50 @@ const categoriesWithItems: CategoryWithItems[] = [{
     name: 'ספורט',
     sentenceBeginning: 'אני רוצה ',
     imageUrl: 'https://i.ibb.co/SK6rnBQ/sport.jpg',
-    itemNames: ['לשחק ', 'לשחק כדורגל', 'לרוץ', 'לקפוץ', 'להתעמל', 'לשחק כדורעף']
+    itemNames: ['לשחק ', 'לשחק כדורגל', 'לשחק כדורסל', 'לרוץ', 'לקפוץ', 'להתעמל', 'לשחק כדורעף', 'לרקוד', 'לשחות', 'לרכב על אופניים']
 },{
     name: 'משפחה וחברים',
     sentenceBeginning: '',
     imageUrl: 'https://i.ibb.co/Gn7QZfr/family.jpg',
-    itemNames: ['סבתא','סבא', 'אחות', 'אח', 'אבא', 'אמא', 'חברה', 'חבר']
+    itemNames:['סבתא','סבא', 'אחות', 'אח', 'אבא', 'אמא', 'חֲבֵרָה', 'חבר', 'דּוֹד', 'דודה', 'בן דּוֹד', 'בת דודה', 'אחיין', 'אחיינית']
 },{
     name: 'מקומות',
     sentenceBeginning: 'אני רוצה ללכת ל',
     imageUrl: 'https://i.ibb.co/XLdy7rp/locations.jpg',
-    itemNames: ['בית', 'בית ספר', 'יער', 'חוג', 'משחקיה', 'קניון', 'מגרש']
+    itemNames: ['בית', 'בית ספר', 'יער', 'חוג', 'משחקיה', 'קניון', 'מגרש', 'חברים', 'כיתה', 'קייטנה', 'סבא וסבתא', 'בריכה'
+    , 'ים', 'גן חיות', 'פארק']
 },{
     name: 'לימודים',
     sentenceBeginning: 'אני רוצה ',
     imageUrl: 'https://i.ibb.co/d2qNZXP/study.jpg',
-    itemNames: ['מחק', 'עיפרון', 'ספר', 'מחברת', 'מורה', 'שיעור', 'הפסקה']
+    itemNames: ['מחק', 'עפרון', 'ספר', 'מספריים', 'מחברת', 'מורה', 'שיעור', 'הפסקה', 'מחדד', 'עט', 'צבעים', 'קלמר', 'תיק']
 },{
     name: 'צפייה',
     sentenceBeginning: 'אני רוצה לראות ',
     imageUrl: 'https://i.ibb.co/8cbj9VF/watch.jpg',
-    itemNames: ['טלוויזיה', 'סרט', 'סדרה', 'מופע', 'כוכבים']
+    itemNames: ['טלויזיה', 'סרט', 'סדרה', 'הופעה', 'כוכבים']
 },{
     name: 'שיחה',
     sentenceBeginning: '',
     imageUrl: 'https://i.ibb.co/x6KsbCF/chat.jpg',
-    itemNames: ['שלום', 'מה שלומך?', 'אני', 'אתה', 'רוצה?', 'יודע?', 'איפה?']
+    itemNames: ['שלום', 'מה שלומך?', 'אני', 'אתה', 'את', 'אנחנו', 'רוצה?', 'יודע?', 'איפה?', 'מתי?', 'כמה?', 'למה?', 'מה?', 'להתראות']
+},{
+    name: 'פעולות',
+    sentenceBeginning: 'אני רוצה ',
+    imageUrl: 'https://i.ibb.co/x6KsbCF/chat.jpg',
+    itemNames: ['ללכת לישון', 'לשחק', 'לנקות', 'ללכת', 'לטייל', 'לצייר', 'לנוח', 'לבשל', 'לשיר', 'לכתוב', 'לקנות']
 }];
 
-export const initCategoriesAndItemsInDb = async () => {
+export const initDb = async () => {
     const shouldInit: boolean = !(await CategoryModel.count().exec() && await ItemModel.count().exec());
 
     if (shouldInit) {
         await CategoryModel.deleteMany({});
+        await ChosenItemRecordModel.deleteMany({});
+        await FavoriteModel.deleteMany({});
+        await FeedbackModel.deleteMany({});
         await ItemModel.deleteMany({});
+
         await initCategoriesDb();
         await initItemsDb();
     } else {
@@ -120,11 +136,16 @@ const getItemsFromUnsplash = async (itemsNames: string[], categoryId: mongoose.T
     const items: Item[] = [];
 
     for (const itemName of itemsNames) {
-        const photos: string[] = await getPhotos(itemName);
+        let photos: string[] = [];
+        try {
+            photos = await getPhotos(itemName);
+        } catch (error) {
+            console.error(`Failed while getting photos for ${itemName} from Unsplash. Error: ${JSON.stringify(error)}`);
+        }
 
         items.push({
             name: itemName,
-            imageUrl: photos[0],
+            imageUrl: photos[0] ?? '',
             categoryId
         });
     }

@@ -4,15 +4,15 @@ import { addFavoriteItem, getFavoriteItemsByUserId, removeFavoriteItem } from ".
 import { validationResult } from "express-validator/check";
 import HttpStatus, { StatusCodes } from "http-status-codes";
 import mongoose from "mongoose";
-import { Item } from "../db/schemas/item.schema";
 import { validateFavoriteItemRequest } from "../validation/favorite.validation";
 import { Favorite } from "../db/schemas/favorites.schema";
+import { ItemWithCategory } from "../db/dal/items.dal";
 
 const router = Router();
 
 router.get('/', authenticate, async (req: Request, res: Response) => {
     const { userId } = (req as AuthenticatedRequest).token;
-    let response: Item[] | string;
+    let response: ItemWithCategory[] | string;
     let statusCode = StatusCodes.OK;
 
     try {

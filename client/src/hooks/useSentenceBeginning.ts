@@ -4,22 +4,33 @@ import { Category } from "../models/category";
 import { Gender } from "../store/user-details/user-details.model";
 import { useEffect, useState } from "react";
 
-const useSentenceBeginning = (category: Category) => {
+export interface UseSentenceBeginningOutput {
+    sentenceBeginning: string,
+    loaded: boolean
+}
+
+const useSentenceBeginning = (category?: Category): UseSentenceBeginningOutput => {
     const gender = useAppSelector(selectGender);
     const [sentenceBeginning, setSentenceBeginning] = useState('');
+    const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
-        const genderedSentenceBeginning: string = gender === Gender.FEMALE ?
-            category.sentenceBeginning
-                .replace('רוצה', 'רוֹצָה')
-                .replace('מרגיש', 'מרגישה') :
-            category.sentenceBeginning
-                .replace('רוצה', 'רוֹצֶה');
+        if (category) {
+            const genderedSentenceBeginning: string = gender === Gender.FEMALE ?
+                category.sentenceBeginning
+                    .replace('רוצה', 'רוֹצָה')
+                    .replace('מרגיש', 'מרגישה') :
+                category.sentenceBeginning
+                    .replace('רוצה', 'רוֹצֶה');
 
-        setSentenceBeginning(genderedSentenceBeginning);
-    }, [gender]);
+            setSentenceBeginning(genderedSentenceBeginning);
+            setLoaded(true);
+        } else {
+            setLoaded(false);
+        }
+    }, [category, gender]);
 
-    return sentenceBeginning;
+    return {sentenceBeginning, loaded};
 };
 
 export default useSentenceBeginning;
