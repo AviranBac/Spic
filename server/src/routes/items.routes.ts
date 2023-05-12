@@ -122,4 +122,6 @@ router.post('/', authenticate, validateAddItemRequest(), async (req: Request, re
     res.status(statusCode).send(response);
 });
 
+// TODO: add order option
+
 export default router;

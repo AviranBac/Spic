@@ -1,9 +1,15 @@
 import { authenticate, AuthenticatedRequest } from "../auth/auth-middleware";
 import { Request, Response, Router } from "express";
-import { addFavoriteItem, getFavoriteItemsByUserId, removeFavoriteItem } from "../db/dal/favorites.dal";
+import {
+    addFavoriteItem,
+    getFavoriteItemsByUserId,
+    removeFavoriteItem,
+    updateOrderedItemIds
+} from "../db/dal/favorites.dal";
 import { validationResult } from "express-validator/check";
 import HttpStatus, { StatusCodes } from "http-status-codes";
 import mongoose from "mongoose";
+import Mongoose from "mongoose";
 import { validateFavoriteItemRequest } from "../validation/favorite.validation";
 import { Favorite } from "../db/schemas/favorites.schema";
 import { ItemWithCategory } from "../db/dal/items.dal";
@@ -48,6 +54,27 @@ router.post('/', authenticate, validateFavoriteItemRequest(), async (req: Reques
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
         response = `Failed while trying to ${action} chosen favorite item record. itemId: ${itemId}, userId: ${userId}. Error: ${error}`;
+        console.log(response);
+    }
+
+    res.status(statusCode).send(response);
+});
+
+// TODO: add validation
+router.put('/order', authenticate, async (req: Request, res: Response) => {
+    const userId: mongoose.Types.ObjectId = new Mongoose.Types.ObjectId((req as AuthenticatedRequest).token.userId);
+    const orderedItemIds: mongoose.Types.ObjectId[] = req.body.orderedItemIds
+        .map((id: string) => new mongoose.Types.ObjectId(id));
+    let response: ItemWithCategory[] | string;
+    let statusCode = StatusCodes.OK;
+
+    try {
+        await updateOrderedItemIds(userId, orderedItemIds);
+        response = await getFavoriteItemsByUserId(userId);
+        console.log(`Ordered favorites. userId: ${userId}, new order: ${orderedItemIds}`);
+    } catch (error) {
+        statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+        response = `Failed while trying to get categories. Error: ${error}`;
         console.log(response);
     }
 

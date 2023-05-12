@@ -11,8 +11,8 @@ export interface ItemWithCategory extends ItemWithId {
 
 export const addItem = async (item: Item): Promise<Item> => ItemModel.create(item);
 
-export const getItemsById = async (itemIds: mongoose.Types.ObjectId[]): Promise<ItemWithCategory[]> => {
-    const items : ItemWithCategory[] = await ItemModel.aggregate([
+export const getItemsById = async (itemIds: mongoose.Types.ObjectId[], ordered = false): Promise<ItemWithCategory[]> => {
+    const itemsDictionary: { [itemId: string]: ItemWithCategory } = (await ItemModel.aggregate([
         {$match: {_id: {$in: itemIds}}},
         {
             $lookup: {
@@ -23,9 +23,16 @@ export const getItemsById = async (itemIds: mongoose.Types.ObjectId[]): Promise<
             }
         },
         {$unwind: "$category"}
-    ]);
-    return (await getAllItemsWithS3Images(items) as ItemWithCategory[]);
-}
+    ])).reduce((acc, curr) => ({...acc, [curr._id.toString()]: curr}), {});
+
+    const orderedItems: ItemWithCategory[] = ordered ?
+        itemIds.map(id => itemsDictionary[id.toString()]) :
+        Object.values(itemsDictionary);
+
+    return (await getAllItemsWithS3Images(orderedItems) as ItemWithCategory[]);
+};
+
+// TODO: apply order
 export const getItemsByCategoryAndUserId = async (categoryId: mongoose.Types.ObjectId, userId: mongoose.Types.ObjectId): Promise<Item[]> => {
     const query: mongoose.FilterQuery<Item> = {
         categoryId,

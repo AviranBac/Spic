@@ -7,6 +7,7 @@ import { addItem } from "./items.dal";
 import { ChosenItemRecordModel } from "../schemas/chosen-item-record.schema";
 import { FavoriteModel } from "../schemas/favorites.schema";
 import { FeedbackModel } from "../schemas/feedback.schema";
+import { resetOrderedCategories } from "./users.dal";
 
 interface CategoryWithItems extends Category {
     itemNames: string[]
@@ -89,6 +90,8 @@ export const initDb = async () => {
         await ItemModel.deleteMany({});
 
         await initCategoriesDb();
+        await resetOrderedCategories();
+
         await initItemsDb();
     } else {
         console.log('Both categories and items are already initialized, therefore not initializing them again');
