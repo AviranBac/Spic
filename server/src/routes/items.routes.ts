@@ -1,6 +1,6 @@
 import { authenticate, AuthenticatedRequest } from "../auth/auth-middleware";
 import { Request, Response, Router } from "express";
-import { addItem, getItemsByCategoryAndUserId, ItemWithCategory } from "../db/dal/items.dal";
+import { addItem, getItemsByCategoryAndUserId, ItemWithCategory, deleteItemById } from "../db/dal/items.dal";
 import { validationResult } from "express-validator/check";
 import HttpStatus, { StatusCodes } from "http-status-codes";
 import { addRecord } from "../db/dal/chosen-item-records.dal";
@@ -46,6 +46,22 @@ router.get('/:categoryId/', authenticate, async (req: Request, res: Response) =>
     }
 
     res.status(statusCode).send(response);
+});
+
+router.get('/:itemId/', authenticate, async (req: Request, res: Response) => {
+    const itemId = req.params.itemId;
+    const {userId} = (req as AuthenticatedRequest).token;
+    let statusCode = StatusCodes.OK;
+
+    try {
+        await deleteItemById(new mongoose.Types.ObjectId(itemId));
+        console.log(`Deleting item with itemId: ${itemId}, userId: ${userId}`);
+    } catch (error) {
+        statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+        console.log(`Failed while trying to delete item. itemId: ${itemId}, userId: ${userId}. Error: ${error}`);
+    }
+
+    res.status(statusCode).send();
 });
 
 router.post('/record', authenticate, validateRecordRequest(), async (req: Request, res: Response) => {

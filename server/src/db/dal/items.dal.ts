@@ -35,3 +35,16 @@ export const getItemsByCategoryAndUserId = async (categoryId: mongoose.Types.Obj
     const items : Item[] = await ItemModel.find(query).exec();
   return await getAllItemsWithS3Images(items);
 };
+
+export const deleteItemById = async (itemId: mongoose.Types.ObjectId): Promise<void> => {
+    await ItemModel.deleteOne({_id: itemId}).exec();
+  }
+  
+  export const editItemById = async (itemId: mongoose.Types.ObjectId, updatedItem: Item): Promise<Item> => {
+    const item = await ItemModel.findOneAndUpdate({_id: itemId}, updatedItem, {new: true}).exec();
+    if (!item) {
+      throw new Error(`Item with id ${itemId} not found`);
+    }
+    return item;
+  }
+  
