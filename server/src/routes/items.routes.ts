@@ -1,6 +1,6 @@
 import { authenticate, AuthenticatedRequest } from "../auth/auth-middleware";
 import { Request, Response, Router } from "express";
-import { addItem, getItemsByCategoryAndUserId, ItemWithCategory, deleteItemById } from "../db/dal/items.dal";
+import { addItem, getItemsByCategoryAndUserId, ItemWithCategory, deleteItemById, editItemById } from "../db/dal/items.dal";
 import { validationResult } from "express-validator/check";
 import HttpStatus, { StatusCodes } from "http-status-codes";
 import { addRecord } from "../db/dal/chosen-item-records.dal";
@@ -48,7 +48,7 @@ router.get('/:categoryId/', authenticate, async (req: Request, res: Response) =>
     res.status(statusCode).send(response);
 });
 
-router.get('/:itemId/', authenticate, async (req: Request, res: Response) => {
+router.get('/delete/:itemId/', authenticate, async (req: Request, res: Response) => {
     const itemId = req.params.itemId;
     const {userId} = (req as AuthenticatedRequest).token;
     let statusCode = StatusCodes.OK;
@@ -58,7 +58,7 @@ router.get('/:itemId/', authenticate, async (req: Request, res: Response) => {
         console.log(`Deleting item with itemId: ${itemId}, userId: ${userId}`);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-        console.log(`Failed while trying to delete item. itemId: ${itemId}, userId: ${userId}. Error: ${error}`);
+       console.log(`Failed while trying to delete item. itemId: ${itemId}, userId: ${userId}. Error: ${error}`);
     }
 
     res.status(statusCode).send();
@@ -132,6 +132,24 @@ router.post('/', authenticate, validateAddItemRequest(), async (req: Request, re
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
         response = `Failed while trying to add new item. Name: ${name}, imageUrl: ${imageUrl}, categoryId: ${categoryId}, userId: ${userId}. Error: ${error}`;
+        console.log(response);
+    }
+
+    res.status(statusCode).send(response);
+});
+
+router.put('/edit/:itemId/', authenticate, async (req: Request, res: Response) => {
+    const itemId = req.params.itemId;
+    const updatedItem: Item = req.body;
+    let response: Item | string;
+    let statusCode = StatusCodes.OK;
+
+    try {
+        response = await editItemById(new mongoose.Types.ObjectId(itemId), updatedItem);
+        console.log(`Updated item with itemId: ${itemId}`);
+    } catch (error) {
+        statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+        response = `Failed while trying to update item. itemId: ${itemId}. Error: ${error}`;
         console.log(response);
     }
 
