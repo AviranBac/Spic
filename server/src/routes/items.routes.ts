@@ -7,7 +7,7 @@ import { addRecord } from "../db/dal/chosen-item-records.dal";
 import mongoose from "mongoose";
 
 import { Item } from "../db/schemas/item.schema";
-import { validateAddItemRequest, validateRecordRequest } from "../validation/items.validation";
+import { validateAddItemRequest, validateRecordRequest, validateEditItemRequest, validateDeleteItemRequest } from "../validation/items.validation";
 import { upsertFeedbacks } from "../services/feedback";
 import { getCommonlyUsedItems } from "../services/commonly-used-items";
 
@@ -46,22 +46,6 @@ router.get('/:categoryId/', authenticate, async (req: Request, res: Response) =>
     }
 
     res.status(statusCode).send(response);
-});
-
-router.get('/delete/:itemId/', authenticate, async (req: Request, res: Response) => {
-    const itemId = req.params.itemId;
-    const {userId} = (req as AuthenticatedRequest).token;
-    let statusCode = StatusCodes.OK;
-
-    try {
-        await deleteItemById(new mongoose.Types.ObjectId(itemId));
-        console.log(`Deleting item with itemId: ${itemId}, userId: ${userId}`);
-    } catch (error) {
-        statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-       console.log(`Failed while trying to delete item. itemId: ${itemId}, userId: ${userId}. Error: ${error}`);
-    }
-
-    res.status(statusCode).send();
 });
 
 router.post('/record', authenticate, validateRecordRequest(), async (req: Request, res: Response) => {
@@ -138,22 +122,39 @@ router.post('/', authenticate, validateAddItemRequest(), async (req: Request, re
     res.status(statusCode).send(response);
 });
 
-router.put('/edit/:itemId/', authenticate, async (req: Request, res: Response) => {
+router.put('/:itemId/', authenticate, validateEditItemRequest(), async (req: Request, res: Response) => {
     const itemId = req.params.itemId;
     const updatedItem: Item = req.body;
+    const {userId} = (req as AuthenticatedRequest).token;
     let response: Item | string;
     let statusCode = StatusCodes.OK;
 
     try {
         response = await editItemById(new mongoose.Types.ObjectId(itemId), updatedItem);
-        console.log(`Updated item with itemId: ${itemId}`);
+        console.log(`Updated item with itemId: ${itemId}, userId: ${userId}`);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-        response = `Failed while trying to update item. itemId: ${itemId}. Error: ${error}`;
+        response = `Failed while trying to update item. itemId: ${itemId}, userId: ${userId}. Error: ${error}`;
         console.log(response);
     }
 
     res.status(statusCode).send(response);
+});
+
+router.delete('/:itemId/', authenticate, validateDeleteItemRequest(), async (req: Request, res: Response) => {
+    const itemId = req.params.itemId;
+    const {userId} = (req as AuthenticatedRequest).token;
+    let statusCode = StatusCodes.OK;
+
+    try {
+        await deleteItemById(new mongoose.Types.ObjectId(itemId));
+        console.log(`Deleting item with itemId: ${itemId}, userId: ${userId}`);
+    } catch (error) {
+        statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+       console.log(`Failed while trying to delete item. itemId: ${itemId}, userId: ${userId}. Error: ${error}`);
+    }
+
+    res.status(statusCode).send();
 });
 
 export default router;
