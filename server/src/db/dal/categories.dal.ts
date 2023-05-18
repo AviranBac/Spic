@@ -2,8 +2,8 @@ import { Category, CategoryModel } from "../schemas/category.schema";
 import mongoose from "mongoose";
 import { getOrderedCategoryIds } from "./user-preferences/ordered-categories.dal";
 
-export const getAllCategoryIds = async (): Promise<mongoose.Types.ObjectId[]> => (await CategoryModel.find())
-    .map((category: Category) => category.id!);
+export const getAllCategoryIds = async (): Promise<mongoose.Types.ObjectId[]> => (await CategoryModel.find().lean())
+    .map(category => category._id);
 
 export const getOrderedCategories = async (userId?: mongoose.Types.ObjectId): Promise<Category[]> => {
     const categoriesDictionary: { [categoryId: string]: Category } = (await CategoryModel.find())

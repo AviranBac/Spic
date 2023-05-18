@@ -7,7 +7,11 @@ import { addRecord } from "../db/dal/chosen-item-records.dal";
 import mongoose from "mongoose";
 
 import { Item } from "../db/schemas/item.schema";
-import { validateAddItemRequest, validateRecordRequest } from "../validation/items.validation";
+import {
+    validateAddItemRequest,
+    validateItemOrderRequest,
+    validateRecordRequest
+} from "../validation/items.validation";
 import { upsertFeedbacks } from "../services/feedback";
 import { getCommonlyUsedItems } from "../services/commonly-used-items";
 import {
@@ -123,8 +127,13 @@ router.post('/', authenticate, validateAddItemRequest(), async (req: Request, re
     res.status(statusCode).send(response);
 });
 
-// TODO: add validation
-router.put('/order', authenticate, async (req: Request, res: Response) => {
+router.put('/order', authenticate, validateItemOrderRequest(), async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(HttpStatus.BAD_REQUEST).json({ errors: errors.array() });
+        return;
+    }
+
     const userId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId((req as AuthenticatedRequest).token.userId);
     const categoryId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(req.body.categoryId);
     const orderedItemIds: mongoose.Types.ObjectId[] = req.body.orderedItemIds

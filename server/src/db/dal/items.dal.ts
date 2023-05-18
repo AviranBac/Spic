@@ -61,9 +61,17 @@ export const getSharedItemIdsPerCategory = async (): Promise<ItemIdsPerCategory>
         [currCategoryId.toString()]: []
     }), {});
 
-    return (await ItemModel.find(query).exec())
+    return (await ItemModel.find(query).lean())
         .reduce((acc, currItem) => ({
             ...acc,
             [currItem.categoryId.toString()]: [...acc[currItem.categoryId.toString()], currItem._id]
         }), itemIdsPerCategory);
+}
+
+export const getItemIdsByUserId = async (userId: mongoose.Types.ObjectId): Promise<mongoose.Types.ObjectId[]> => {
+    const query: mongoose.FilterQuery<Item> = {
+        $or: [{userId}, {userId: {$exists: false}}]
+    };
+
+    return (await ItemModel.find(query).lean()).map(item => item._id);
 }

@@ -4,7 +4,7 @@ import { getItemsById, ItemWithCategory } from "../items.dal";
 import { UserPreferencesModel } from "../../schemas/user-preferences.schema";
 import { getUserPreferences } from "./user-preferences.dal";
 
-const getOrderedFavoriteItemIds = async (userId: mongoose.Types.ObjectId) => (await getUserPreferences(userId))?.orderedFavoriteItemIds || [];
+export const getOrderedFavoriteItemIds = async (userId: mongoose.Types.ObjectId) => (await getUserPreferences(userId))?.orderedFavoriteItemIds || [];
 
 export const getFavoriteItemsByUserId = async (userId: mongoose.Types.ObjectId): Promise<ItemWithCategory[]> => {
     const orderedFavoriteItemIds: mongoose.Types.ObjectId[] = await getOrderedFavoriteItemIds(userId);

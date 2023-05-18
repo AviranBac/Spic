@@ -5,6 +5,8 @@ import { Category } from "../db/schemas/category.schema";
 import HttpStatus, { StatusCodes } from "http-status-codes";
 import mongoose, * as Mongoose from "mongoose";
 import { updateOrderedCategoryIds } from "../db/dal/user-preferences/ordered-categories.dal";
+import { validateCategoriesOrderRequest } from "../validation/categories.validation";
+import { validationResult } from "express-validator/check";
 
 const router = Router();
 
@@ -25,8 +27,13 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
     res.status(statusCode).send(response);
 });
 
-// TODO: add validation
-router.put('/order', authenticate, async (req: Request, res: Response) => {
+router.put('/order', authenticate, validateCategoriesOrderRequest(), async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(HttpStatus.BAD_REQUEST).json({ errors: errors.array() });
+        return;
+    }
+
     const userId: mongoose.Types.ObjectId = new Mongoose.Types.ObjectId((req as AuthenticatedRequest).token.userId);
     const orderedCategoryIds: mongoose.Types.ObjectId[] = req.body.orderedCategoryIds
         .map((id: string) => new mongoose.Types.ObjectId(id));

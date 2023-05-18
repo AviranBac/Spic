@@ -10,7 +10,7 @@ import { validationResult } from "express-validator/check";
 import HttpStatus, { StatusCodes } from "http-status-codes";
 import mongoose from "mongoose";
 import Mongoose from "mongoose";
-import { validateFavoriteItemRequest } from "../validation/favorite.validation";
+import { validateFavoriteItemRequest, validateFavoritesOrderRequest } from "../validation/favorite.validation";
 import { ItemWithCategory } from "../db/dal/items.dal";
 
 const router = Router();
@@ -59,8 +59,13 @@ router.post('/', authenticate, validateFavoriteItemRequest(), async (req: Reques
     res.status(statusCode).send(response);
 });
 
-// TODO: add validation
-router.put('/order', authenticate, async (req: Request, res: Response) => {
+router.put('/order', authenticate, validateFavoritesOrderRequest(), async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(HttpStatus.BAD_REQUEST).json({ errors: errors.array() });
+        return;
+    }
+
     const userId: mongoose.Types.ObjectId = new Mongoose.Types.ObjectId((req as AuthenticatedRequest).token.userId);
     const orderedFavoriteItemIds: mongoose.Types.ObjectId[] = req.body.orderedFavoriteItemIds
         .map((id: string) => new mongoose.Types.ObjectId(id));
