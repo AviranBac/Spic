@@ -39,8 +39,8 @@ export const FavoriteIcon = ({itemId}: Props) => {
 
     const handleOnPress = async () => {
         const action: ActionType = favorites?.includes(itemId) ? 'REMOVE' : 'ADD';
-        const newFavorites = await updateFavorites({itemId, action})
-        dispatch(upsertFavoritesThunk(newFavorites?.orderedItemIds));
+        const orderedFavoriteIds: string[] = await updateFavorites({itemId, action})
+        dispatch(upsertFavoritesThunk(orderedFavoriteIds));
     }
 
     return (

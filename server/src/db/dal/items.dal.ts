@@ -3,8 +3,12 @@ import { getAllItemsWithS3Images } from "../../services/s3-bucket";
 
 import mongoose, { Require_id } from "mongoose";
 import { Category, CategoryModel } from "../schemas/category.schema";
+import { ItemIdsPerCategory } from "../schemas/user-preferences.schema";
+import { getAllCategoryIds } from "./categories.dal";
+import { getOrderedItemIdsByCategoryId } from "./user-preferences/ordered-items-per-category.dal";
 
 type ItemWithId = Item & Require_id<Item>;
+
 export interface ItemWithCategory extends ItemWithId {
     category: Category
 }
@@ -32,13 +36,34 @@ export const getItemsById = async (itemIds: mongoose.Types.ObjectId[], ordered =
     return (await getAllItemsWithS3Images(orderedItems) as ItemWithCategory[]);
 };
 
-// TODO: apply order
 export const getItemsByCategoryAndUserId = async (categoryId: mongoose.Types.ObjectId, userId: mongoose.Types.ObjectId): Promise<Item[]> => {
     const query: mongoose.FilterQuery<Item> = {
         categoryId,
         $or: [{userId}, {userId: {$exists: false}}]
     };
 
-    const items : Item[] = await ItemModel.find(query).exec();
-  return await getAllItemsWithS3Images(items);
+    const itemsDictionary: { [itemId: string]: Item } = (await ItemModel.find(query).exec())
+        .reduce((acc, curr) => ({...acc, [curr._id.toString()]: curr}), {});
+    const orderedItems: Item[] = (await getOrderedItemIdsByCategoryId(userId, categoryId))
+        .map((itemId: mongoose.Types.ObjectId) => itemsDictionary[itemId.toString()]);
+
+    return await getAllItemsWithS3Images(orderedItems);
 };
+
+export const getSharedItemIdsPerCategory = async (): Promise<ItemIdsPerCategory> => {
+    const query: mongoose.FilterQuery<Item> = {
+        $or: [{userId: {$exists: false}}]
+    };
+
+    const categoryIds: mongoose.Types.ObjectId[] = await getAllCategoryIds();
+    const itemIdsPerCategory: ItemIdsPerCategory = categoryIds.reduce((acc, currCategoryId) => ({
+        ...acc,
+        [currCategoryId.toString()]: []
+    }), {});
+
+    return (await ItemModel.find(query).exec())
+        .reduce((acc, currItem) => ({
+            ...acc,
+            [currItem.categoryId.toString()]: [...acc[currItem.categoryId.toString()], currItem._id]
+        }), itemIdsPerCategory);
+}

@@ -10,6 +10,10 @@ import { Item } from "../db/schemas/item.schema";
 import { validateAddItemRequest, validateRecordRequest } from "../validation/items.validation";
 import { upsertFeedbacks } from "../services/feedback";
 import { getCommonlyUsedItems } from "../services/commonly-used-items";
+import {
+    addItemToPreferences,
+    updateOrderedItemIdsByCategoryId
+} from "../db/dal/user-preferences/ordered-items-per-category.dal";
 
 const router = Router();
 
@@ -101,16 +105,13 @@ router.post('/', authenticate, validateAddItemRequest(), async (req: Request, re
 
     let response: Item | string;
     let statusCode = HttpStatus.OK;
-    const {name, imageUrl, categoryId} = req.body;
-    const {userId} = (req as AuthenticatedRequest).token;
+    const {name, imageUrl} = req.body;
+    const categoryId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(req.body.categoryId);
+    const userId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId((req as AuthenticatedRequest).token.userId);
 
     try {
-        response = await addItem({
-            name,
-            imageUrl,
-            categoryId: new mongoose.Types.ObjectId(categoryId),
-            userId: new mongoose.Types.ObjectId(userId)
-        });
+        response = await addItem({name, imageUrl, categoryId, userId});
+        await addItemToPreferences(userId, categoryId, response.id!);
 
         console.log(`Added new item for userId ${userId}. Item: ${JSON.stringify(response)}`);
     } catch (error) {
@@ -122,6 +123,26 @@ router.post('/', authenticate, validateAddItemRequest(), async (req: Request, re
     res.status(statusCode).send(response);
 });
 
-// TODO: add order option
+// TODO: add validation
+router.put('/order', authenticate, async (req: Request, res: Response) => {
+    const userId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId((req as AuthenticatedRequest).token.userId);
+    const categoryId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(req.body.categoryId);
+    const orderedItemIds: mongoose.Types.ObjectId[] = req.body.orderedItemIds
+        .map((id: string) => new mongoose.Types.ObjectId(id));
+    let response: Item[] | string;
+    let statusCode = StatusCodes.OK;
+
+    try {
+        await updateOrderedItemIdsByCategoryId(userId, categoryId, orderedItemIds);
+        response = await getItemsByCategoryAndUserId(categoryId, userId);
+        console.log(`Ordered items in category. userId: ${userId}, categoryId: ${categoryId}, new order: ${orderedItemIds}`);
+    } catch (error) {
+        statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+        response = `Failed while trying to order items in category. Error: ${error}`;
+        console.log(response);
+    }
+
+    res.status(statusCode).send(response);
+});
 
 export default router;

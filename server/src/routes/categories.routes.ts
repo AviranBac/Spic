@@ -4,7 +4,7 @@ import { getOrderedCategories } from "../db/dal/categories.dal";
 import { Category } from "../db/schemas/category.schema";
 import HttpStatus, { StatusCodes } from "http-status-codes";
 import mongoose, * as Mongoose from "mongoose";
-import { setUserDetails } from "../db/dal/users.dal";
+import { updateOrderedCategoryIds } from "../db/dal/user-preferences/ordered-categories.dal";
 
 const router = Router();
 
@@ -34,12 +34,12 @@ router.put('/order', authenticate, async (req: Request, res: Response) => {
     let statusCode = StatusCodes.OK;
 
     try {
-        await setUserDetails(userId, {orderedCategoryIds});
+        await updateOrderedCategoryIds(userId, orderedCategoryIds);
         response = await getOrderedCategories(userId);
         console.log(`Ordered categories. userId: ${userId}, new order: ${orderedCategoryIds}`);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-        response = `Failed while trying to get categories. Error: ${error}`;
+        response = `Failed while trying to order categories. Error: ${error}`;
         console.log(response);
     }
 

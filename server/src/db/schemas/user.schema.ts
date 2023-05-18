@@ -1,5 +1,4 @@
-import mongoose, { Document, model, Schema } from "mongoose";
-import { CategoryModel } from "./category.schema";
+import { Document, model, Schema } from "mongoose";
 
 export interface IToken {
     token: string,
@@ -13,7 +12,6 @@ export interface IUser extends Document {
     age: number,
     password: string,
     refreshTokens: IToken[],
-    orderedCategoryIds: mongoose.Types.ObjectId[]
 }
 
 const UserModelSchema = new Schema<IUser>({
@@ -48,11 +46,7 @@ const UserModelSchema = new Schema<IUser>({
                 require: true
             }
         }]
-    },
-    orderedCategoryIds: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: CategoryModel.modelName
-    }]
+    }
 });
 
 export const UserModel = model<IUser>("User", UserModelSchema);

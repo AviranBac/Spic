@@ -4,14 +4,13 @@ import {
     addFavoriteItem,
     getFavoriteItemsByUserId,
     removeFavoriteItem,
-    updateOrderedItemIds
-} from "../db/dal/favorites.dal";
+    updateOrderedFavoriteItemIds
+} from "../db/dal/user-preferences/ordered-favorites.dal";
 import { validationResult } from "express-validator/check";
 import HttpStatus, { StatusCodes } from "http-status-codes";
 import mongoose from "mongoose";
 import Mongoose from "mongoose";
 import { validateFavoriteItemRequest } from "../validation/favorite.validation";
-import { Favorite } from "../db/schemas/favorites.schema";
 import { ItemWithCategory } from "../db/dal/items.dal";
 
 const router = Router();
@@ -40,7 +39,7 @@ router.post('/', authenticate, validateFavoriteItemRequest(), async (req: Reques
         return;
     }
 
-    let response: string | Favorite | null;
+    let response: string | mongoose.Types.ObjectId[] | undefined;
     let statusCode = HttpStatus.OK;
     const { itemId, action } = req.body;
     const { userId } = (req as AuthenticatedRequest).token;
@@ -63,18 +62,18 @@ router.post('/', authenticate, validateFavoriteItemRequest(), async (req: Reques
 // TODO: add validation
 router.put('/order', authenticate, async (req: Request, res: Response) => {
     const userId: mongoose.Types.ObjectId = new Mongoose.Types.ObjectId((req as AuthenticatedRequest).token.userId);
-    const orderedItemIds: mongoose.Types.ObjectId[] = req.body.orderedItemIds
+    const orderedFavoriteItemIds: mongoose.Types.ObjectId[] = req.body.orderedFavoriteItemIds
         .map((id: string) => new mongoose.Types.ObjectId(id));
     let response: ItemWithCategory[] | string;
     let statusCode = StatusCodes.OK;
 
     try {
-        await updateOrderedItemIds(userId, orderedItemIds);
+        await updateOrderedFavoriteItemIds(userId, orderedFavoriteItemIds);
         response = await getFavoriteItemsByUserId(userId);
-        console.log(`Ordered favorites. userId: ${userId}, new order: ${orderedItemIds}`);
+        console.log(`Ordered favorites. userId: ${userId}, new order: ${orderedFavoriteItemIds}`);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-        response = `Failed while trying to get categories. Error: ${error}`;
+        response = `Failed while trying to order favorites. Error: ${error}`;
         console.log(response);
     }
 
