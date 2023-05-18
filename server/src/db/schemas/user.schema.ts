@@ -11,7 +11,7 @@ export interface IUser extends Document {
     gender: string, 
     age: number,
     password: string,
-    refreshTokens: IToken[],
+    refreshTokens: IToken[]
 }
 
 const UserModelSchema = new Schema<IUser>({

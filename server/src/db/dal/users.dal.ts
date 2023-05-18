@@ -30,5 +30,5 @@ export const setUserDetails = async (userId: mongoose.Types.ObjectId, userDetail
     return filteredUserDetails(response);
 }
 
-export const getAllUserIds = async (): Promise<mongoose.Types.ObjectId[]> => (await UserModel.find({}))
-    .map((user: IUser) => user.id!);
+export const getAllUserIds = async (): Promise<mongoose.Types.ObjectId[]> => (await UserModel.find().lean())
+    .map(user => user._id);
