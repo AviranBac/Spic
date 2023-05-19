@@ -128,7 +128,7 @@ router.put('/:itemId/', authenticate, validateEditItemRequest(), async (req: Req
         res.status(HttpStatus.BAD_REQUEST).json({errors: errors.array()});
         return;
     }
-
+    
     const itemId = req.params.itemId;
     const updatedItem: Item = req.body;
     const {userId} = (req as AuthenticatedRequest).token;
@@ -151,7 +151,6 @@ router.delete('/:itemId/', authenticate, validateDeleteItemRequest(), async (req
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         res.status(HttpStatus.BAD_REQUEST).json({errors: errors.array()});
-        console.log(`Failed while trying to delete item. itemId: ${itemId}, userId: ${userId}. Error: ${error}`);
         return;
     }
 
