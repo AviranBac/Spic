@@ -7,13 +7,13 @@ import { ItemIdsPerCategory } from "../schemas/user-preferences.schema";
 import { getAllCategoryIds } from "./categories.dal";
 import { getOrderedItemIdsByCategoryId } from "./user-preferences/ordered-items-per-category.dal";
 
-type ItemWithId = Item & Require_id<Item>;
+export type ItemWithId = Item & Require_id<Item>;
 
 export interface ItemWithCategory extends ItemWithId {
     category: Category
 }
 
-export const addItem = async (item: Item): Promise<Item> => ItemModel.create(item);
+export const addItem = async (item: Item): Promise<ItemWithId> => ItemModel.create(item);
 
 export const getItemsById = async (itemIds: mongoose.Types.ObjectId[], ordered = false): Promise<ItemWithCategory[]> => {
     const itemsDictionary: { [itemId: string]: ItemWithCategory } = (await ItemModel.aggregate([
@@ -49,6 +49,14 @@ export const getItemsByCategoryAndUserId = async (categoryId: mongoose.Types.Obj
 
     return await getAllItemsWithS3Images(orderedItems);
 };
+
+export const deleteItemById = async (itemId: mongoose.Types.ObjectId): Promise<void> => {
+    await ItemModel.deleteOne({_id: itemId}).exec();
+}
+
+export const editItemById = async (itemId: mongoose.Types.ObjectId, updatedItem: Item): Promise<Item> => {
+    return (await ItemModel.findOneAndUpdate({_id: itemId}, updatedItem, {new: true}).exec()) as Item;
+}
 
 export const getSharedItemIdsPerCategory = async (): Promise<ItemIdsPerCategory> => {
     const query: mongoose.FilterQuery<Item> = {

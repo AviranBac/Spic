@@ -3,7 +3,7 @@ import { Category, CategoryModel } from "../schemas/category.schema";
 import mongoose from "mongoose";
 import { Item, ItemModel } from "../schemas/item.schema";
 import { getPhotos } from "../../services/photos";
-import { addItem } from "./items.dal";
+import { addItem, ItemWithId } from "./items.dal";
 import { ChosenItemRecordModel } from "../schemas/chosen-item-record.schema";
 import { FeedbackModel } from "../schemas/feedback.schema";
 import { UserPreferences, UserPreferencesModel } from "../schemas/user-preferences.schema";
@@ -141,7 +141,7 @@ const initItemsForCategoryDb = async (itemsNames: string[], categoryId: mongoose
     const items: Item[] = await getItemsFromUnsplash(itemsNames, categoryId);
     await Promise.all(
         items.map(async (item: Item) => {
-            const addedItem: Item = await addItem(item);
+            const addedItem: ItemWithId = await addItem(item);
             console.log(`Saved item in DB: ${JSON.stringify(addedItem)}`);
         })
     );

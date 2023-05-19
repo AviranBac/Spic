@@ -28,8 +28,7 @@ export const addItemToPreferences = async (userId: mongoose.Types.ObjectId,
     ))?.orderedItemIdsPerCategory?.[categoryId.toString()];
 }
 
-// TODO: add this to remove item method in Tesel's feature
-export const removeItemFromPreferences = async (userId: mongoose.Types.ObjectId,
+export const deleteItemFromPreferences = async (userId: mongoose.Types.ObjectId,
                                                 categoryId: mongoose.Types.ObjectId,
                                                 itemId: mongoose.Types.ObjectId): Promise<mongoose.Types.ObjectId[] | undefined> => {
     return (await UserPreferencesModel.findOneAndUpdate(

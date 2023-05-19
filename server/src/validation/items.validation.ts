@@ -70,7 +70,7 @@ export const validateItemOrderRequest = () => {
         ...[categoryIdValidation],
         body('orderedItemIds', 'Invalid orderedItemIds')
             .isArray()
-            .custom(async (orderedItemIds: string[], {req}: {req: Request}) => {
+            .custom(async (orderedItemIds: string[], {req}: { req: Request }) => {
                 const categoryId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(req.body.categoryId);
 
                 const userId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId((req as AuthenticatedRequest).token.userId);
@@ -85,3 +85,23 @@ export const validateItemOrderRequest = () => {
             })
     ]
 }
+
+export const validateEditItemRequest = () => {
+    return [
+        ...validateDeleteItemRequest(),
+        ...validateAddItemRequest(),
+    ];
+};
+
+export const validateDeleteItemRequest = () => {
+    return [
+        body('_id', 'Invalid itemId')
+            .isString()
+            .custom(async (_id: string, {req}: { req: Request }) => {
+                if (await ItemModel.findOne({_id, userId: (req as AuthenticatedRequest).token.userId})) {
+                    return true;
+                }
+                throw new Error('itemId does not exist');
+            })
+    ];
+};
