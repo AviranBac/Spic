@@ -4,6 +4,7 @@ import { CategoryModel } from "../db/schemas/category.schema";
 import mongoose from "mongoose";
 import { difference } from 'lodash';
 import { Request } from "express-validator/src/base";
+import { AuthenticatedRequest } from "../auth/auth-middleware";
 
 export const validateRecordRequest = () => {
     return [
@@ -62,23 +63,7 @@ export const validateAddItemRequest = () => {
 
 export const validateEditItemRequest = () => {
     return [
-        body('_id', 'Invalid itemId'),
-        body('name', 'Invalid name')
-            .isString()
-            .notEmpty({ ignore_whitespace: true }),
-        body('imageUrl', 'Invalid imageUrl')
-            .isString()
-            .notEmpty({ ignore_whitespace: true }),
-        body('categoryId', 'Invalid categoryId')
-            .isString()
-            .isString()
-            .custom(async (_id: string, { req }: { req: Request }) => {
-                const itemId: string = _id || req.body.itemId;
-                if (await ItemModel.findOne({ _id: itemId, userId: req.user.id })) {
-                    return true;
-                }
-                throw new Error('itemId does not exist');
-            }),
+        ...validateDeleteItemRequest(),
         ...validateAddItemRequest(),
     ];
 };
@@ -89,7 +74,7 @@ export const validateDeleteItemRequest = () => {
             .isString()
             .custom(async (_id: string, { req }: { req: Request }) => {
                 const itemId: string = _id || req.body.itemId;
-                if (await ItemModel.findOne({ _id: itemId, userId: req.user.id })) {
+                if (await ItemModel.findOne({ _id: itemId, userId: (req as AuthenticatedRequest).token.userId })) {
                     return true;
                 }
                 throw new Error('itemId does not exist');
