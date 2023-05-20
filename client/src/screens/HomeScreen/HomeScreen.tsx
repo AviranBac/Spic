@@ -1,15 +1,15 @@
-import { ScrollView } from "react-native";
-import React, { useEffect, useState } from "react";
-import { ClickableBox } from "../../components/ClickableBox";
-import { getCategories } from "../../services/categories.service";
-import { useAppSelector } from "../../store/hooks";
-import { StackScreenProps } from "@react-navigation/stack";
-import { HomeStackParamList } from "../../utils/navigation-stack";
-import { Category } from "../../models/category";
-import { selectGender, selectUsername } from "../../store/user-details/user-details.selectors";
-import { StyledText, Wrapper } from "./styles";
-import { HeadLinedWrapper, ItemsWrapper } from "../../styles/shared-styles";
-import { Gender } from "../../store/user-details/user-details.model";
+import {ScrollView} from "react-native";
+import React, {useEffect, useState} from "react";
+import {getCategories} from "../../services/categories.service";
+import {useAppSelector} from "../../store/hooks";
+import {StackScreenProps} from "@react-navigation/stack";
+import {HomeStackParamList} from "../../utils/navigation-stack";
+import {Category} from "../../models/category";
+import {selectGender, selectUsername} from "../../store/user-details/user-details.selectors";
+import {StyledText, Wrapper} from "./styles";
+import {HeadLinedWrapper, ItemsWrapper} from "../../styles/shared-styles";
+import {Gender} from "../../store/user-details/user-details.model";
+import {DragAndDrop} from "../../components/DragAndDrop/DragAndDrop";
 
 type HomeScreenProps = StackScreenProps<HomeStackParamList>;
 
@@ -43,6 +43,10 @@ export const HomeScreen = ({navigation}: HomeScreenProps) => {
     const gender: Gender | undefined = useAppSelector(selectGender);
     const timeString = getTimeString();
 
+    const onItemPress = (category: Category) => {
+        navigation.navigate('Category', {category})
+    }
+
     useEffect(() => {
         getCategories().then((response) => {
             setCategories(response);
@@ -52,33 +56,22 @@ export const HomeScreen = ({navigation}: HomeScreenProps) => {
     const userGenderString = gender === 'FEMALE' ? 'תרצי' : 'תרצה';
 
     return (
-        <ScrollView>
-            <Wrapper>
-                <HeadLinedWrapper>
-                    <StyledText>
-                        {timeString} {username}
-                        {timeString === TIME_STRINGS.MORNING && <> ☀️ </>}
-                        {timeString === TIME_STRINGS.NOON && <> 🌞 </>}
-                        {timeString === TIME_STRINGS.EVENING && <> 🌗 </>}
-                        {timeString === TIME_STRINGS.NIGHT && <> 🌚 </>}
-                    </StyledText>
-                    <StyledText>
-                        מה {userGenderString} לעשות היום ?
-                    </StyledText>
-                </HeadLinedWrapper>
-                <ItemsWrapper style={{direction: "rtl"}}>
-                    {
-                        categories?.map((category: Category) => {
-                            return <ClickableBox name={category.name}
-                                                 id={category._id}
-                                                 imageUrl={category.imageUrl}
-                                                 onPress={() => navigation.navigate('Category', {category})}
-                                                 hasIcon={false}
-                                                 key={category._id}/>
-                        })
-                    }
-                </ItemsWrapper>
-            </Wrapper>
-        </ScrollView>
+        <Wrapper>
+            <HeadLinedWrapper wrapperSize={8}>
+                <StyledText>
+                    {timeString} {username}
+                    {timeString === TIME_STRINGS.MORNING && <> ☀️ </>}
+                    {timeString === TIME_STRINGS.NOON && <> 🌞 </>}
+                    {timeString === TIME_STRINGS.EVENING && <> 🌗 </>}
+                    {timeString === TIME_STRINGS.NIGHT && <> 🌚 </>}
+                </StyledText>
+                <StyledText>
+                    מה {userGenderString} לעשות היום ?
+                </StyledText>
+            </HeadLinedWrapper>
+            <ItemsWrapper>
+                <DragAndDrop items={categories} isHomeScreen={true} onItemPress={onItemPress}/>
+            </ItemsWrapper>
+        </Wrapper>
     );
 }

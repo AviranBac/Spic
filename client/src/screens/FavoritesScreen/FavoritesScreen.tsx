@@ -40,9 +40,11 @@ export const FavoritesScreen = () => {
 
     return (
         <Wrapper>
-            <Text style={{fontSize: 30}}>המועדפים שלי: </Text>
+            <HeadLinedWrapper wrapperSize={8}>
+                <Text style={{fontSize: 30}}>המועדפים שלי: </Text>
+            </HeadLinedWrapper>
             <ItemsWrapper>
-                <DragAndDrop items={favoriteItems}/>
+                <DragAndDrop items={favoriteItems} isFavorites={true}/>
             </ItemsWrapper>
             <FullActionModal itemWithCategory={activeItemWithCategory}
                              onRequestClose={onModalClose}

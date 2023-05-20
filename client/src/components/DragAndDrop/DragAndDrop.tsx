@@ -6,8 +6,9 @@ import {ItemsWrapper} from "../../styles/shared-styles";
 import {styles} from "./styles";
 import {Category} from "../../models/category";
 import Toast from "react-native-toast-message";
-import {updateCategoryItemListOrder} from "../../services/categories.service";
-import {bool} from "yup";
+import {updateItemListOrder} from "../../services/items.service";
+import {updateFavoriteListOrder} from "../../services/favorites.service";
+import {updateCategoryListOrder} from "../../services/categories.service";
 
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
@@ -20,13 +21,14 @@ interface Props {
     onItemPress?: (item: any) => void;
     category?: Category;
     isFavorites?: boolean;
+    isHomeScreen?: boolean;
 }
 
-export const DragAndDrop = ({items, onItemPress, category, isFavorites = false}: Props) => {
+export const DragAndDrop = ({items, onItemPress, category, isFavorites = false, isHomeScreen = false}: Props) => {
     const [scrollEnabled, setScrollEnabled] = useState(true);
     const [isEditState, setIsEdit] = useState(false);
     const setMap = useRef(new Map());
-    const [temp, setTemp] = useState(items);
+    const [itemsList, setItemsList] = useState(items);
     const [isPortrait, setIsPortrait] = useState(true);
 
     useEffect(() => {
@@ -42,7 +44,7 @@ export const DragAndDrop = ({items, onItemPress, category, isFavorites = false}:
         };
     }, []);
     useEffect(() => {
-        setTemp(items)
+        setItemsList(items)
     }, [items])
 
     const renderSelectedItemView = (item: { name: string, _id: string, imageUrl: string }, index: number) => {
@@ -53,7 +55,9 @@ export const DragAndDrop = ({items, onItemPress, category, isFavorites = false}:
                               id={item._id}
                               onPress={() => onItemPress && onItemPress(item)}
                               imageUrl={item.imageUrl}
-                              key={item._id}/>
+                              key={item._id}
+                              hasIcon={!isHomeScreen}
+                />
 
             </View>
         )
@@ -82,13 +86,14 @@ export const DragAndDrop = ({items, onItemPress, category, isFavorites = false}:
             text2: 'סדר הפריטים במערכת ⭐️',
         });
 
-        updateCategoryItemListOrder(Array.from(sortedMap.keys()), categoryId);
-
+        isFavorites ? updateFavoriteListOrder(Array.from(sortedMap.keys())).then(setItemsList)
+            : isHomeScreen ? updateCategoryListOrder(Array.from(sortedMap.keys())).then(setItemsList) :
+                updateItemListOrder(Array.from(sortedMap.keys()), categoryId).then(setItemsList);
     }
 
     const handleReset = () => {
         setIsEdit(false)
-        setTemp([...items])
+        setItemsList([...itemsList])
     };
 
     return (
@@ -105,7 +110,7 @@ export const DragAndDrop = ({items, onItemPress, category, isFavorites = false}:
                 </View>}
                 <ItemsWrapper>
                     <DragSortableView
-                        dataSource={temp}
+                        dataSource={itemsList}
                         parentWidth={deviceWidth}
                         childrenWidth={isPortrait ? childrenWidth : childrenWidth}
                         childrenHeight={isPortrait ? childrenHeight : childrenHeight}
