@@ -1,15 +1,33 @@
 import { authenticate, AuthenticatedRequest } from "../auth/auth-middleware";
 import { Request, Response, Router } from "express";
-import { addItem, getItemsByCategoryAndUserId, ItemWithCategory } from "../db/dal/items.dal";
+import {
+    addItem,
+    deleteItemById,
+    editItemById,
+    getItemsByCategoryAndUserId,
+    getItemsById,
+    ItemWithCategory,
+    ItemWithId
+} from "../db/dal/items.dal";
 import { validationResult } from "express-validator/check";
 import HttpStatus, { StatusCodes } from "http-status-codes";
 import { addRecord } from "../db/dal/chosen-item-records.dal";
 import mongoose from "mongoose";
-
 import { Item } from "../db/schemas/item.schema";
-import { validateAddItemRequest, validateRecordRequest } from "../validation/items.validation";
+import {
+    validateAddItemRequest,
+    validateDeleteItemRequest,
+    validateEditItemRequest,
+    validateItemOrderRequest,
+    validateRecordRequest
+} from "../validation/items.validation";
 import { upsertFeedbacks } from "../services/feedback";
 import { getCommonlyUsedItems } from "../services/commonly-used-items";
+import {
+    addItemToPreferences,
+    deleteItemFromPreferences,
+    updateOrderedItemIdsByCategoryId
+} from "../db/dal/user-preferences/ordered-items-per-category.dal";
 
 const router = Router();
 
@@ -99,23 +117,99 @@ router.post('/', authenticate, validateAddItemRequest(), async (req: Request, re
         return;
     }
 
-    let response: Item | string;
+    let response: ItemWithId | string;
     let statusCode = HttpStatus.OK;
-    const {name, imageUrl, categoryId} = req.body;
-    const {userId} = (req as AuthenticatedRequest).token;
+    const {name, imageUrl} = req.body;
+    const categoryId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(req.body.categoryId);
+    const userId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId((req as AuthenticatedRequest).token.userId);
 
     try {
-        response = await addItem({
-            name,
-            imageUrl,
-            categoryId: new mongoose.Types.ObjectId(categoryId),
-            userId: new mongoose.Types.ObjectId(userId)
-        });
+        response = await addItem({name, imageUrl, categoryId, userId});
+        await addItemToPreferences(userId, categoryId, response._id);
 
         console.log(`Added new item for userId ${userId}. Item: ${JSON.stringify(response)}`);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
         response = `Failed while trying to add new item. Name: ${name}, imageUrl: ${imageUrl}, categoryId: ${categoryId}, userId: ${userId}. Error: ${error}`;
+        console.log(response);
+    }
+
+    res.status(statusCode).send(response);
+});
+
+router.put('/', authenticate, validateEditItemRequest(), async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(HttpStatus.BAD_REQUEST).json({errors: errors.array()});
+        return;
+    }
+
+    const {userId} = (req as AuthenticatedRequest).token;
+    const updatedItem: ItemWithId = req.body;
+    const itemId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(updatedItem._id);
+    let response: Item | string;
+    let statusCode = StatusCodes.OK;
+
+    try {
+        response = await editItemById(itemId, updatedItem);
+        console.log(`Updated item with itemId: ${itemId.toString()}, userId: ${userId}`);
+    } catch (error) {
+        statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+        response = `Failed while trying to update item. itemId: ${itemId.toString()}, userId: ${userId}. Error: ${error}`;
+        console.log(response);
+    }
+
+    res.status(statusCode).send(response);
+});
+
+router.put('/order', authenticate, validateItemOrderRequest(), async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(HttpStatus.BAD_REQUEST).json({errors: errors.array()});
+        return;
+    }
+
+    const userId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId((req as AuthenticatedRequest).token.userId);
+    const categoryId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(req.body.categoryId);
+    const orderedItemIds: mongoose.Types.ObjectId[] = req.body.orderedItemIds
+        .map((id: string) => new mongoose.Types.ObjectId(id));
+    let response: Item[] | string;
+    let statusCode = StatusCodes.OK;
+
+    try {
+        await updateOrderedItemIdsByCategoryId(userId, categoryId, orderedItemIds);
+        response = await getItemsByCategoryAndUserId(categoryId, userId);
+        console.log(`Ordered items in category. userId: ${userId}, categoryId: ${categoryId}, new order: ${orderedItemIds}`);
+    } catch (error) {
+        statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+        response = `Failed while trying to order items in category. Error: ${error}`;
+        console.log(response);
+    }
+
+    res.status(statusCode).send(response);
+});
+
+router.delete('/', authenticate, validateDeleteItemRequest(), async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(HttpStatus.BAD_REQUEST).json({errors: errors.array()});
+        return;
+    }
+
+    const userId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId((req as AuthenticatedRequest).token.userId);
+    const itemId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(req.body._id);
+    let response: string = '';
+    let statusCode = StatusCodes.OK;
+
+    try {
+        const deletedItemCategoryId: mongoose.Types.ObjectId = (await getItemsById([itemId]))[0].categoryId;
+
+        await deleteItemById(new mongoose.Types.ObjectId(itemId));
+        await deleteItemFromPreferences(userId, deletedItemCategoryId, itemId);
+        console.log(`Deleted item with itemId: ${itemId}, userId: ${userId}`);
+    } catch (error) {
+        statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+        response = `Failed while trying to delete item. itemId: ${itemId}, userId: ${userId}. Error: ${error}`;
         console.log(response);
     }
 

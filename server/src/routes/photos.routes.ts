@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import HttpStatus from 'http-status-codes';
 import { getPhotos } from '../services/photos';
 import { authenticate } from "../auth/auth-middleware";
-import { getS3SignedUrl, Action } from "../services/s3-bucket"
+import { Action, getS3SignedUrl } from "../services/s3-bucket"
 
 const router = express.Router();
 

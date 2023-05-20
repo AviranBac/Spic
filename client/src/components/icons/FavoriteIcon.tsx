@@ -1,9 +1,9 @@
-import {StyleSheet, TouchableOpacity, View} from "react-native";
-import {MaterialCommunityIcons} from "@expo/vector-icons";
-import {ActionType, updateFavorites} from "../../services/favorites.service";
-import {useAppDispatch, useAppSelector} from "../../store/hooks";
-import {selectFavoriteIds} from "../../store/favorites/favorites.selectors";
-import {upsertFavoritesThunk} from "../../store/favorites/favorites.slice";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { ActionType, updateFavorites } from "../../services/favorites.service";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { selectFavoriteIds } from "../../store/favorites/favorites.selectors";
+import { upsertFavoritesThunk } from "../../store/favorites/favorites.slice";
 
 interface Props {
     itemId: string
@@ -39,8 +39,8 @@ export const FavoriteIcon = ({itemId}: Props) => {
 
     const handleOnPress = async () => {
         const action: ActionType = favorites?.includes(itemId) ? 'REMOVE' : 'ADD';
-        const newFavorites = await updateFavorites({itemId, action})
-        dispatch(upsertFavoritesThunk(newFavorites?.itemIds));
+        const orderedFavoriteIds: string[] = await updateFavorites({itemId, action})
+        dispatch(upsertFavoritesThunk(orderedFavoriteIds));
     }
 
     return (

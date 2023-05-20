@@ -8,7 +8,7 @@ export const getFavorites: () => Promise<ItemWithCategory[]> = () => {
 }
 export type ActionType = 'ADD' | 'REMOVE';
 
-export const updateFavorites = (data: { itemId: string, action: ActionType }) => {
+export const updateFavorites = (data: { itemId: string, action: ActionType }): Promise<string[]> => {
     return axiosInstance.post('/favorites', data)
         .then(response => response.data)
         .catch(error => {
