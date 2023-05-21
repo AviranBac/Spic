@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {StackScreenProps} from "@react-navigation/stack";
 import {HomeStackParamList} from "../../utils/navigation-stack";
-import {getItems, recordItemChosen} from "../../services/items.service";
+import {getItems, recordItemChosen, updateItemListOrder} from "../../services/items.service";
 import {Item, ItemWithCategory} from "../../models/item";
 import {FullActionModal} from "../../components/FullActionModal/FullActionModal";
 import {CircleIcon} from "../../components/icons/CircleIcon";
@@ -49,7 +49,7 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
 
     return (
         <>
-            <DragAndDrop items={items} onItemPress={onItemPress} category={category}/>
+            <DragAndDrop items={items} onItemPress={onItemPress} category={category} updateOrderFunc={(orderedItemIds: string[]) => updateItemListOrder(orderedItemIds, categoryId)}/>
             <FullActionModal
                 itemWithCategory={activeItemWithCategory}
                 onRequestClose={onModalClose}

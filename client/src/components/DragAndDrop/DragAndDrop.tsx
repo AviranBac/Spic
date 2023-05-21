@@ -6,9 +6,6 @@ import {ItemsWrapper} from "../../styles/shared-styles";
 import {styles} from "./styles";
 import {Category} from "../../models/category";
 import Toast from "react-native-toast-message";
-import {updateItemListOrder} from "../../services/items.service";
-import {updateFavoriteListOrder} from "../../services/favorites.service";
-import {updateCategoryListOrder} from "../../services/categories.service";
 
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
@@ -19,14 +16,18 @@ const childrenHeight = deviceHeight / 4;
 interface Props {
     items: any[];
     onItemPress?: (item: any) => void;
-    category?: Category;
-    isFavorites?: boolean;
     isHomeScreen?: boolean;
+    updateOrderFunc: (orderedIds: string[]) => Promise<any[]>;
 }
 
-export const DragAndDrop = ({items, onItemPress, category, isFavorites = false, isHomeScreen = false}: Props) => {
+export const DragAndDrop = ({
+                                items,
+                                onItemPress,
+                                isHomeScreen = false,
+                                updateOrderFunc
+                            }: Props) => {
     const [scrollEnabled, setScrollEnabled] = useState(true);
-    const [isEditState, setIsEdit] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
     const setMap = useRef(new Map());
     const [itemsList, setItemsList] = useState(items);
     const [isPortrait, setIsPortrait] = useState(true);
@@ -68,27 +69,31 @@ export const DragAndDrop = ({items, onItemPress, category, isFavorites = false, 
     }
 
     const onSelectedDragStart = () => {
-        if (!isEditState) {
+        if (!isEdit) {
             setIsEdit(true);
-            setScrollEnabled(false);
-        } else {
-            setScrollEnabled(false);
         }
+        setScrollEnabled(false);
     }
 
     const onSaveChanges = () => {
         setIsEdit(false);
         const sortedMap = new Map(Array.from(setMap.current.entries()).sort((a, b) => a[1] - b[1]));
-        const categoryId = isFavorites ? 'favorites' : category?._id;
-        Toast.show({
-            type: 'success',
-            text1: 'שמירה בוצעה בהצלחה',
-            text2: 'סדר הפריטים במערכת ⭐️',
-        });
+        const iterable: IterableIterator<any> = sortedMap.keys();
+        const array: string[] = Array.from(iterable);
 
-        isFavorites ? updateFavoriteListOrder(Array.from(sortedMap.keys())).then(setItemsList)
-            : isHomeScreen ? updateCategoryListOrder(Array.from(sortedMap.keys())).then(setItemsList) :
-                updateItemListOrder(Array.from(sortedMap.keys()), categoryId).then(setItemsList);
+        updateOrderFunc(array).then((res) => {
+            setItemsList(res);
+            Toast.show({
+                type: 'success',
+                text1: 'שמירה בוצעה בהצלחה',
+                text2: 'סדר הפריטים במערכת עודכן ⭐️',
+            });
+        }).catch(() => Toast.show({
+                type: 'error',
+                text1: 'שמירה נכשלה',
+                text2: 'סדר הפריטים במערכת לא עודכן 🚫',
+            })
+        )
     }
 
     const handleReset = () => {
@@ -100,7 +105,7 @@ export const DragAndDrop = ({items, onItemPress, category, isFavorites = false, 
         <SafeAreaView style={{backgroundColor: '#fff', flex: 1}}>
             <ScrollView
                 scrollEnabled={scrollEnabled}>
-                {isEditState && <View style={styles.hurdle}>
+                {isEdit && <View style={styles.hurdle}>
                     <TouchableOpacity style={styles.hurdle_edit} onPress={onSaveChanges}>
                         <Text style={styles.hurdle_edit_text}>{'שמירת שינויים'}</Text>
                     </TouchableOpacity>

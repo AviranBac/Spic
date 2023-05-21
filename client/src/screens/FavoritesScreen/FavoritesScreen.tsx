@@ -2,7 +2,7 @@ import {useAppSelector} from "../../store/hooks";
 import React, {useEffect, useState} from "react";
 import {ScrollView, Text, View} from 'react-native';
 import {selectFavoriteIds} from "../../store/favorites/favorites.selectors";
-import {getFavorites} from "../../services/favorites.service";
+import {getFavorites, updateFavoriteListOrder} from "../../services/favorites.service";
 import {HeadLinedWrapper, ItemsWrapper} from "../../styles/shared-styles";
 import {Wrapper} from "../HomeScreen/styles";
 import {DragAndDrop} from "../../components/DragAndDrop/DragAndDrop";
@@ -44,7 +44,7 @@ export const FavoritesScreen = () => {
                 <Text style={{fontSize: 30}}>המועדפים שלי: </Text>
             </HeadLinedWrapper>
             <ItemsWrapper>
-                <DragAndDrop items={favoriteItems} isFavorites={true}/>
+                <DragAndDrop items={favoriteItems} updateOrderFunc={updateFavoriteListOrder}/>
             </ItemsWrapper>
             <FullActionModal itemWithCategory={activeItemWithCategory}
                              onRequestClose={onModalClose}

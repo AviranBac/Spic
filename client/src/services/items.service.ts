@@ -22,7 +22,7 @@ export const recordItemChosen = (item: Item, recommendedItemIds?: string[]) => {
         .then((response) => response.data);
 }
 
-export const updateItemListOrder = (orderedItemIds: string[], categoryId?: string) => {
+export const updateItemListOrder = (orderedItemIds: string[], categoryId: string | undefined) => {
     return axiosInstance.put('/items/order', {categoryId, orderedItemIds}).then(response => response.data)
         .catch(error => {
             console.error('Error:', error);

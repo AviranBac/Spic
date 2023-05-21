@@ -34,28 +34,12 @@ export const styles = StyleSheet.create({
         color: '#ff6548',
         fontSize: 16
     },
-    // selected_container: {
-    //     width: childrenWidth,
-    //     height: childrenHeight,
-    //     alignItems: 'center',
-    //     justifyContent: 'center',
-    // },
     edit_mode: {
-        // width: childrenWidth,
-        // height: childrenHeight,
         alignItems: 'center',
         justifyContent: 'center',
         borderColor: 'black',
         borderWidth: 5
     },
-    // selected_item: {
-    //     width: 72,
-    //     height: 36,
-    //     backgroundColor: '#f0f0f0',
-    //     borderRadius: 2,
-    //     alignItems: 'center',
-    //     justifyContent: 'center'
-    // },
     selected_item_fixed: {
         width: 72,
         height: 36,
@@ -72,14 +56,6 @@ export const styles = StyleSheet.create({
         fontSize: 16,
         color: '#f0f0f0'
     },
-    // selected_item_icon: {
-    //     width: 16,
-    //     height: 16,
-    //     resizeMode: 'contain',
-    //     position: 'absolute',
-    //     top: (childrenHeight - itemHeight - 16) / 2 + 16 * 0.25, //下移点
-    //     left: (childrenWidth + itemWidth - 16) / 2 - 16 * 0.25 //右移点，也可以换个布局
-    // },
     unselected_item: {
         width: 72,
         height: 36,

@@ -1,6 +1,6 @@
 import {ScrollView} from "react-native";
 import React, {useEffect, useState} from "react";
-import {getCategories} from "../../services/categories.service";
+import {getCategories, updateCategoryListOrder} from "../../services/categories.service";
 import {useAppSelector} from "../../store/hooks";
 import {StackScreenProps} from "@react-navigation/stack";
 import {HomeStackParamList} from "../../utils/navigation-stack";
@@ -70,7 +70,7 @@ export const HomeScreen = ({navigation}: HomeScreenProps) => {
                 </StyledText>
             </HeadLinedWrapper>
             <ItemsWrapper>
-                <DragAndDrop items={categories} isHomeScreen={true} onItemPress={onItemPress}/>
+                <DragAndDrop items={categories} isHomeScreen={true} onItemPress={onItemPress} updateOrderFunc={updateCategoryListOrder}/>
             </ItemsWrapper>
         </Wrapper>
     );
