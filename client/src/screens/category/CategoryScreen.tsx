@@ -49,7 +49,7 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
 
     return (
         <>
-            <DragAndDrop items={items} onItemPress={onItemPress} category={category} updateOrderFunc={(orderedItemIds: string[]) => updateItemListOrder(orderedItemIds, categoryId)}/>
+            <DragAndDrop items={items} onItemPress={onItemPress} updateOrderFunc={(orderedItemIds: string[]) => updateItemListOrder(orderedItemIds, categoryId)}/>
             <FullActionModal
                 itemWithCategory={activeItemWithCategory}
                 onRequestClose={onModalClose}
