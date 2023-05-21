@@ -2,7 +2,7 @@ import {Dimensions, SafeAreaView, ScrollView, Text, TouchableOpacity, View} from
 import {DragSortableView} from "react-native-drag-sort";
 import React, {useEffect, useRef, useState} from "react";
 import {ClickableBox} from "../ClickableBox";
-import {ItemsWrapper} from "../../styles/shared-styles";
+import {ItemsWrapper, StyledButton} from "../../styles/shared-styles";
 import {styles} from "./styles";
 import {Category} from "../../models/category";
 import Toast from "react-native-toast-message";
@@ -106,12 +106,14 @@ export const DragAndDrop = ({
             <ScrollView
                 scrollEnabled={scrollEnabled}>
                 {isEdit && <View style={styles.hurdle}>
-                    <TouchableOpacity style={styles.hurdle_edit} onPress={onSaveChanges}>
-                        <Text style={styles.hurdle_edit_text}>{'שמירת שינויים'}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.hurdle_edit} onPress={handleReset}>
-                        <Text style={styles.hurdle_edit_text}>{'ביטול'}</Text>
-                    </TouchableOpacity>
+                    <StyledButton title={'שמירת שינויים'} onPress={onSaveChanges}/>
+                    <StyledButton title={'ביטול'} onPress={handleReset}/>
+                    {/*<TouchableOpacity style={styles.hurdle_edit} onPress={onSaveChanges}>*/}
+                    {/*    <Text style={styles.hurdle_edit_text}>{'שמירת שינויים'}</Text>*/}
+                    {/*</TouchableOpacity>*/}
+                    {/*<TouchableOpacity style={styles.hurdle_edit} onPress={handleReset}>*/}
+                    {/*    <Text style={styles.hurdle_edit_text}>{'ביטול'}</Text>*/}
+                    {/*</TouchableOpacity>*/}
                 </View>}
                 <ItemsWrapper>
                     <DragSortableView
