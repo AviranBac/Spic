@@ -1,15 +1,15 @@
-import { addCategory } from "./categories.dal";
+import { addCategory } from "../dal/categories.dal";
 import { Category, CategoryModel } from "../schemas/category.schema";
 import mongoose from "mongoose";
 import { Item, ItemModel } from "../schemas/item.schema";
 import { getPhotos } from "../../services/photos";
-import { addItem, ItemWithId } from "./items.dal";
+import { addItem, ItemWithId } from "../dal/items.dal";
 import { ChosenItemRecordModel } from "../schemas/chosen-item-record.schema";
 import { FeedbackModel } from "../schemas/feedback.schema";
-import { categoriesWithItems, CategoryWithItems, hardcodedItems, HardcodedItem } from "./Initialized-data";
+import { categoriesWithItems, CategoryWithItems, hardcodedItems } from "./hard-coded-data";
 import { UserPreferences, UserPreferencesModel } from "../schemas/user-preferences.schema";
-import { getAllUserIds } from "./users.dal";
-import { getInitialPreferences } from "./user-preferences/user-preferences.dal";
+import { getAllUserIds } from "../dal/users.dal";
+import { getInitialPreferences } from "../dal/user-preferences/user-preferences.dal";
 
 export const initDb = async () => {
     const shouldInit: boolean = !(await CategoryModel.count().exec() && await ItemModel.count().exec());
@@ -72,9 +72,9 @@ const getItemsFromUnsplash = async (itemsNames: string[], categoryId: mongoose.T
     for (const itemName of itemsNames) {
         let imageUrl : string = '';
 
-        const hardcodedItem : HardcodedItem | undefined =  hardcodedItems.find(({name}) => name === itemName);
-        if (hardcodedItem) {
-            imageUrl = hardcodedItem.imageUrl;
+        const hardcodedImgUrl : string | undefined =  hardcodedItems[itemName];
+        if (hardcodedImgUrl) {
+            imageUrl = hardcodedImgUrl;
         } else {
             try {
                 const photos : string[] = await getPhotos(itemName);
