@@ -70,7 +70,7 @@ export const categoriesWithItems: CategoryWithItems[] = [{
     itemNames: ['ללכת לישון', 'לשחק', 'לנקות', 'ללכת', 'לטייל', 'לצייר', 'לנוח', 'לבשל', 'לשיר', 'לכתוב', 'לקנות']
 }];
 
-export const hardcodedItems: Record<string, string> = {
+export const hardcodedImageUrls: Record<string, string> = {
     'איפה?': 'https://images.unsplash.com/photo-1535745122259-f1e187953c4c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NDA2MTh8MHwxfHNlYXJjaHw0fHwlRDclOTAlRDclOTklRDclQTQlRDclOTR8aGV8MXx8fHwxNjg0Nzc0MjgzfDA&ixlib=rb-4.0.3&q=80&w=1080',
     'אנחנו': 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NDA2MTZ8MHwxfHNlYXJjaHwyfHwlRDclOTAlRDclQTAlRDclOTclRDclQTAlRDclOTUlMjAlRDclOTklRDclOTclRDclOTN8aGV8MXx8fHwxNjg0Nzc0MjUwfDA&ixlib=rb-4.0.3&q=80&w=1080',
     'למה?': 'https://images.unsplash.com/photo-1458419948946-19fb2cc296af?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0MjExODJ8MHwxfHNlYXJjaHw0fHwlRDclOUMlRDclOUUlRDclOTR8aGV8MXx8fHwxNjg0Nzc0MTgxfDA&ixlib=rb-4.0.3&q=80&w=1080',

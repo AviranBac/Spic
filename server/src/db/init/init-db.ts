@@ -6,7 +6,7 @@ import { getPhotos } from "../../services/photos";
 import { addItem, ItemWithId } from "../dal/items.dal";
 import { ChosenItemRecordModel } from "../schemas/chosen-item-record.schema";
 import { FeedbackModel } from "../schemas/feedback.schema";
-import { categoriesWithItems, CategoryWithItems, hardcodedItems } from "./hard-coded-data";
+import { categoriesWithItems, CategoryWithItems, hardcodedImageUrls } from "./hard-coded-data";
 import { UserPreferences, UserPreferencesModel } from "../schemas/user-preferences.schema";
 import { getAllUserIds } from "../dal/users.dal";
 import { getInitialPreferences } from "../dal/user-preferences/user-preferences.dal";
@@ -72,7 +72,7 @@ const getItemsFromUnsplash = async (itemsNames: string[], categoryId: mongoose.T
     for (const itemName of itemsNames) {
         let imageUrl : string = '';
 
-        const hardcodedImgUrl : string | undefined =  hardcodedItems[itemName];
+        const hardcodedImgUrl : string | undefined =  hardcodedImageUrls[itemName];
         if (hardcodedImgUrl) {
             imageUrl = hardcodedImgUrl;
         } else {
