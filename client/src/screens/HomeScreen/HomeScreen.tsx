@@ -70,7 +70,7 @@ export const HomeScreen = ({navigation}: HomeScreenProps) => {
                 </StyledText>
             </HeadLinedWrapper>
             <ItemsWrapper>
-                <DragAndDrop items={categories} isHomeScreen={true} onItemPress={onItemPress} updateOrderFunc={updateCategoryListOrder}/>
+                <DragAndDrop items={categories} shouldItemHaveIcons={false} onItemPress={onItemPress} updateOrderFunc={updateCategoryListOrder}/>
             </ItemsWrapper>
         </Wrapper>
     );

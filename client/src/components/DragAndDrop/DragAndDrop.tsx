@@ -4,7 +4,6 @@ import React, {useEffect, useRef, useState} from "react";
 import {ClickableBox} from "../ClickableBox";
 import {ItemsWrapper, StyledButton} from "../../styles/shared-styles";
 import {styles} from "./styles";
-import {Category} from "../../models/category";
 import Toast from "react-native-toast-message";
 
 const deviceWidth = Dimensions.get('window').width
@@ -16,14 +15,14 @@ const childrenHeight = deviceHeight / 4;
 interface Props {
     items: any[];
     onItemPress?: (item: any) => void;
-    isHomeScreen?: boolean;
+    shouldItemHaveIcons?: boolean;
     updateOrderFunc: (orderedIds: string[]) => Promise<any[]>;
 }
 
 export const DragAndDrop = ({
                                 items,
                                 onItemPress,
-                                isHomeScreen = false,
+                                shouldItemHaveIcons = true,
                                 updateOrderFunc
                             }: Props) => {
     const [scrollEnabled, setScrollEnabled] = useState(true);
@@ -57,7 +56,7 @@ export const DragAndDrop = ({
                               onPress={() => onItemPress && onItemPress(item)}
                               imageUrl={item.imageUrl}
                               key={item._id}
-                              hasIcon={!isHomeScreen}
+                              hasIcon={!shouldItemHaveIcons}
                 />
 
             </View>
@@ -108,12 +107,6 @@ export const DragAndDrop = ({
                 {isEdit && <View style={styles.hurdle}>
                     <StyledButton title={'שמירת שינויים'} onPress={onSaveChanges}/>
                     <StyledButton title={'ביטול'} onPress={handleReset}/>
-                    {/*<TouchableOpacity style={styles.hurdle_edit} onPress={onSaveChanges}>*/}
-                    {/*    <Text style={styles.hurdle_edit_text}>{'שמירת שינויים'}</Text>*/}
-                    {/*</TouchableOpacity>*/}
-                    {/*<TouchableOpacity style={styles.hurdle_edit} onPress={handleReset}>*/}
-                    {/*    <Text style={styles.hurdle_edit_text}>{'ביטול'}</Text>*/}
-                    {/*</TouchableOpacity>*/}
                 </View>}
                 <ItemsWrapper>
                     <DragSortableView
