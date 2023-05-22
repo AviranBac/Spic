@@ -3,11 +3,13 @@ import { Category, CategoryModel } from "../schemas/category.schema";
 import mongoose from "mongoose";
 import { Item, ItemModel } from "../schemas/item.schema";
 import { getPhotos } from "../../services/photos";
-import { addItem } from "./items.dal";
+import { addItem, ItemWithId } from "./items.dal";
 import { ChosenItemRecordModel } from "../schemas/chosen-item-record.schema";
-import { FavoriteModel } from "../schemas/favorites.schema";
 import { FeedbackModel } from "../schemas/feedback.schema";
 import { categoriesWithItems, CategoryWithItems, hardcodedItems, HardcodedItem } from "./Initialized-data";
+import { UserPreferences, UserPreferencesModel } from "../schemas/user-preferences.schema";
+import { getAllUserIds } from "./users.dal";
+import { getInitialPreferences } from "./user-preferences/user-preferences.dal";
 
 export const initDb = async () => {
     const shouldInit: boolean = !(await CategoryModel.count().exec() && await ItemModel.count().exec());
@@ -15,12 +17,13 @@ export const initDb = async () => {
     if (shouldInit) {
         await CategoryModel.deleteMany({});
         await ChosenItemRecordModel.deleteMany({});
-        await FavoriteModel.deleteMany({});
         await FeedbackModel.deleteMany({});
         await ItemModel.deleteMany({});
+        await UserPreferencesModel.deleteMany({});
 
         await initCategoriesDb();
         await initItemsDb();
+        await initUserPreferencesDb();
     } else {
         console.log('Both categories and items are already initialized, therefore not initializing them again');
     }
@@ -56,7 +59,7 @@ const initItemsForCategoryDb = async (itemsNames: string[], categoryId: mongoose
     const items: Item[] = await getItemsFromUnsplash(itemsNames, categoryId);
     await Promise.all(
         items.map(async (item: Item) => {
-            const addedItem: Item = await addItem(item);
+            const addedItem: ItemWithId = await addItem(item);
             console.log(`Saved item in DB: ${JSON.stringify(addedItem)}`);
         })
     );
@@ -90,3 +93,18 @@ const getItemsFromUnsplash = async (itemsNames: string[], categoryId: mongoose.T
 
     return items;
 };
+
+const initUserPreferencesDb = async () => {
+    const allUserIds: mongoose.Types.ObjectId[] = await getAllUserIds();
+
+    if (allUserIds.length) {
+        const initialPreferences: Omit<UserPreferences, 'userId'> = await getInitialPreferences();
+
+        await Promise.all(allUserIds.map(async (userId: mongoose.Types.ObjectId) => {
+            await (new UserPreferencesModel({...initialPreferences, userId})).save();
+            console.log(`Saved user preferences in DB. userId: ${userId.toString()}`);
+        }));
+
+        console.log(`Saved all user preferences in DB`);
+    }
+}

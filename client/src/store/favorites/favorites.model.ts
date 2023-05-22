@@ -1,3 +1,3 @@
 export interface FavoritesState {
-    favoriteIds: string[]
+    orderedFavoriteIds: string[]
 }
