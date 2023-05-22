@@ -1,16 +1,16 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {FavoritesState} from "./favorites.model";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { FavoritesState } from "./favorites.model";
 
 const favoritesInitialState: FavoritesState = {
-    favoriteIds: []
+    orderedFavoriteIds: []
 }
 
-export const upsertFavoritesThunk = createAsyncThunk<{ favorites: string[] }, string[]>(
+export const upsertFavoritesThunk = createAsyncThunk<{ orderedFavoriteIds: string[] }, string[]>(
     'favorites/addFavorite',
     async (payload, thunkApi) => {
         try {
-            const favorites = payload;
-            return { favorites };
+            const orderedFavoriteIds = payload;
+            return { orderedFavoriteIds };
         } catch (error: any) {
             return thunkApi.rejectWithValue(error.response);
         }
@@ -25,7 +25,7 @@ const favoritesSlice = createSlice({
     extraReducers:(builder) => {
         builder
             .addCase(upsertFavoritesThunk.fulfilled, (state, action) => {
-                state.favoriteIds = action.payload.favorites;
+                state.orderedFavoriteIds = action.payload.orderedFavoriteIds;
             });
     },
 });

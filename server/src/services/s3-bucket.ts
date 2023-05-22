@@ -16,20 +16,18 @@ export enum Action {
 }
 
 export const getS3SignedUrl = async (imageName : string, action : Action = Action.download) : Promise<string> => {
-    const url = await s3.getSignedUrlPromise(action, {
+    return s3.getSignedUrlPromise(action, {
         Bucket: process.env.S3_BUCKET_NAME,
         Key: imageName,
-        ...(action === Action.upload &&{ ContentType: `image/${imageName.split('.')[1]}`}),
+        ...(action === Action.upload && {ContentType: `image/${imageName.split('.')[1]}`}),
     });
-    return url;
 };
 
-export const getAllItemsWithS3Images = async (items : ItemWithCategory[] | Item[]) => {
-    const mappedItems = await Promise.all(items.map(async (item) => {
+export const getAllItemsWithS3Images = async (items : ItemWithCategory[] | Item[]): Promise<ItemWithCategory[] | Item[]> => {
+    return Promise.all(items.map(async (item) => {
         if (item.imageUrl.startsWith('s3')) {
             item.imageUrl = await getS3SignedUrl(item.imageUrl, Action.download);
-        } 
+        }
         return item;
     }));
-    return mappedItems;
 }

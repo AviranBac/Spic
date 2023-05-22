@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { StackScreenProps } from "@react-navigation/stack";
-import { HomeStackParamList } from "../../utils/navigation-stack";
-import { getItems, recordItemChosen } from "../../services/items.service";
-import { ClickableBox } from "../../components/ClickableBox";
-import { Item, ItemWithCategory } from "../../models/item";
-import { ScrollView, View } from "react-native";
-import { FullActionModal } from "../../components/FullActionModal/FullActionModal";
-import { CircleIcon } from "../../components/icons/CircleIcon";
-import { useIsFocused } from "@react-navigation/native";
+import React, {useEffect, useState} from "react";
+import {StackScreenProps} from "@react-navigation/stack";
+import {HomeStackParamList} from "../../utils/navigation-stack";
+import {getItems, recordItemChosen, updateItemListOrder} from "../../services/items.service";
+import {Item, ItemWithCategory} from "../../models/item";
+import {FullActionModal} from "../../components/FullActionModal/FullActionModal";
+import {CircleIcon} from "../../components/icons/CircleIcon";
+import {useIsFocused} from "@react-navigation/native";
 import useSentenceBeginning from "../../hooks/useSentenceBeginning";
-import { styles } from "./styles";
+import {DragAndDrop} from "../../components/DragAndDrop/DragAndDrop";
+import {styles} from "./styles";
 
 type CategoryScreenProps = StackScreenProps<HomeStackParamList, 'Category'>;
 
@@ -50,25 +49,12 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
 
     return (
         <>
-            <ScrollView>
-                <View style={styles.itemsWrapper}>
-                    {
-                        items?.map((item: Item) => {
-                            return <ClickableBox name={item.name}
-                                                 id={item._id}
-                                                 imageUrl={item.imageUrl}
-                                                 onPress={() => onItemPress(item)}
-                                                 key={item._id}/>
-                        })
-                    }
-                </View>
-
-                <FullActionModal itemWithCategory={activeItemWithCategory}
-                                 onRequestClose={onModalClose}
-                                 setVisible={setModalVisible}
-                                 visible={isModalVisible}/>
-            </ScrollView>
-
+            <DragAndDrop items={items} onItemPress={onItemPress} updateOrderFunc={(orderedItemIds: string[]) => updateItemListOrder(orderedItemIds, categoryId)}/>
+            <FullActionModal
+                itemWithCategory={activeItemWithCategory}
+                onRequestClose={onModalClose}
+                setVisible={setModalVisible}
+                visible={isModalVisible}/>
             <CircleIcon style={styles.addItemIconContainer} iconColor="white" name="plus" size={40}
                         onPress={() => navigation.navigate('AddItem', {category})}/>
         </>

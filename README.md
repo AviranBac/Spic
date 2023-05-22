@@ -6,6 +6,11 @@ Final project in Full Stack Development - Bachelor's Degree
 * NodeJS (Express)
 * TypeScript
 * MongoDB
+* Amazon S3
+
+#### External APIs:
+* Google Cloud Text-to-Speech
+* Unsplash API
 
 #### Collaborators:
 * [Aviran Bachar][aviran-github-link]

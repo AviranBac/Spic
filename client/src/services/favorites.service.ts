@@ -8,9 +8,16 @@ export const getFavorites: () => Promise<ItemWithCategory[]> = () => {
 }
 export type ActionType = 'ADD' | 'REMOVE';
 
-export const updateFavorites = (data: { itemId: string, action: ActionType }) => {
+export const updateFavorites = (data: { itemId: string, action: ActionType }): Promise<string[]> => {
     return axiosInstance.post('/favorites', data)
         .then(response => response.data)
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+export const updateFavoriteListOrder = (orderedFavoriteItemIds: string[]) => {
+    return axiosInstance.put('/favorites/order', {orderedFavoriteItemIds}).then(response => response.data)
         .catch(error => {
             console.error('Error:', error);
         });
