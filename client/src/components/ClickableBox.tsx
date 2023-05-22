@@ -5,6 +5,8 @@ import {useAppSelector} from "../store/hooks";
 import {FavoriteIcon} from "./icons/FavoriteIcon";
 import {selectGender} from "../store/user-details/user-details.selectors";
 import {Gender} from "../store/user-details/user-details.model";
+import {DeleteIcon} from "./icons/DeleteIcon";
+import {EditIcon} from "./icons/EditIcon";
 
 interface ClickableBoxProps {
     name: string,
@@ -12,6 +14,7 @@ interface ClickableBoxProps {
     imageUrl: string;
     onPress?: () => void;
     hasIcon?: boolean;
+    editMode?: boolean;
 }
 
 const RelativeView = styled.View`
@@ -28,23 +31,32 @@ const StyledImage = styled.Image`
 
 export const ClickableBox = ({
                                  name, id, imageUrl, onPress = () => {
-    }, hasIcon = true
+    }, hasIcon = true, editMode = false
                              }: ClickableBoxProps) => {
     const userGender = useAppSelector(selectGender);
 
     return (
         <View style={{marginVertical: 10, marginHorizontal: 10}}>
             <RelativeView>
-                {hasIcon &&
-                    <>
-                        <TextToSpeechIcon text={name}
-                                          gender={userGender as Gender}
-                                          style={{position: 'absolute', top: 3, left: 6, zIndex: 1}}/>
+                {hasIcon && (
+                    !true ? (
+                        <>
+                            <TextToSpeechIcon text={name}
+                                              gender={userGender as Gender}
+                                              style={{position: 'absolute', top: 3, left: 6, zIndex: 1}}/>
+
+                            <View style={{position: 'absolute', top: 3, right: 6, zIndex: 1}}>
+                                <FavoriteIcon key={id} itemId={id}/>
+                            </View>
+                        </>
+                    ) : <>
+
+                        <DeleteIcon itemId={id}/>
 
                         <View style={{position: 'absolute', top: 3, right: 6, zIndex: 1}}>
-                            <FavoriteIcon key={id} itemId={id}/>
+                            <EditIcon key={id} itemId={id}/>
                         </View>
-                    </>
+                    </>)
                 }
                 <TouchableOpacity onPress={onPress}>
                     <StyledImage source={{uri: imageUrl}}/>
