@@ -7,6 +7,7 @@ import {selectGender} from "../store/user-details/user-details.selectors";
 import {Gender} from "../store/user-details/user-details.model";
 import {DeleteIcon} from "./icons/DeleteIcon";
 import {EditIcon} from "./icons/EditIcon";
+import {handlePress} from "react-native-paper/lib/typescript/src/components/RadioButton/utils";
 
 interface ClickableBoxProps {
     name: string,
@@ -15,6 +16,7 @@ interface ClickableBoxProps {
     onPress?: () => void;
     hasIcon?: boolean;
     editMode?: boolean;
+    onDeletePress?: (itemId:string) => void;
 }
 
 const RelativeView = styled.View`
@@ -31,15 +33,21 @@ const StyledImage = styled.Image`
 
 export const ClickableBox = ({
                                  name, id, imageUrl, onPress = () => {
-    }, hasIcon = true, editMode = false
+    }, hasIcon = true, editMode = false, onDeletePress
                              }: ClickableBoxProps) => {
     const userGender = useAppSelector(selectGender);
+
+    const handleDeletePress = ()=> {
+        if (onDeletePress) {
+            onDeletePress(id)
+        }
+    }
 
     return (
         <View style={{marginVertical: 10, marginHorizontal: 10}}>
             <RelativeView style={{backgroundColor: '#f2f2f2'}}>
                 {hasIcon && (
-                    !true ? (
+                    !editMode ? (
                         <>
                             <TextToSpeechIcon text={name}
                                               gender={userGender as Gender}
@@ -51,7 +59,7 @@ export const ClickableBox = ({
                         </>
                     ) : <>
 
-                        <DeleteIcon itemId={id}/>
+                        <DeleteIcon itemId={id} onDeletePress={handleDeletePress}/>
 
                         <View style={{position: 'absolute', top: 3, right: 6, zIndex: 1}}>
                             <EditIcon key={id} itemId={id}/>

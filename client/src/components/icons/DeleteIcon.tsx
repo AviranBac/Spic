@@ -1,30 +1,26 @@
-import {StyleSheet, TouchableOpacity, View} from "react-native";
+import {TouchableOpacity, View} from "react-native";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
-import {ActionType, updateFavorites} from "../../services/favorites.service";
-import {useAppDispatch, useAppSelector} from "../../store/hooks";
-import {selectFavoriteIds} from "../../store/favorites/favorites.selectors";
-import {upsertFavoritesThunk} from "../../store/favorites/favorites.slice";
 import {IconsStyles} from "./FavoriteIcon";
+import React from "react";
 
 interface Props {
-    itemId: string
+    itemId: string;
+    backgroundColor?: string;
+    onDeletePress?: () => void;
 }
 
-export const DeleteIcon = ({itemId}: Props) => {
-
-    const handleOnPress = async () => {
-
-    }
-
+export const DeleteIcon = ({onDeletePress, backgroundColor = '#f2f2f2'}: Props) => {
     return (
-        <View style={{position: 'absolute', top: 2, left: 6, zIndex: 1}}>
-            <TouchableOpacity onPress={handleOnPress}>
-                <View style={IconsStyles.iconCircleWrapper}>
-                    <View style={IconsStyles.iconCirclePaper}/>
-                    <MaterialCommunityIcons name="delete" color={'red'}
-                                            size={30}/>
-                </View>
-            </TouchableOpacity>
-        </View>
+        <>
+            <View style={{position: 'absolute', top: 2, left: 6, zIndex: 1}}>
+                <TouchableOpacity onPress={onDeletePress}>
+                    <View style={{...IconsStyles.iconCircleWrapper, backgroundColor}}>
+                        <View style={IconsStyles.iconCirclePaper}/>
+                        <MaterialCommunityIcons name="delete" color={'black'}
+                                                size={30}/>
+                    </View>
+                </TouchableOpacity>
+            </View>
+        </>
     )
 }

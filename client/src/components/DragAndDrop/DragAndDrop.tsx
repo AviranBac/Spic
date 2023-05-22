@@ -1,4 +1,4 @@
-import {Dimensions, SafeAreaView, ScrollView, Text, TouchableOpacity, View} from "react-native";
+import {Dimensions, SafeAreaView, ScrollView, View} from "react-native";
 import {DragSortableView} from "react-native-drag-sort";
 import React, {useEffect, useRef, useState} from "react";
 import {ClickableBox} from "../ClickableBox";
@@ -17,13 +17,17 @@ interface Props {
     onItemPress?: (item: any) => void;
     shouldItemHaveIcons?: boolean;
     updateOrderFunc: (orderedIds: string[]) => Promise<any[]>;
+    editRemoveMode?: boolean;
+    onDeletePress: (itemId:string) => void;
 }
 
 export const DragAndDrop = ({
                                 items,
                                 onItemPress,
                                 shouldItemHaveIcons = true,
-                                updateOrderFunc
+                                updateOrderFunc,
+                                editRemoveMode = false,
+                                onDeletePress
                             }: Props) => {
     const [scrollEnabled, setScrollEnabled] = useState(true);
     const [isEdit, setIsEdit] = useState(false);
@@ -57,6 +61,8 @@ export const DragAndDrop = ({
                               imageUrl={item.imageUrl}
                               key={item._id}
                               hasIcon={shouldItemHaveIcons}
+                              editMode={editRemoveMode}
+                              onDeletePress={onDeletePress}
                 />
 
             </View>

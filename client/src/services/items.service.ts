@@ -28,3 +28,7 @@ export const updateItemListOrder = (orderedItemIds: string[], categoryId: string
             console.error('Error:', error);
         });
 }
+
+export const deleteItem = (itemId: string) => {
+    return axiosInstance.delete('/items', {data: {_id: itemId}}).then(() => console.log('ok'));
+}
