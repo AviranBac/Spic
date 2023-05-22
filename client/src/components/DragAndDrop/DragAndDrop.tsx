@@ -56,7 +56,7 @@ export const DragAndDrop = ({
                               onPress={() => onItemPress && onItemPress(item)}
                               imageUrl={item.imageUrl}
                               key={item._id}
-                              hasIcon={!shouldItemHaveIcons}
+                              hasIcon={shouldItemHaveIcons}
                 />
 
             </View>
