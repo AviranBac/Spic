@@ -17,7 +17,7 @@ const TextToSpeechIcon = ({
                               gender,
                               style,
                               initialPlay = false,
-                              backgroundColor = 'white'
+                              backgroundColor = '#f2f2f2'
                           }: TextToSpeechIconProps): JSX.Element => {
     const {loading, playing, loadAndPlayAudioFn, forceStopFn}: UseTextToSpeechOutput = useTextToSpeech({text, gender});
 

@@ -1,7 +1,8 @@
 import axiosInstance from "./axios.service";
 import UserSessionService from "./user-session.service";
 import { AxiosResponse } from "axios";
-import { Gender, IUserSession } from "../store/auth/auth.model";
+import { IUserSession } from "../store/auth/auth.model";
+import { Gender } from "../store/user-details/user-details.model";
 
 class AuthService {
   async login(email: string, password: string) : Promise<IUserSession> {
@@ -37,11 +38,6 @@ class AuthService {
       return await this.login(email, password);
     });
   }
-
-  async getCurrentUser() : Promise<IUserSession | null> {
-    return await UserSessionService.getSessionData();
-  };
-
 }
 
 export default new AuthService();
