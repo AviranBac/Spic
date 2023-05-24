@@ -60,7 +60,7 @@ export const deleteItemById = async (userId: mongoose.Types.ObjectId, itemId: mo
         await ItemModel.deleteOne({_id: itemId});
     }
 
-    await deleteItemIdFromReferences(userId, itemToDelete.categoryId, itemId);
+    await deleteItemIdReferences(userId, itemToDelete.categoryId, itemId);
 }
 
 export const editItemById = async (userId: mongoose.Types.ObjectId, itemId: mongoose.Types.ObjectId, updatedItem: ItemWithId): Promise<ItemWithId> => {
@@ -72,7 +72,7 @@ export const editItemById = async (userId: mongoose.Types.ObjectId, itemId: mong
 
     const {_id, ...newItemWithoutId} = updatedItem;
     const newItem: ItemWithId = await addItem({...newItemWithoutId, userId});
-    await replaceItemIdInReferences(userId, newItem.categoryId, itemId, new mongoose.Types.ObjectId(newItem.id!));
+    await replaceItemIdReferences(userId, newItem.categoryId, itemId, new mongoose.Types.ObjectId(newItem.id!));
 
     return newItem;
 }
@@ -103,7 +103,7 @@ export const getItemIdsByUserId = async (userId: mongoose.Types.ObjectId): Promi
     return (await ItemModel.find(query).lean()).map(item => item._id);
 }
 
-const replaceItemIdInReferences = async (userId: mongoose.Types.ObjectId,
+const replaceItemIdReferences = async (userId: mongoose.Types.ObjectId,
                                                 categoryId: mongoose.Types.ObjectId,
                                                 oldItemId: mongoose.Types.ObjectId,
                                                 newItemId: mongoose.Types.ObjectId): Promise<void> => {
@@ -112,7 +112,7 @@ const replaceItemIdInReferences = async (userId: mongoose.Types.ObjectId,
     await replaceItemIdInFeedbacks(userId, oldItemId, newItemId);
 }
 
-const deleteItemIdFromReferences =  async (userId: mongoose.Types.ObjectId,
+const deleteItemIdReferences =  async (userId: mongoose.Types.ObjectId,
                                                   categoryId: mongoose.Types.ObjectId,
                                                   itemId: mongoose.Types.ObjectId): Promise<void> => {
     await deleteItemIdFromPreferences(userId, categoryId, itemId);
