@@ -37,3 +37,13 @@ export const deleteItemFromPreferences = async (userId: mongoose.Types.ObjectId,
         {new: true}
     ))?.orderedItemIdsPerCategory?.[categoryId.toString()];
 }
+
+export const replaceItemIdInCategory = async (userId: mongoose.Types.ObjectId,
+                                              categoryId: mongoose.Types.ObjectId,
+                                              oldItemId: mongoose.Types.ObjectId,
+                                              newItemId: mongoose.Types.ObjectId): Promise<mongoose.Types.ObjectId[] | undefined> => {
+    const updatedOrderedItemIdsByCategoryId: mongoose.Types.ObjectId[] = (await getOrderedItemIdsByCategoryId(userId, categoryId))
+        .map((itemId: mongoose.Types.ObjectId) => itemId.toString() === oldItemId.toString() ? newItemId : itemId);
+
+    return updateOrderedItemIdsByCategoryId(userId, categoryId, updatedOrderedItemIdsByCategoryId);
+}

@@ -4,7 +4,8 @@ import { getItemsById, ItemWithCategory } from "../items.dal";
 import { UserPreferencesModel } from "../../schemas/user-preferences.schema";
 import { getUserPreferences } from "./user-preferences.dal";
 
-export const getOrderedFavoriteItemIds = async (userId: mongoose.Types.ObjectId) => (await getUserPreferences(userId))?.orderedFavoriteItemIds || [];
+export const getOrderedFavoriteItemIds = async (userId: mongoose.Types.ObjectId): Promise<mongoose.Types.ObjectId[]> =>
+    (await getUserPreferences(userId))?.orderedFavoriteItemIds || [];
 
 export const getFavoriteItemsByUserId = async (userId: mongoose.Types.ObjectId): Promise<ItemWithCategory[]> => {
     const orderedFavoriteItemIds: mongoose.Types.ObjectId[] = await getOrderedFavoriteItemIds(userId);
@@ -33,4 +34,13 @@ export const updateOrderedFavoriteItemIds = async (userId: mongoose.Types.Object
         {$set: {orderedFavoriteItemIds}},
         {upsert: true}
     ))?.orderedFavoriteItemIds;
+}
+
+export const replaceFavoriteItemId = async (userId: mongoose.Types.ObjectId,
+                                            oldItemId: mongoose.Types.ObjectId,
+                                            newItemId: mongoose.Types.ObjectId): Promise<mongoose.Types.ObjectId[] | undefined> => {
+    const updatedOrderedFavoriteItemIds: mongoose.Types.ObjectId[] = (await getOrderedFavoriteItemIds(userId))
+        .map((itemId: mongoose.Types.ObjectId) => itemId.toString() === oldItemId.toString() ? newItemId : itemId);
+
+    return updateOrderedFavoriteItemIds(userId, updatedOrderedFavoriteItemIds);
 }
