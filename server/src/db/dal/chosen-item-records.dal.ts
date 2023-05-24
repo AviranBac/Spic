@@ -5,9 +5,9 @@ export const getUserRecords = async (userId: mongoose.Types.ObjectId): Promise<C
 
 export const addRecord = async (record: ChosenItemRecord): Promise<ChosenItemRecord> => ChosenItemRecordModel.create(record);
 
-export const replaceItemIdInRecords = async (userId: mongoose.Types.ObjectId,
-                                             oldItemId: mongoose.Types.ObjectId,
-                                             newItemId: mongoose.Types.ObjectId): Promise<void> => {
+export const updateItemIdInRecords = async (userId: mongoose.Types.ObjectId,
+                                            oldItemId: mongoose.Types.ObjectId,
+                                            newItemId: mongoose.Types.ObjectId): Promise<void> => {
     await ChosenItemRecordModel.updateMany(
         {userId, itemId: oldItemId},
         {itemId: newItemId}

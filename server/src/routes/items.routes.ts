@@ -23,7 +23,7 @@ import {
 import { upsertFeedbacks } from "../services/feedback";
 import { getCommonlyUsedItems } from "../services/commonly-used-items";
 import {
-    addItemToPreferences,
+    addItemToPerCategoryPreferences,
     updateOrderedItemIdsByCategoryId
 } from "../db/dal/user-preferences/ordered-items-per-category.dal";
 
@@ -123,7 +123,7 @@ router.post('/', authenticate, validateAddItemRequest(), async (req: Request, re
 
     try {
         response = await addItem({name, imageUrl, categoryId, userId});
-        await addItemToPreferences(userId, categoryId, response._id);
+        await addItemToPerCategoryPreferences(userId, categoryId, response._id);
 
         console.log(`Added new item for userId ${userId}. Item: ${JSON.stringify(response)}`);
     } catch (error) {

@@ -9,9 +9,9 @@ export const getFeedbacksByUserIdAndItemIds = async (userId: mongoose.Types.Obje
         .lean();
 };
 
-export const replaceItemIdInFeedbacks = async (userId: mongoose.Types.ObjectId,
-                                               oldItemId: mongoose.Types.ObjectId,
-                                               newItemId: mongoose.Types.ObjectId): Promise<void> => {
+export const updateItemIdInFeedbacks = async (userId: mongoose.Types.ObjectId,
+                                              oldItemId: mongoose.Types.ObjectId,
+                                              newItemId: mongoose.Types.ObjectId): Promise<void> => {
     await FeedbackModel.updateMany(
         {userId, itemId: oldItemId},
         {itemId: newItemId}

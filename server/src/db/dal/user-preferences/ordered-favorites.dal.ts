@@ -36,9 +36,9 @@ export const updateOrderedFavoriteItemIds = async (userId: mongoose.Types.Object
     ))?.orderedFavoriteItemIds;
 }
 
-export const replaceFavoriteItemId = async (userId: mongoose.Types.ObjectId,
-                                            oldItemId: mongoose.Types.ObjectId,
-                                            newItemId: mongoose.Types.ObjectId): Promise<mongoose.Types.ObjectId[] | undefined> => {
+export const updateFavoriteItemId = async (userId: mongoose.Types.ObjectId,
+                                           oldItemId: mongoose.Types.ObjectId,
+                                           newItemId: mongoose.Types.ObjectId): Promise<mongoose.Types.ObjectId[] | undefined> => {
     const updatedOrderedFavoriteItemIds: mongoose.Types.ObjectId[] = (await getOrderedFavoriteItemIds(userId))
         .map((itemId: mongoose.Types.ObjectId) => itemId.toString() === oldItemId.toString() ? newItemId : itemId);
 
