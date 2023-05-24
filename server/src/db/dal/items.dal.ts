@@ -64,9 +64,9 @@ export const deleteItemById = async (userId: mongoose.Types.ObjectId, itemId: mo
 }
 
 export const editItemById = async (userId: mongoose.Types.ObjectId, itemId: mongoose.Types.ObjectId, updatedItem: ItemWithId): Promise<ItemWithId> => {
-    const currentItem: ItemWithId = await ItemModel.findById(itemId).lean();
+    const currentItem: ItemWithId = (await ItemModel.findById(itemId).lean())!;
 
-    if (currentItem?.userId) {
+    if (currentItem.userId) {
         return (await ItemModel.findOneAndUpdate({_id: itemId}, updatedItem, {new: true}).exec()) as ItemWithId;
     }
 
