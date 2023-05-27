@@ -1,14 +1,12 @@
-import React, { useEffect } from "react";
-import { useAppDispatch } from "../../store/hooks";
-import { logoutThunk } from "../../store/auth/auth.slice";
-import { ImageWrapper, StyledAppBar, StyledIcon, StyledImage, Wrapper } from "./MainAppBarStyles";
-import { ItemWithCategory } from "../../models/item";
-import { getFavorites } from "../../services/favorites.service";
-import { upsertFavoritesThunk } from "../../store/favorites/favorites.slice";
-import { getUserDetails, UserDetails } from "../../services/user-settings.service";
-import { updateUserDetailsThunk } from "../../store/user-details/user-details.slice";
-import Toast from "react-native-toast-message";
-import { toastConfig } from "../../styles/toast-confing";
+import React, {useEffect} from "react";
+import {useAppDispatch} from "../../store/hooks";
+import {logoutThunk} from "../../store/auth/auth.slice";
+import {ImageWrapper, StyledAppBar, StyledIcon, StyledImage, Wrapper} from "./MainAppBarStyles";
+import {ItemWithCategory} from "../../models/item";
+import {getFavorites} from "../../services/favorites.service";
+import {upsertFavoritesThunk} from "../../store/favorites/favorites.slice";
+import {getUserDetails, UserDetails} from "../../services/user-settings.service";
+import {updateUserDetailsThunk} from "../../store/user-details/user-details.slice";
 
 const logo = require('../../../assets/logo-spic.png');
 export const MainAppBar = () => {
@@ -33,7 +31,6 @@ export const MainAppBar = () => {
 
     return (
         <StyledAppBar>
-            <Toast config={toastConfig}/>
             <Wrapper>
                 <ImageWrapper>
                     <StyledImage source={logo}/>
