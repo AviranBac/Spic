@@ -5,7 +5,6 @@ import {
     deleteItemById,
     editItemById,
     getItemsByCategoryAndUserId,
-    getItemsById,
     ItemWithCategory,
     ItemWithId
 } from "../db/dal/items.dal";
@@ -24,8 +23,7 @@ import {
 import { upsertFeedbacks } from "../services/feedback";
 import { getCommonlyUsedItems } from "../services/commonly-used-items";
 import {
-    addItemToPreferences,
-    deleteItemFromPreferences,
+    addItemToPerCategoryPreferences,
     updateOrderedItemIdsByCategoryId
 } from "../db/dal/user-preferences/ordered-items-per-category.dal";
 
@@ -125,7 +123,7 @@ router.post('/', authenticate, validateAddItemRequest(), async (req: Request, re
 
     try {
         response = await addItem({name, imageUrl, categoryId, userId});
-        await addItemToPreferences(userId, categoryId, response._id);
+        await addItemToPerCategoryPreferences(userId, categoryId, response._id);
 
         console.log(`Added new item for userId ${userId}. Item: ${JSON.stringify(response)}`);
     } catch (error) {
@@ -144,14 +142,14 @@ router.put('/', authenticate, validateEditItemRequest(), async (req: Request, re
         return;
     }
 
-    const {userId} = (req as AuthenticatedRequest).token;
+    const userId = new mongoose.Types.ObjectId((req as AuthenticatedRequest).token.userId);
     const updatedItem: ItemWithId = req.body;
     const itemId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(updatedItem._id);
     let response: Item | string;
     let statusCode = StatusCodes.OK;
 
     try {
-        response = await editItemById(itemId, updatedItem);
+        response = await editItemById(userId, itemId, updatedItem);
         console.log(`Updated item with itemId: ${itemId.toString()}, userId: ${userId}`);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -202,10 +200,7 @@ router.delete('/', authenticate, validateDeleteItemRequest(), async (req: Reques
     let statusCode = StatusCodes.OK;
 
     try {
-        const deletedItemCategoryId: mongoose.Types.ObjectId = (await getItemsById([itemId]))[0].categoryId;
-
-        await deleteItemById(new mongoose.Types.ObjectId(itemId));
-        await deleteItemFromPreferences(userId, deletedItemCategoryId, itemId);
+        await deleteItemById(userId, itemId);
         console.log(`Deleted item with itemId: ${itemId}, userId: ${userId}`);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
