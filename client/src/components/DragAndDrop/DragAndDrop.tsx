@@ -67,7 +67,6 @@ export const DragAndDrop = ({
                               onDeletePress={onDeletePress}
                               onEditPress={onEditPress}
                 />
-
             </View>
         )
     }
