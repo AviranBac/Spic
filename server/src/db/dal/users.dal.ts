@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { UserModel, IUser } from "../schemas/user.schema";
+import { IUser, UserModel } from "../schemas/user.schema";
 
 interface UserDetails {
     email: string,
@@ -29,3 +29,6 @@ export const setUserDetails = async (userId: mongoose.Types.ObjectId, userDetail
     );
     return filteredUserDetails(response);
 }
+
+export const getAllUserIds = async (): Promise<mongoose.Types.ObjectId[]> => (await UserModel.find().lean())
+    .map(user => user._id);

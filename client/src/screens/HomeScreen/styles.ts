@@ -5,6 +5,7 @@ export const Wrapper = styled.View`
   justify-content: center;
   align-items: center;
   padding-top: 10px;
+  background-color: white;
 `;
 
 export const StyledText = styled.Text`

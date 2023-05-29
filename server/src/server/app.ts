@@ -43,7 +43,6 @@ app.use(bodyParser.json());
  *       scheme: bearer
  *       bearerFormat: JWT
  */
-
 app.use(
   cors({
     origin: "*",
