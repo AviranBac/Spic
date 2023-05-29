@@ -1,0 +1,8 @@
+{
+    "entryFile": "src/app.ts",
+    "swaggerFile": "swagger.json",
+    "outputDirectory": "dist",
+    "templates": {
+      "swagger": "swagger/v2"
+    }
+  }  

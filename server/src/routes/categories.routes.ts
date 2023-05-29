@@ -6,6 +6,31 @@ import HttpStatus, { StatusCodes } from "http-status-codes";
 
 const router = Router();
 
+/**
+ * @swagger
+ * /categories:
+ *   get:
+ *     summary: Get all categories
+ *     description: Retrieves a list of all categories.
+ *     tags: [Categories]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Category'
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ */
 router.get('/', authenticate, async (req: Request, res:Response) => {
     let response: Category[] | string;
     let statusCode = StatusCodes.OK;

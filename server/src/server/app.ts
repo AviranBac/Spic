@@ -11,8 +11,23 @@ import photosRouters from "../routes/photos.routes";
 import ttsRouters from '../routes/text-to-speech.routes';
 import favoriteRouters from "../routes/favorites.routes";
 import UserRouters from "../routes/user.routes";
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
 export const app = express();
+
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Spic API',
+      version: '1.0.0',
+    },
+  },
+  apis: ['C:\Users\User\Documents\final-project\Spic\server\src\routes*', 'C:\Users\User\Documents\final-project\Spic\server\src\server\app.ts'], 
+};
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 app.use(bodyParser.json());
 
@@ -41,6 +56,13 @@ app.use("/items", itemsRouters);
 app.use('/photos', photosRouters);
 app.use('/tts', ttsRouters);
 app.use('/user', UserRouters);
+
+app.get('/swagger.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 /**
  * @swagger

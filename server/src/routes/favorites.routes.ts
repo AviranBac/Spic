@@ -1,108 +1,98 @@
 import { authenticate, AuthenticatedRequest } from "../auth/auth-middleware";
 import { Request, Response, Router } from "express";
+import { addFavoriteItem, getFavoriteItemsByUserId, removeFavoriteItem } from "../db/dal/favorites.dal";
 import { validationResult } from "express-validator/check";
 import HttpStatus, { StatusCodes } from "http-status-codes";
 import mongoose from "mongoose";
-
-import { Item } from "../db/schemas/item.schema";
-import { validateAddItemRequest, validateRecordRequest, validateEditItemRequest, validateDeleteItemRequest } from "../validation/items.validation";
-import { getCommonlyUsedItems } from "../services/commonly-used-items";
-import { addItem, getItemsByCategoryAndUserId, ItemWithCategory, deleteItemById, editItemById } from "../db/dal/items.dal";
-import { addRecord } from "../db/dal/chosen-item-records.dal";
-import { upsertFeedbacks } from "../services/feedback";
+import { validateFavoriteItemRequest } from "../validation/favorite.validation";
+import { Favorite } from "../db/schemas/favorites.schema";
+import { ItemWithCategory } from "../db/dal/items.dal";
 
 const router = Router();
 
 /**
  * @swagger
- * /items/commonlyUsed:
+ * /favorites:
  *   get:
- *     summary: Get commonly used items
- *     description: Retrieves a list of commonly used items for the authenticated user.
- *     tags: [Items]
+ *     summary: Get favorite items by user ID
+ *     description: Get favorite items for the authenticated user.
+ *     tags: [Favorites]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       '200':
  *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/ItemWithCategory'
+ *       '400':
+ *         description: Bad Request
  *       '500':
  *         description: Internal Server Error
- *         content:
- *           application/json:
- *             schema:
- *               type: string
  */
-router.get('/commonlyUsed', authenticate, async (req: Request, res: Response) => {
-  const { userId } = (req as AuthenticatedRequest).token;
-  let response: ItemWithCategory[] | string;
-  let statusCode = StatusCodes.OK;
+router.get('/', authenticate, async (req: Request, res: Response) => {
+    const { userId } = (req as AuthenticatedRequest).token;
+    let response: ItemWithCategory[] | string;
+    let statusCode = StatusCodes.OK;
 
-  try {
-    response = await getCommonlyUsedItems(new mongoose.Types.ObjectId(userId), new Date());
-    console.log(`Sending ${response.length} commonly used items. userId: ${userId}`);
-  } catch (error) {
-    statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-    response = `Failed while trying to get commonly used items. userId: ${userId}. Error: ${error}`;
-    console.log(response);
-  }
+    try {
+        response = await getFavoriteItemsByUserId(new mongoose.Types.ObjectId(userId));
+        console.log(`Sending ${response.length} favorite items. userId: ${userId}`);
+    } catch (error) {
+        statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+        response = `Failed while trying to get favorite items. userId: ${userId}. Error: ${error}`;
+        console.log(response);
+    }
 
-  res.status(statusCode).send(response);
+    res.status(statusCode).send(response);
 });
 
 /**
  * @swagger
- * /items/{categoryId}:
- *   get:
- *     summary: Get items by category ID
- *     description: Retrieves a list of items based on the provided category ID for the authenticated user.
- *     tags: [Items]
+ * /favorites:
+ *   post:
+ *     summary: Add or remove favorite item
+ *     description: Add or remove a favorite item for the authenticated user.
+ *     tags: [Favorites]
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: categoryId
- *         required: true
- *         description: The ID of the category.
- *         schema:
- *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/FavoriteItemRequest'
  *     responses:
  *       '200':
  *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Item'
+ *       '400':
+ *         description: Bad Request
  *       '500':
  *         description: Internal Server Error
- *         content:
- *           application/json:
- *             schema:
- *               type: string
  */
-router.get('/:categoryId/', authenticate, async (req: Request, res: Response) => {
-  const categoryId = req.params.categoryId;
-  const { userId } = (req as AuthenticatedRequest).token;
-  let response: Item[] | string;
-  let statusCode = StatusCodes.OK;
 
-  try {
-    response = await getItemsByCategoryAndUserId(categoryId, userId);
-    console.log(`Sending ${response.length} items by category ID. categoryId: ${categoryId}, userId: ${userId}`);
-  } catch (error) {
-    statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-    response = `Failed while trying to get items by category ID. categoryId: ${categoryId}, userId: ${userId}. Error: ${error}`;
-    console.log(response);
-  }
+router.post('/', authenticate, validateFavoriteItemRequest(), async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(HttpStatus.BAD_REQUEST).json({ errors: errors.array() });
+        return;
+    }
 
-  res.status(statusCode).send(response);
+    let response: string | Favorite | null;
+    let statusCode = HttpStatus.OK;
+    const { itemId, action } = req.body;
+    const { userId } = (req as AuthenticatedRequest).token;
+
+    try {
+        response = action === 'ADD' ?
+            await addFavoriteItem(new mongoose.Types.ObjectId(userId), new mongoose.Types.ObjectId(itemId)) :
+            await removeFavoriteItem(new mongoose.Types.ObjectId(userId), new mongoose.Types.ObjectId(itemId));
+
+        console.log(`${action} favorite item. itemId: ${itemId}, userId: ${userId}`);
+    } catch (error) {
+        statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+        response = `Failed while trying to ${action} chosen favorite item record. itemId: ${itemId}, userId: ${userId}. Error: ${error}`;
+        console.log(response);
+    }
+
+    res.status(statusCode).send(response);
 });
 
 export default router;
