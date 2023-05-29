@@ -41,9 +41,13 @@ const router = Router();
  *     security:
  *       - bearerAuth: []
  *     responses:
- *       '200':
+ *       200:
  *         description: OK
- *       '500':
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
  *         description: Internal Server Error
  */
 router.get('/commonlyUsed', authenticate, async (req: Request, res: Response) => {
@@ -80,9 +84,13 @@ router.get('/commonlyUsed', authenticate, async (req: Request, res: Response) =>
  *         schema:
  *           type: string
  *     responses:
- *       '200':
+ *       200:
  *         description: OK
- *       '500':
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
  *         description: Internal Server Error
  */
 router.get('/:categoryId/', authenticate, async (req: Request, res: Response) => {
@@ -119,11 +127,15 @@ router.get('/:categoryId/', authenticate, async (req: Request, res: Response) =>
  *           schema:
  *             $ref: '#/components/schemas/ItemRecordRequest'
  *     responses:
- *       '200':
+ *       200:
  *         description: OK
- *       '400':
+ *       400:
  *         description: Bad Request
- *       '500':
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
  *         description: Internal Server Error
  */
 router.post('/record', authenticate, validateRecordRequest(), async (req: Request, res: Response) => {
@@ -186,11 +198,15 @@ router.post('/record', authenticate, validateRecordRequest(), async (req: Reques
  *           schema:
  *             $ref: '#/components/schemas/AddItemRequest'
  *     responses:
- *       '200':
+ *       200:
  *         description: OK
- *       '400':
+ *       400:
  *         description: Bad Request
- *       '500':
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
  *         description: Internal Server Error
  */
 router.post('/', authenticate, validateAddItemRequest(), async (req: Request, res: Response) => {
@@ -236,11 +252,15 @@ router.post('/', authenticate, validateAddItemRequest(), async (req: Request, re
  *           schema:
  *             $ref: '#/components/schemas/EditItemRequest'
  *     responses:
- *       '200':
+ *       200:
  *         description: OK
- *       '400':
+ *       400:
  *         description: Bad Request
- *       '500':
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
  *         description: Internal Server Error
  */
 router.put('/', authenticate, validateEditItemRequest(), async (req: Request, res: Response) => {
@@ -284,11 +304,15 @@ router.put('/', authenticate, validateEditItemRequest(), async (req: Request, re
  *           schema:
  *             $ref: '#/components/schemas/ItemOrderRequest'
  *     responses:
- *       '200':
+ *       200:
  *         description: OK
- *       '400':
+ *       400:
  *         description: Bad Request
- *       '500':
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
  *         description: Internal Server Error
  */
 router.put('/order', authenticate, validateItemOrderRequest(), async (req: Request, res: Response) => {
@@ -334,11 +358,15 @@ router.put('/order', authenticate, validateItemOrderRequest(), async (req: Reque
  *           schema:
  *             $ref: '#/components/schemas/DeleteItemRequest'
  *     responses:
- *       '200':
+ *       200:
  *         description: OK
- *       '400':
+ *       400:
  *         description: Bad Request
- *       '500':
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
  *         description: Internal Server Error
  */
 router.delete('/', authenticate, validateDeleteItemRequest(), async (req: Request, res: Response) => {

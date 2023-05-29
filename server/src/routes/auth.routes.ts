@@ -19,11 +19,11 @@ const router = Router();
  *           schema:
  *             $ref: '#/components/schemas/UserRegistration'
  *     responses:
- *       '200':
+ *       200:
  *         description: OK
- *       '400':
+ *       400:
  *         description: Bad Request
- *       '500':
+ *       500:
  *         description: Internal Server Error
  */
 router.post("/register", AuthValidation(), Auth.register);
@@ -42,11 +42,11 @@ router.post("/register", AuthValidation(), Auth.register);
  *           schema:
  *             $ref: '#/components/schemas/UserLogin'
  *     responses:
- *       '200':
+ *       200:
  *         description: OK
- *       '400':
+ *       400:
  *         description: Bad Request
- *       '500':
+ *       500:
  *         description: Internal Server Error
  */
 router.post("/login", AuthValidation(), Auth.login);
@@ -65,11 +65,11 @@ router.post("/login", AuthValidation(), Auth.login);
  *           schema:
  *             $ref: '#/components/schemas/RefreshToken'
  *     responses:
- *       '200':
+ *       200:
  *         description: OK
- *       '400':
+ *       400:
  *         description: Bad Request
- *       '500':
+ *       500:
  *         description: Internal Server Error
  */
 router.post("/refresh", Auth.refreshTokenHandler);
@@ -82,11 +82,11 @@ router.post("/refresh", Auth.refreshTokenHandler);
  *     description: Invalidate the refresh token and log out the user.
  *     tags: [Authentication]
  *     responses:
- *       '200':
+ *        200:
  *         description: OK
- *       '400':
+ *        400:
  *         description: Bad Request
- *       '500':
+ *        500:
  *         description: Internal Server Error
  */
 router.post("/logout", Auth.logout);

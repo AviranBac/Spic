@@ -22,11 +22,13 @@ const router = Router();
  *       200:
  *         description: User details retrieved successfully
  *       401:
- *         $ref: '#/components/responses/Unauthorized'
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
  *       404:
  *         description: User not found
  *       500:
- *         $ref: '#/components/responses/InternalServerError'
+ *         description: Internal Server Error
  */
 router.get('/', authenticate, async (req: Request, res: Response) => {
   const { userId } = (req as AuthenticatedRequest).token;
@@ -80,13 +82,15 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
  *       200:
  *         description: User details updated successfully
  *       400:
- *         $ref: '#/components/responses/BadRequest'
+ *         description: Bad Request
  *       401:
- *         $ref: '#/components/responses/Unauthorized'
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
  *       404:
  *         description: User not found
  *       500:
- *         $ref: '#/components/responses/InternalServerError'
+ *         description: Internal Server Error
  */
 router.post('/', authenticate, validateUpdateUserRequest(), async (req: Request, res: Response) => {
   const errors = validationResult(req);

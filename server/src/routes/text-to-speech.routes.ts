@@ -43,7 +43,7 @@ const ttsClient: TextToSpeechClient = new textToSpeech.TextToSpeechClient();
  *               type: string
  *               format: binary
  *       500:
- *         $ref: '#/components/responses/InternalServerError'
+ *         description: Internal Server Error
  */
 router.get('', async (req: Request, res: Response) => {
   const text: string = req.query.text as string;

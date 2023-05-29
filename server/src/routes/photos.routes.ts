@@ -23,7 +23,7 @@ const router = express.Router();
  *         schema:
  *           type: string
  *     responses:
- *       '200':
+ *       200:
  *         description: OK
  *         content:
  *           application/json:
@@ -31,7 +31,11 @@ const router = express.Router();
  *               type: array
  *               items:
  *                 type: string
- *       '500':
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
  *         description: Internal Server Error
  *         content:
  *           application/json:
@@ -77,7 +81,7 @@ router.get('/:searchQuery', authenticate, async (req: Request, res: Response) =>
  *             required:
  *               - imageName
  *     responses:
- *       '200':
+ *       200:
  *         description: OK
  *         content:
  *           application/json:
@@ -86,7 +90,11 @@ router.get('/:searchQuery', authenticate, async (req: Request, res: Response) =>
  *               properties:
  *                 url:
  *                   type: string
- *       '500':
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
  *         description: Internal Server Error
  *         content:
  *           application/json:

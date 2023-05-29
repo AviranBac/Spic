@@ -20,9 +20,13 @@ const router = Router();
  *     security:
  *       - bearerAuth: []
  *     responses:
- *       '200':
+ *       200:
  *         description: OK
- *       '500':
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
  *         description: Internal Server Error
  */
 router.get('/', authenticate, async (req: Request, res: Response) => {
@@ -58,11 +62,15 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
  *           schema:
  *             $ref: '#/components/schemas/CategoriesOrderRequest'
  *     responses:
- *       '200':
+ *       200:
  *         description: OK
- *       '400':
+ *       400:
  *         description: Bad Request
- *       '500':
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
  *         description: Internal Server Error
  */
 router.put('/order', authenticate, validateCategoriesOrderRequest(), async (req: Request, res: Response) => {

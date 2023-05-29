@@ -12,6 +12,7 @@ import ttsRouters from '../routes/text-to-speech.routes';
 import favoriteRouters from "../routes/favorites.routes";
 import UserRouters from "../routes/user.routes";
 import path from 'path';
+
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
@@ -58,29 +59,7 @@ app.use("/items", itemsRouters);
 app.use('/photos', photosRouters);
 app.use('/tts', ttsRouters);
 app.use('/user', UserRouters);
-
-app.get('/swagger.json', (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-  res.send(swaggerSpec);
-});
-
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-/**
- * @swagger
- * /:
- *   get:
- *     summary: Check if the server is running
- *     tags: [Authentication]
- *     responses:
- *       200:
- *         description: Server is running
- *       500:
- *         $ref: '#/components/responses/InternalServerError'
- */
-app.get('/', (req, res) => {
-  res.sendStatus(StatusCodes.OK);
-});
 
 (async () => {
   await initializeApplication();

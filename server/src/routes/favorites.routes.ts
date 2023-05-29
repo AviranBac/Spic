@@ -25,11 +25,15 @@ const router = Router();
  *     security:
  *       - bearerAuth: []
  *     responses:
- *       '200':
+ *       200:
  *         description: OK
- *       '400':
+ *       400:
  *         description: Bad Request
- *       '500':
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
  *         description: Internal Server Error
  */
 router.get('/', authenticate, async (req: Request, res: Response) => {
@@ -65,14 +69,17 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
  *           schema:
  *             $ref: '#/components/schemas/FavoriteItemRequest'
  *     responses:
- *       '200':
+ *       200:
  *         description: OK
- *       '400':
+ *       400:
  *         description: Bad Request
- *       '500':
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
  *         description: Internal Server Error
  */
-
 router.post('/', authenticate, validateFavoriteItemRequest(), async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -100,6 +107,33 @@ router.post('/', authenticate, validateFavoriteItemRequest(), async (req: Reques
     res.status(statusCode).send(response);
 });
 
+/**
+ * @swagger
+ * /favorites/order:
+ *   put:
+ *     summary: Update favorites order
+ *     description: Update the order of favorites for the authenticated user.
+ *     tags: [Favorites]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/FavoritesOrderRequest'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad Request
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal Server Error
+ */
 router.put('/order', authenticate, validateFavoritesOrderRequest(), async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
