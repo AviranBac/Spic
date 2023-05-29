@@ -13,8 +13,33 @@ import { getCommonlyUsedItems } from "../services/commonly-used-items";
 
 const router = Router();
 
+/**
+ * @swagger
+ * /items/commonlyUsed:
+ *   get:
+ *     summary: Get commonly used items
+ *     description: Retrieves a list of commonly used items for the authenticated user.
+ *     tags: [Items]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/ItemWithCategory'
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ */
 router.get('/commonlyUsed', authenticate, async (req: Request, res: Response) => {
-    const {userId} = (req as AuthenticatedRequest).token;
+    const { userId } = (req as AuthenticatedRequest).token;
     let response: ItemWithCategory[] | string;
     let statusCode = StatusCodes.OK;
 
@@ -30,9 +55,41 @@ router.get('/commonlyUsed', authenticate, async (req: Request, res: Response) =>
     res.status(statusCode).send(response);
 });
 
+/**
+ * @swagger
+ * /items/{categoryId}:
+ *   get:
+ *     summary: Get items by category ID
+ *     description: Retrieves a list of items based on the provided category ID for the authenticated user.
+ *     tags: [Items]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: categoryId
+ *         required: true
+ *         description: The ID of the category.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Item'
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ */
 router.get('/:categoryId/', authenticate, async (req: Request, res: Response) => {
     const categoryId = req.params.categoryId;
-    const {userId} = (req as AuthenticatedRequest).token;
+    const { userId } = (req as AuthenticatedRequest).token;
     let response: Item[] | string;
     let statusCode = StatusCodes.OK;
 
@@ -48,10 +105,63 @@ router.get('/:categoryId/', authenticate, async (req: Request, res: Response) =>
     res.status(statusCode).send(response);
 });
 
+/**
+ * @swagger
+ * /items/record:
+ *   post:
+ *     summary: Record chosen item
+ *     description: Records a chosen item and updates the feedback for the authenticated user.
+ *     tags: [Items]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               itemId:
+ *                 type: string
+ *                 description: The ID of the chosen item.
+ *               requestTime:
+ *                 type: string
+ *                 format: date-time
+ *                 description: The timestamp when the item was chosen.
+ *               recommendedItemIds:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: The IDs of recommended items, if any.
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *       '400':
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/ValidationError'
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ */
 router.post('/record', authenticate, validateRecordRequest(), async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        res.status(HttpStatus.BAD_REQUEST).json({errors: errors.array()});
+        res.status(HttpStatus.BAD_REQUEST).json({ errors: errors.array() });
         return;
     }
 
@@ -62,7 +172,7 @@ router.post('/record', authenticate, validateRecordRequest(), async (req: Reques
         requestTime,
         recommendedItemIds
     }: { itemId: string, requestTime: Date, recommendedItemIds: string[] | undefined } = req.body;
-    const {userId}: { userId: string } = (req as AuthenticatedRequest).token;
+    const { userId }: { userId: string } = (req as AuthenticatedRequest).token;
 
     try {
         const handleAddRecord: () => Promise<void> = async () => {
@@ -92,17 +202,67 @@ router.post('/record', authenticate, validateRecordRequest(), async (req: Reques
     res.status(statusCode).send(response);
 });
 
+/**
+ * @swagger
+ * /items:
+ *   post:
+ *     summary: Add a new item
+ *     description: Adds a new item for the authenticated user.
+ *     tags: [Items]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: The name of the item.
+ *               imageUrl:
+ *                 type: string
+ *                 description: The URL of the item's image.
+ *               categoryId:
+ *                 type: string
+ *                 description: The ID of the category to which the item belongs.
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Item'
+ *       '400':
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/ValidationError'
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ */
 router.post('/', authenticate, validateAddItemRequest(), async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        res.status(HttpStatus.BAD_REQUEST).json({errors: errors.array()});
+        res.status(HttpStatus.BAD_REQUEST).json({ errors: errors.array() });
         return;
     }
 
     let response: Item | string;
     let statusCode = HttpStatus.OK;
-    const {name, imageUrl, categoryId} = req.body;
-    const {userId} = (req as AuthenticatedRequest).token;
+    const { name, imageUrl, categoryId } = req.body;
+    const { userId } = (req as AuthenticatedRequest).token;
 
     try {
         response = await addItem({
@@ -122,51 +282,145 @@ router.post('/', authenticate, validateAddItemRequest(), async (req: Request, re
     res.status(statusCode).send(response);
 });
 
-router.put('/:itemId/', authenticate, validateEditItemRequest(), async (req: Request, res: Response) => {
+/**
+ * @swagger
+ * /items/{itemId}:
+ *   put:
+ *     summary: Update an item
+ *     description: Updates an item for the authenticated user.
+ *     tags: [Items]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: itemId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the item to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Item'
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Item'
+ *       '400':
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/ValidationError'
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ */
+router.put('/:itemId', authenticate, validateEditItemRequest(), async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        res.status(HttpStatus.BAD_REQUEST).json({errors: errors.array()});
+        res.status(HttpStatus.BAD_REQUEST).json({ errors: errors.array() });
         return;
     }
-    
-    const itemId = req.params.itemId;
-    const updatedItem: Item = req.body;
-    const {userId} = (req as AuthenticatedRequest).token;
+
     let response: Item | string;
-    let statusCode = StatusCodes.OK;
+    let statusCode = HttpStatus.OK;
+    const { itemId } = req.params;
+    const { name, imageUrl, categoryId } = req.body;
 
     try {
-        response = await editItemById(new mongoose.Types.ObjectId(itemId), updatedItem);
-        console.log(`Updated item with itemId: ${itemId}, userId: ${userId}`);
+        response = await editItemById(new mongoose.Types.ObjectId(itemId), {
+            name,
+            imageUrl,
+            categoryId: new mongoose.Types.ObjectId(categoryId)
+        });
+
+        console.log(`Updated item with itemId ${itemId}. Updated item: ${JSON.stringify(response)}`);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-        response = `Failed while trying to update item. itemId: ${itemId}, userId: ${userId}. Error: ${error}`;
+        response = `Failed while trying to update item with itemId ${itemId}. Error: ${error}`;
         console.log(response);
     }
 
     res.status(statusCode).send(response);
 });
 
-router.delete('/:itemId/', authenticate, validateDeleteItemRequest(), async (req: Request, res: Response) => {
+/**
+ * @swagger
+ * /items/{itemId}:
+ *   delete:
+ *     summary: Delete an item
+ *     description: Deletes an item for the authenticated user.
+ *     tags: [Items]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: itemId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the item to delete.
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *       '400':
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/ValidationError'
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ */
+router.delete('/:itemId', authenticate, validateDeleteItemRequest(), async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        res.status(HttpStatus.BAD_REQUEST).json({errors: errors.array()});
+        res.status(HttpStatus.BAD_REQUEST).json({ errors: errors.array() });
         return;
     }
 
-    const itemId = req.params.itemId;
-    const {userId} = (req as AuthenticatedRequest).token;
-    let statusCode = StatusCodes.OK;
+    let response: string;
+    let statusCode = HttpStatus.OK;
+    const { itemId } = req.params;
 
     try {
         await deleteItemById(new mongoose.Types.ObjectId(itemId));
-        console.log(`Deleting item with itemId: ${itemId}, userId: ${userId}`);
+        response = `Deleted item with itemId ${itemId}`;
+        console.log(response);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-       console.log(`Failed while trying to delete item. itemId: ${itemId}, userId: ${userId}. Error: ${error}`);
+        response = `Failed while trying to delete item with itemId ${itemId}. Error: ${error}`;
+        console.log(response);
     }
 
-    res.status(statusCode).send();
+    res.status(statusCode).send(response);
 });
 
 export default router;
