@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
-import {View, Switch, StyleSheet} from 'react-native';
-import {StyledText} from "../../screens/HomeScreen/styles";
+import React from 'react';
+import {StyleSheet, Switch, View} from 'react-native';
 
 interface Props {
     isEditMode: boolean;

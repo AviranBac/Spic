@@ -7,7 +7,6 @@ import {selectGender} from "../store/user-details/user-details.selectors";
 import {Gender} from "../store/user-details/user-details.model";
 import {DeleteIcon} from "./icons/DeleteIcon";
 import {EditIcon} from "./icons/EditIcon";
-import {handlePress} from "react-native-paper/lib/typescript/src/components/RadioButton/utils";
 
 interface ClickableBoxProps {
     name: string,

@@ -18,7 +18,6 @@ export const MainAppBar = () => {
         const fetchData = async () => {
             const favorites: ItemWithCategory[] = await getFavorites();
             const filteredFavorites: string[] = favorites?.map((item: { _id: string; }) => item._id);
-
             const userDetails: UserDetails = await getUserDetails();
 
             dispatch(upsertFavoritesThunk(filteredFavorites));
