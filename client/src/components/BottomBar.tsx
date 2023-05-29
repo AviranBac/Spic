@@ -5,7 +5,7 @@ import {HomeScreen} from "../screens/HomeScreen/HomeScreen";
 import {CommonlyUsedScreen} from "../screens/CommonlyUsedScreen/CommonlyUsedScreen";
 import {SettingsScreen} from "../screens/SettingsScreen/SettingsScreen";
 import {HomeStack} from "../utils/navigation-stack";
-import {CategoryScreen} from "../screens/category/CategoryScreen";
+import {CategoryScreen} from "../screens/CategoryScreen/CategoryScreen";
 import {AddItemScreen} from "../screens/AddItemScreen/AddItemScreen";
 import {FavoritesScreen} from "../screens/FavoritesScreen/FavoritesScreen";
 

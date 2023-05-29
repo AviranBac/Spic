@@ -3,19 +3,15 @@ import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {IconsStyles} from "./FavoriteIcon";
 
 interface Props {
-    itemId: string;
     backgroundColor?: string;
+    onEditPress: () => void;
 }
 
-export const EditIcon = ({itemId, backgroundColor = '#f2f2f2'}: Props) => {
-
-    const handleOnPress = async () => {
-
-    }
+export const EditIcon = ({onEditPress, backgroundColor = '#f2f2f2'}: Props) => {
 
     return (
         <View style={{position: 'absolute', top: 2, right: 1, zIndex: 1}}>
-            <TouchableOpacity onPress={handleOnPress}>
+            <TouchableOpacity onPress={onEditPress}>
                 <View style={{...IconsStyles.iconCircleWrapper, backgroundColor}}>
                     <View style={IconsStyles.iconCirclePaper}/>
                     <MaterialCommunityIcons name="circle-edit-outline" color={'black'}

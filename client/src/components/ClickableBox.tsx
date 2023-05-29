@@ -16,7 +16,8 @@ interface ClickableBoxProps {
     onPress?: () => void;
     hasIcon?: boolean;
     editMode?: boolean;
-    onDeletePress?: (itemId:string) => void;
+    onDeletePress?: (itemId: string) => void;
+    onEditPress?: (itemId: string, imageUri:string, itemName:string) => void;
 }
 
 const RelativeView = styled.View`
@@ -33,13 +34,19 @@ const StyledImage = styled.Image`
 
 export const ClickableBox = ({
                                  name, id, imageUrl, onPress = () => {
-    }, hasIcon = true, editMode = false, onDeletePress
+    }, hasIcon = true, editMode = false, onDeletePress, onEditPress
                              }: ClickableBoxProps) => {
     const userGender = useAppSelector(selectGender);
 
-    const handleDeletePress = ()=> {
+    const handleDeletePress = () => {
         if (onDeletePress) {
             onDeletePress(id)
+        }
+    }
+
+    const handleEditPress = () => {
+        if (onEditPress) {
+            onEditPress(id, imageUrl, name);
         }
     }
 
@@ -62,7 +69,7 @@ export const ClickableBox = ({
                         <DeleteIcon itemId={id} onDeletePress={handleDeletePress}/>
 
                         <View style={{position: 'absolute', top: 3, right: 6, zIndex: 1}}>
-                            <EditIcon key={id} itemId={id}/>
+                            <EditIcon key={id} onEditPress={handleEditPress}/>
                         </View>
                     </>)
                 }

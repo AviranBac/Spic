@@ -18,7 +18,8 @@ interface Props {
     shouldItemHaveIcons?: boolean;
     updateOrderFunc: (orderedIds: string[]) => Promise<any[]>;
     editRemoveMode?: boolean;
-    onDeletePress: (itemId:string) => void;
+    onDeletePress?: (itemId: string) => void;
+    onEditPress?: (itemId: string, imageUri: string, itemName: string) => void;
 }
 
 export const DragAndDrop = ({
@@ -27,7 +28,8 @@ export const DragAndDrop = ({
                                 shouldItemHaveIcons = true,
                                 updateOrderFunc,
                                 editRemoveMode = false,
-                                onDeletePress
+                                onDeletePress,
+                                onEditPress
                             }: Props) => {
     const [scrollEnabled, setScrollEnabled] = useState(true);
     const [isEdit, setIsEdit] = useState(false);
@@ -63,6 +65,7 @@ export const DragAndDrop = ({
                               hasIcon={shouldItemHaveIcons}
                               editMode={editRemoveMode}
                               onDeletePress={onDeletePress}
+                              onEditPress={onEditPress}
                 />
 
             </View>

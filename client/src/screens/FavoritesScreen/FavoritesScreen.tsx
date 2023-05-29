@@ -1,6 +1,6 @@
 import {useAppSelector} from "../../store/hooks";
 import React, {useEffect, useState} from "react";
-import {ScrollView, Text, View} from 'react-native';
+import {Text} from 'react-native';
 import {selectFavoriteIds} from "../../store/favorites/favorites.selectors";
 import {getFavorites, updateFavoriteListOrder} from "../../services/favorites.service";
 import {HeadLinedWrapper, ItemsWrapper} from "../../styles/shared-styles";

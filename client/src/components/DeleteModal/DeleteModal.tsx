@@ -42,9 +42,7 @@ export const DeleteModal = ({handleClose, showDeleteModal, deleteItem}: Props) =
                                     onPress={handleClose}/>
                     </TouchableOpacity>
                 </TouchableOpacity>
-
             </Modal>
-
         </View>
     )
 }

@@ -1,5 +1,5 @@
-import { createStackNavigator } from "@react-navigation/stack";
-import { Category } from "../models/category";
+import {createStackNavigator} from "@react-navigation/stack";
+import {Category} from "../models/category";
 
 export type UnauthenticatedStackParamList = {
     Login: {},
@@ -13,7 +13,10 @@ export type HomeStackParamList = {
         category: Category
     },
     AddItem: {
-        category: Category
+        category: Category;
+        itemId?: string;
+        imageUri?: string;
+        itemName?: string;
     }
 };
 export const HomeStack = createStackNavigator<HomeStackParamList>();

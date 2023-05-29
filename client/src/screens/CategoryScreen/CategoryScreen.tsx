@@ -27,9 +27,31 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
     const [editRemoveMode, setEditRemoveMode] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [idToDelete, setIdToDelete] = useState('');
-    const handleOnPress = (itemId: string) => {
+
+    navigation.setOptions({
+        headerRight: () => (
+            <View style={{
+                gap: 30,
+                paddingRight: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}>
+                <EditRemoveSwitch isEditMode={editRemoveMode} onChange={setEditRemoveMode}/>
+                <Text style={{fontWeight: 'bold'}}>
+                    מצב עריכה
+                </Text>
+            </View>
+        ),
+    });
+
+    const onDeletePress = (itemId: string) => {
         setIdToDelete(itemId);
         setShowDeleteModal(true);
+    }
+
+    const onEditPress = (itemId: string, imageUri: string, itemName: string) => {
+        navigation.navigate('AddItem', {category, itemId, imageUri, itemName});
     }
 
     const handleOnClose = () => {
@@ -52,24 +74,8 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
             })
         );
         setShowDeleteModal(false);
-    }
+    };
 
-    navigation.setOptions({
-        headerRight: () => (
-            <View style={{
-                gap: 30,
-                paddingRight: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center'
-            }}>
-                <EditRemoveSwitch isEditMode={editRemoveMode} onChange={setEditRemoveMode}/>
-                <Text style={{fontWeight: 'bold'}}>
-                    מצב עריכה
-                </Text>
-            </View>
-        ),
-    })
     useEffect(() => {
         navigation.setOptions({
             title: sentenceBeginning ? sentenceBeginning.trim() + '...' : ''
@@ -98,8 +104,8 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
 
     return (
         <>
-            <DragAndDrop items={items} onItemPress={onItemPress} onDeletePress={handleOnPress}
-                         editRemoveMode={editRemoveMode}
+            <DragAndDrop items={items} onItemPress={onItemPress} onDeletePress={onDeletePress}
+                         editRemoveMode={editRemoveMode} onEditPress={onEditPress}
                          updateOrderFunc={(orderedItemIds: string[]) => updateItemListOrder(orderedItemIds, categoryId)}/>
             <FullActionModal
                 itemWithCategory={activeItemWithCategory}
