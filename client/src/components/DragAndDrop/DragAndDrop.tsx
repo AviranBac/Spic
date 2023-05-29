@@ -119,7 +119,7 @@ export const DragAndDrop = ({
                 </View>}
                 <ItemsWrapper>
                     <DragSortableView
-                        dataSource={itemsList}
+                        dataSource={itemsList || []}
                         parentWidth={deviceWidth}
                         childrenWidth={isPortrait ? childrenWidth : childrenWidth}
                         childrenHeight={isPortrait ? childrenHeight : childrenHeight}

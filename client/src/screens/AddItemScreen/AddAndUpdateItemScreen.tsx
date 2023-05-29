@@ -17,13 +17,17 @@ import Toast from "react-native-toast-message";
 import PopUpMenu from "../../components/PopUpMenu";
 import Spinner from 'react-native-loading-spinner-overlay';
 import {selectEmail} from "../../store/user-details/user-details.selectors";
-import {useAppSelector} from "../../store/hooks";
+import {useAppDispatch, useAppSelector} from "../../store/hooks";
 import {editItem} from "../../services/items.service";
+import {ItemWithCategory} from "../../models/item";
+import {getFavorites} from "../../services/favorites.service";
+import {upsertFavoritesThunk} from "../../store/favorites/favorites.slice";
 
 export const defaultColor = '#2196f3';
 type AddItemScreenProps = StackScreenProps<HomeStackParamList, 'AddItem'>;
 
-export const AddItemScreen = ({navigation, route}: AddItemScreenProps) => {
+export const AddAndUpdateItemScreen = ({navigation, route}: AddItemScreenProps) => {
+    const dispatch = useAppDispatch();
     const {_id, name} = route.params.category;
     const {itemName, imageUri, itemId} = route.params;
     const category = name;
@@ -96,6 +100,14 @@ export const AddItemScreen = ({navigation, route}: AddItemScreenProps) => {
         }
 
         setLoading(false);
+
+        const fetchData = async () => {
+            const favorites: ItemWithCategory[] = await getFavorites();
+            const filteredFavorites: string[] = favorites?.map((item: { _id: string; }) => item._id);
+            dispatch(upsertFavoritesThunk(filteredFavorites));
+        };
+        fetchData();
+
         Toast.show({
             type: 'success',
             text1: itemId ? 'הפריט עודכן בהצלחה' : 'הפריט נשמר בהצלחה',

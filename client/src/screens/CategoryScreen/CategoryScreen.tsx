@@ -13,10 +13,14 @@ import {Text, View} from "react-native";
 import {EditRemoveSwitch} from "../../components/icons/EditRemoveSwitch";
 import {DeleteModal} from "../../components/DeleteModal/DeleteModal";
 import Toast from "react-native-toast-message";
+import {getFavorites} from "../../services/favorites.service";
+import {upsertFavoritesThunk} from "../../store/favorites/favorites.slice";
+import {useAppDispatch} from "../../store/hooks";
 
 type CategoryScreenProps = StackScreenProps<HomeStackParamList, 'Category'>;
 
 export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
+    const dispatch = useAppDispatch();
     const [items, setItems] = useState<Item[]>([]);
     const [isModalVisible, setModalVisible] = useState<boolean>(false);
     const [activeItemWithCategory, setActiveItemWithCategory] = useState<ItemWithCategory | null>(null);
@@ -62,6 +66,12 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
     const handleDelete = () => {
         deleteItem(idToDelete).then(() => {
             setItems(items.filter((item) => item._id !== idToDelete));
+            const fetchData = async () => {
+                const favorites: ItemWithCategory[] = await getFavorites();
+                const filteredFavorites: string[] = favorites?.map((item: { _id: string; }) => item._id);
+                dispatch(upsertFavoritesThunk(filteredFavorites));
+            };
+            fetchData();
             Toast.show({
                 type: 'success',
                 text1: 'מחיקה בוצעה בהצלחה',

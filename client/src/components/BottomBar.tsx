@@ -6,7 +6,7 @@ import {CommonlyUsedScreen} from "../screens/CommonlyUsedScreen/CommonlyUsedScre
 import {SettingsScreen} from "../screens/SettingsScreen/SettingsScreen";
 import {HomeStack} from "../utils/navigation-stack";
 import {CategoryScreen} from "../screens/CategoryScreen/CategoryScreen";
-import {AddItemScreen} from "../screens/AddItemScreen/AddItemScreen";
+import {AddAndUpdateItemScreen} from "../screens/AddItemScreen/AddAndUpdateItemScreen";
 import {FavoritesScreen} from "../screens/FavoritesScreen/FavoritesScreen";
 
 const Tab = createMaterialBottomTabNavigator();
@@ -27,7 +27,7 @@ const HomeStackContainer = () => (
                           component={CategoryScreen}
                           options={{headerTitleAlign: 'center', headerStyle: {backgroundColor: '#f2f2f2'}}}/>
         <HomeStack.Screen name="AddItem"
-                          component={AddItemScreen}
+                          component={AddAndUpdateItemScreen}
                           options={{headerTransparent: true}}/>
     </HomeStack.Navigator>
 );
