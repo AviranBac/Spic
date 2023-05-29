@@ -11,10 +11,13 @@ import photosRouters from "../routes/photos.routes";
 import ttsRouters from '../routes/text-to-speech.routes';
 import favoriteRouters from "../routes/favorites.routes";
 import UserRouters from "../routes/user.routes";
+import path from 'path';
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
 export const app = express();
+
+const routesPath = path.resolve(__dirname, '../routes/*.ts');
 
 const swaggerOptions = {
   definition: {
@@ -24,7 +27,7 @@ const swaggerOptions = {
       version: '1.0.0',
     },
   },
-  apis: ['C:\Users\User\Documents\final-project\Spic\server\src\routes*', 'C:\Users\User\Documents\final-project\Spic\server\src\server\app.ts'], 
+  apis: [routesPath],
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
