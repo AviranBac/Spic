@@ -16,7 +16,7 @@ const useAxiosInterceptor = () => {
         async (config) => {
             const token: string = await UserSessionService.getLocalAccessToken();
             if (token) {
-                config.headers.authorization = token;
+                config.headers.authorization = `Bearer ${token}`;
             }
             return config;
         },

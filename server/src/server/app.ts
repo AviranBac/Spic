@@ -21,35 +21,34 @@ export const app = express();
 const routesPath = path.resolve(__dirname, '../routes/*.ts');
 
 const swaggerOptions = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'Spic API',
-      version: '1.0.0',
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'Spic API',
+            version: '1.0.0',
+        },
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT'
+                }
+            }
+        }
     },
-  },
-  apis: [routesPath],
+    apis: [routesPath]
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 app.use(bodyParser.json());
-
-/**
- * @swagger
- * components:
- *   securitySchemes:
- *     BearerAuth:
- *       type: http
- *       scheme: bearer
- *       bearerFormat: JWT
- */
 app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-    optionsSuccessStatus: StatusCodes.OK
-  })
+    cors({
+        origin: "*",
+        credentials: true,
+        optionsSuccessStatus: StatusCodes.OK
+    })
 );
 
 app.use("/auth", authRouters);
@@ -62,5 +61,5 @@ app.use('/user', UserRouters);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 (async () => {
-  await initializeApplication();
+    await initializeApplication();
 })();
