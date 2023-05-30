@@ -1,8 +1,8 @@
 import styled from "styled-components/native";
-import {Button, TextInput} from "@react-native-material/core";
-import {Image, Platform, Text} from "react-native";
+import { Button, TextInput } from "@react-native-material/core";
+import { Image, Platform, Text } from "react-native";
 
-export const AddItemScreenWrapper = styled.View`
+export const UpsertItemScreenWrapper = styled.View`
   flex: 1;
   padding-top: ${() => (Platform.OS === 'ios' ? '50px' : '550px')};
   gap: 20px;

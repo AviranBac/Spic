@@ -15,7 +15,7 @@ import UserRouters from "../routes/user.routes";
 
 export const app = express();
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
 
 app.use(
     cors({

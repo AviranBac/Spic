@@ -1,9 +1,9 @@
-import {Dimensions, SafeAreaView, ScrollView, View} from "react-native";
-import {DragSortableView} from "react-native-drag-sort";
-import React, {useEffect, useRef, useState} from "react";
-import {ClickableBox} from "../ClickableBox";
-import {ItemsWrapper, StyledButton} from "../../styles/shared-styles";
-import {styles} from "./styles";
+import { Dimensions, SafeAreaView, ScrollView, View } from "react-native";
+import { DragSortableView } from "react-native-drag-sort";
+import React, { useEffect, useRef, useState } from "react";
+import { ClickableBox } from "../ClickableBox";
+import { ItemsWrapper, StyledButton } from "../../styles/shared-styles";
+import { styles } from "./styles";
 import Toast from "react-native-toast-message";
 
 const deviceWidth = Dimensions.get('window').width
@@ -19,7 +19,7 @@ interface Props {
     updateOrderFunc: (orderedIds: string[]) => Promise<any[]>;
     isEditMode?: boolean;
     onDeletePress?: (itemId: string) => void;
-    onEditPress?: (itemId: string, imageUri: string, itemName: string) => void;
+    onEditPress?: (itemId: string, imageUrl: string, itemName: string) => void;
 }
 
 export const DragAndDrop = ({

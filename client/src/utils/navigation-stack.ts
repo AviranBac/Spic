@@ -1,5 +1,5 @@
-import {createStackNavigator} from "@react-navigation/stack";
-import {Category} from "../models/category";
+import { createStackNavigator } from "@react-navigation/stack";
+import { Category } from "../models/category";
 
 export type UnauthenticatedStackParamList = {
     Login: {},
@@ -15,7 +15,7 @@ export type HomeStackParamList = {
     UpsertItem: {
         category: Category;
         itemId?: string;
-        imageUri?: string;
+        imageUrl?: string;
         itemName?: string;
     }
 };

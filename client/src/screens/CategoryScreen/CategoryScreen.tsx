@@ -1,21 +1,21 @@
-import React, {useEffect, useState} from "react";
-import {StackScreenProps} from "@react-navigation/stack";
-import {HomeStackParamList} from "../../utils/navigation-stack";
-import {deleteItem, getItems, recordItemChosen, updateItemListOrder} from "../../services/items.service";
-import {Item, ItemWithCategory} from "../../models/item";
-import {FullActionModal} from "../../components/FullActionModal/FullActionModal";
-import {CircleIcon} from "../../components/Icons/CircleIcon";
-import {useIsFocused} from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import { StackScreenProps } from "@react-navigation/stack";
+import { HomeStackParamList } from "../../utils/navigation-stack";
+import { deleteItem, getItems, recordItemChosen, updateItemListOrder } from "../../services/items.service";
+import { Item, ItemWithCategory } from "../../models/item";
+import { FullActionModal } from "../../components/FullActionModal/FullActionModal";
+import { CircleIcon } from "../../components/Icons/CircleIcon";
+import { useIsFocused } from "@react-navigation/native";
 import useSentenceBeginning from "../../hooks/useSentenceBeginning";
-import {DragAndDrop} from "../../components/DragAndDrop/DragAndDrop";
-import {styles} from "./styles";
-import {Text, View} from "react-native";
-import {EditRemoveSwitch} from "../../components/Icons/EditRemoveSwitch";
-import {DeleteModal} from "../../components/DeleteModal/DeleteModal";
+import { DragAndDrop } from "../../components/DragAndDrop/DragAndDrop";
+import { styles } from "./styles";
+import { Text, View } from "react-native";
+import { EditRemoveSwitch } from "../../components/Icons/EditRemoveSwitch";
+import { DeleteModal } from "../../components/DeleteModal/DeleteModal";
 import Toast from "react-native-toast-message";
-import {getFavorites} from "../../services/favorites.service";
-import {upsertFavoritesThunk} from "../../store/favorites/favorites.slice";
-import {useAppDispatch} from "../../store/hooks";
+import { getFavorites } from "../../services/favorites.service";
+import { upsertFavoritesThunk } from "../../store/favorites/favorites.slice";
+import { useAppDispatch } from "../../store/hooks";
 
 type CategoryScreenProps = StackScreenProps<HomeStackParamList, 'Category'>;
 
@@ -32,30 +32,32 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [idToDelete, setIdToDelete] = useState('');
 
-    navigation.setOptions({
-        headerRight: () => (
-            <View style={{
-                gap: 30,
-                paddingRight: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center'
-            }}>
-                <EditRemoveSwitch isEditMode={isEditMode} onChange={setIsEditMode}/>
-                <Text style={{fontWeight: 'bold'}}>
-                    מצב עריכה
-                </Text>
-            </View>
-        ),
-    });
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <View style={{
+                    gap: 30,
+                    paddingRight: 10,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+                    <EditRemoveSwitch isEditMode={isEditMode} onChange={setIsEditMode}/>
+                    <Text style={{fontWeight: 'bold'}}>
+                        מצב עריכה
+                    </Text>
+                </View>
+            ),
+        });
+    }, [navigation, isEditMode]);
 
     const onDeletePress = (itemId: string) => {
         setIdToDelete(itemId);
         setShowDeleteModal(true);
     }
 
-    const onEditPress = (itemId: string, imageUri: string, itemName: string) => {
-        navigation.navigate('UpsertItem', {category, itemId, imageUri, itemName});
+    const onEditPress = (itemId: string, imageUrl: string, itemName: string) => {
+        navigation.navigate('UpsertItem', {category, itemId, imageUrl, itemName});
     }
 
     const handleOnClose = () => {

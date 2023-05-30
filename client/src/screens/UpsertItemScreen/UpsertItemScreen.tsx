@@ -1,41 +1,48 @@
-import {Image, NativeSyntheticEvent, ScrollView, TextInputChangeEventData, TouchableOpacity, View} from "react-native";
-import React, {useState} from "react";
+import {
+    Image,
+    NativeSyntheticEvent,
+    ScrollView,
+    TextInputChangeEventData,
+    TouchableOpacity,
+    View
+} from "react-native";
+import React, { useState } from "react";
 import axiosInstance from "../../services/axios.service";
 import {
-    AddItemScreenWrapper,
     ContentWrapper,
     ImageListWrapper,
     SelectedImageWrapper,
     StyledButton,
     StyledImage,
     StyledText,
-    StyledTextInput
+    StyledTextInput,
+    UpsertItemScreenWrapper
 } from "./styles";
-import {StackScreenProps} from "@react-navigation/stack";
-import {HomeStackParamList} from "../../utils/navigation-stack";
+import { StackScreenProps } from "@react-navigation/stack";
+import { HomeStackParamList } from "../../utils/navigation-stack";
 import Toast from "react-native-toast-message";
 import PopUpMenu from "../../components/PopUpMenu";
 import Spinner from 'react-native-loading-spinner-overlay';
-import {selectEmail} from "../../store/user-details/user-details.selectors";
-import {useAppDispatch, useAppSelector} from "../../store/hooks";
-import {editItem} from "../../services/items.service";
-import {ItemWithCategory} from "../../models/item";
-import {getFavorites} from "../../services/favorites.service";
-import {upsertFavoritesThunk} from "../../store/favorites/favorites.slice";
+import { selectEmail } from "../../store/user-details/user-details.selectors";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { editItem } from "../../services/items.service";
+import { ItemWithCategory } from "../../models/item";
+import { getFavorites } from "../../services/favorites.service";
+import { upsertFavoritesThunk } from "../../store/favorites/favorites.slice";
 
 export const defaultColor = '#2196f3';
-type AddItemScreenProps = StackScreenProps<HomeStackParamList, 'UpsertItem'>;
+type UpsertItemScreenProps = StackScreenProps<HomeStackParamList, 'UpsertItem'>;
 
-export const UpsertItemScreen = ({navigation, route}: AddItemScreenProps) => {
+export const UpsertItemScreen = ({navigation, route}: UpsertItemScreenProps) => {
     const dispatch = useAppDispatch();
     const {_id, name} = route.params.category;
-    const {itemName, imageUri, itemId} = route.params;
+    const {itemName, imageUrl, itemId} = route.params;
     const category = name;
     const categoryId = _id;
     const [newItemName, setNewItemName] = useState<string>('');
     const [editItemName, setEditItemName] = useState<string>('');
     const [searchItem, setSearchItem] = useState<string>('');
-    const [image, setImage] = useState<string>(imageUri || '');
+    const [image, setImage] = useState<string>(imageUrl || '');
     const [imagesList, setImagesList] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const email: string | undefined = useAppSelector(selectEmail);
@@ -43,7 +50,7 @@ export const UpsertItemScreen = ({navigation, route}: AddItemScreenProps) => {
         itemId
             ? editItemName === '' &&
             editItemName === newItemName &&
-            (image === '' || image === imageUri)
+            (image === '' || image === imageUrl)
             : image === '';
 
     const needToSave = itemId ? true : newItemName !== '';
@@ -58,7 +65,7 @@ export const UpsertItemScreen = ({navigation, route}: AddItemScreenProps) => {
     const handleClearChanges = () => {
         setEditItemName('');
         setSearchItem('');
-        setImage(imageUri || '')
+        setImage(imageUrl || '')
     }
 
     const handleOnPress = () => {
@@ -133,11 +140,11 @@ export const UpsertItemScreen = ({navigation, route}: AddItemScreenProps) => {
 
     return (
         <ScrollView>
-            <AddItemScreenWrapper>
+            <UpsertItemScreenWrapper>
                 <ContentWrapper style={{direction: "rtl"}}>
                     {itemId ? <>
                             <StyledText style={{paddingBottom: 25}}>עריכת הפריט: {itemName}</StyledText>
-                            <StyledImage source={{uri: imageUri}}/>
+                            <StyledImage source={{uri: imageUrl}}/>
                             <StyledTextInput style={{paddingTop: 25}} label={itemName} variant="outlined"
                                              color={defaultColor}
                                              value={editItemName}
@@ -203,7 +210,7 @@ export const UpsertItemScreen = ({navigation, route}: AddItemScreenProps) => {
                         <Image source={{uri: image}} style={{width: 300, height: 300}}/>
                     </SelectedImageWrapper>
                 }
-            </AddItemScreenWrapper>
+            </UpsertItemScreenWrapper>
         </ScrollView>
     )
 }
