@@ -41,16 +41,16 @@ export const CommonlyUsedScreen = () => {
     return (
         <ScrollView>
             <Wrapper>
-                <HeadLinedWrapper style={{paddingTop:20, paddingBottom:35}}>
+                <HeadLinedWrapper style={{paddingTop: 20, paddingBottom: 35}}>
                     <Text style={{fontSize: 30}}>פעולות בשימוש נפוץ: </Text>
                 </HeadLinedWrapper>
                 <ItemsWrapper style={{direction: "rtl"}}>
                     {commonlyUsedItems.map((itemWithCategory: ItemWithCategory, id) => (
                         <View key={id}>
-                            <ClickableBox name={itemWithCategory.name}
-                                          id={itemWithCategory._id}
-                                          imageUrl={itemWithCategory.imageUrl}
-                                          onPress={() => onItemPress(itemWithCategory)}/>
+                            {itemWithCategory && <ClickableBox name={itemWithCategory.name}
+                                                               id={itemWithCategory._id}
+                                                               imageUrl={itemWithCategory.imageUrl}
+                                                               onPress={() => onItemPress(itemWithCategory)}/>}
                         </View>
                     ))}
                 </ItemsWrapper>
