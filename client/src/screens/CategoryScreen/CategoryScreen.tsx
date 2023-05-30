@@ -4,13 +4,13 @@ import {HomeStackParamList} from "../../utils/navigation-stack";
 import {deleteItem, getItems, recordItemChosen, updateItemListOrder} from "../../services/items.service";
 import {Item, ItemWithCategory} from "../../models/item";
 import {FullActionModal} from "../../components/FullActionModal/FullActionModal";
-import {CircleIcon} from "../../components/icons/CircleIcon";
+import {CircleIcon} from "../../components/Icons/CircleIcon";
 import {useIsFocused} from "@react-navigation/native";
 import useSentenceBeginning from "../../hooks/useSentenceBeginning";
 import {DragAndDrop} from "../../components/DragAndDrop/DragAndDrop";
 import {styles} from "./styles";
 import {Text, View} from "react-native";
-import {EditRemoveSwitch} from "../../components/icons/EditRemoveSwitch";
+import {EditRemoveSwitch} from "../../components/Icons/EditRemoveSwitch";
 import {DeleteModal} from "../../components/DeleteModal/DeleteModal";
 import Toast from "react-native-toast-message";
 import {getFavorites} from "../../services/favorites.service";
@@ -22,13 +22,13 @@ type CategoryScreenProps = StackScreenProps<HomeStackParamList, 'Category'>;
 export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
     const dispatch = useAppDispatch();
     const [items, setItems] = useState<Item[]>([]);
-    const [isModalVisible, setModalVisible] = useState<boolean>(false);
+    const [isFullActionModalVisible, setIsFullActionModalVisible] = useState<boolean>(false);
     const [activeItemWithCategory, setActiveItemWithCategory] = useState<ItemWithCategory | null>(null);
     const {category} = route.params;
     const {_id: categoryId} = category;
     const {sentenceBeginning} = useSentenceBeginning(category);
     const isFocused = useIsFocused();
-    const [editRemoveMode, setEditRemoveMode] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [idToDelete, setIdToDelete] = useState('');
 
@@ -41,7 +41,7 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
                 alignItems: 'center',
                 justifyContent: 'center'
             }}>
-                <EditRemoveSwitch isEditMode={editRemoveMode} onChange={setEditRemoveMode}/>
+                <EditRemoveSwitch isEditMode={isEditMode} onChange={setIsEditMode}/>
                 <Text style={{fontWeight: 'bold'}}>
                     מצב עריכה
                 </Text>
@@ -55,7 +55,7 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
     }
 
     const onEditPress = (itemId: string, imageUri: string, itemName: string) => {
-        navigation.navigate('AddItem', {category, itemId, imageUri, itemName});
+        navigation.navigate('UpsertItem', {category, itemId, imageUri, itemName});
     }
 
     const handleOnClose = () => {
@@ -103,7 +103,7 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
         recordItemChosen(item)
             .then(() => {
                 setActiveItemWithCategory({...item, category});
-                setModalVisible(true);
+                setIsFullActionModalVisible(true);
             })
             .catch(console.error);
     };
@@ -115,16 +115,16 @@ export const CategoryScreen = ({navigation, route}: CategoryScreenProps) => {
     return (
         <>
             <DragAndDrop items={items} onItemPress={onItemPress} onDeletePress={onDeletePress}
-                         editRemoveMode={editRemoveMode} onEditPress={onEditPress}
+                         isEditMode={isEditMode} onEditPress={onEditPress}
                          updateOrderFunc={(orderedItemIds: string[]) => updateItemListOrder(orderedItemIds, categoryId)}/>
             <FullActionModal
                 itemWithCategory={activeItemWithCategory}
                 onRequestClose={onModalClose}
-                setVisible={setModalVisible}
-                visible={isModalVisible}/>
+                setVisible={setIsFullActionModalVisible}
+                visible={isFullActionModalVisible}/>
             <DeleteModal handleClose={handleOnClose} showDeleteModal={showDeleteModal} deleteItem={handleDelete}/>
             <CircleIcon style={styles.addItemIconContainer} iconColor="white" name="plus" size={40}
-                        onPress={() => navigation.navigate('AddItem', {category})}/>
+                        onPress={() => navigation.navigate('UpsertItem', {category})}/>
         </>
     )
 };

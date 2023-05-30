@@ -1,6 +1,6 @@
 import {TouchableOpacity, View} from "react-native";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
-import {IconsStyles} from "./FavoriteIcon";
+import {IconsStyles} from "./GenericIcon/styles";
 
 interface Props {
     backgroundColor?: string;

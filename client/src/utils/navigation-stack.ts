@@ -12,7 +12,7 @@ export type HomeStackParamList = {
     Category: {
         category: Category
     },
-    AddItem: {
+    UpsertItem: {
         category: Category;
         itemId?: string;
         imageUri?: string;

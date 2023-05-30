@@ -24,9 +24,9 @@ import {getFavorites} from "../../services/favorites.service";
 import {upsertFavoritesThunk} from "../../store/favorites/favorites.slice";
 
 export const defaultColor = '#2196f3';
-type AddItemScreenProps = StackScreenProps<HomeStackParamList, 'AddItem'>;
+type AddItemScreenProps = StackScreenProps<HomeStackParamList, 'UpsertItem'>;
 
-export const AddAndUpdateItemScreen = ({navigation, route}: AddItemScreenProps) => {
+export const UpsertItemScreen = ({navigation, route}: AddItemScreenProps) => {
     const dispatch = useAppDispatch();
     const {_id, name} = route.params.category;
     const {itemName, imageUri, itemId} = route.params;
@@ -39,7 +39,14 @@ export const AddAndUpdateItemScreen = ({navigation, route}: AddItemScreenProps) 
     const [imagesList, setImagesList] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const email: string | undefined = useAppSelector(selectEmail);
-    const needToSearch = itemId ? editItemName === '' && editItemName === newItemName && image === '' || image === imageUri && editItemName === newItemName : image === '';
+    const needToSearch =
+        itemId
+            ? editItemName === '' &&
+            editItemName === newItemName &&
+            (image === '' || image === imageUri)
+            : image === '';
+
+    const needToSave = itemId ? true : newItemName !== '';
     const handleItemNameChanged = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
         itemId ? setEditItemName(e.nativeEvent.text) : setNewItemName(e.nativeEvent.text);
     }
@@ -59,7 +66,11 @@ export const AddAndUpdateItemScreen = ({navigation, route}: AddItemScreenProps) 
         setImagesList([]);
         return axiosInstance.get(`/photos/${searchItem}`)
             .then((response) => setImagesList(response.data))
-            .catch(console.error);
+            .catch(() => Toast.show({
+                type: 'error',
+                text1: 'החיפוש נכשל',
+                text2: 'חיפוש התמונה נכשל - אנא נסה שוב ⛔️',
+            }));
     };
 
     const uploadImageToS3 = async () => {
@@ -79,13 +90,16 @@ export const AddAndUpdateItemScreen = ({navigation, route}: AddItemScreenProps) 
         if (!image) {
             alert('בבקשה בחר תמונה');
             return;
+        } else if (!itemId && newItemName === '') {
+            alert('בבקשה בחר שם לפריט');
         }
+
         setLoading(true);
 
         try {
             const imageUrl = image.startsWith('file') ? await uploadImageToS3() : image;
             if (itemId) {
-                await editItem(itemId, categoryId, imageUrl, editItemName).catch(console.log);
+                await editItem(itemId, categoryId, imageUrl, editItemName || itemName || '');
             } else {
                 await axiosInstance.post('/items/', {name: newItemName, imageUrl, categoryId});
             }
@@ -94,9 +108,10 @@ export const AddAndUpdateItemScreen = ({navigation, route}: AddItemScreenProps) 
             Toast.show({
                 type: 'error',
                 text1: 'השמירה נכשלה',
-                text2: 'הפרטים שהזנת לא נשמרו במערכת ⛔️',
+                text2: `הפרטים שהזנת לא נשמרו במערכת ⛔️ֿ`,
             });
             console.log(error);
+            return
         }
 
         setLoading(false);
@@ -153,7 +168,7 @@ export const AddAndUpdateItemScreen = ({navigation, route}: AddItemScreenProps) 
 
                     {needToSearch ? searchItem !== '' && <StyledButton title={'חפש'} onPress={handleOnPress}/> :
                         <View style={{gap: 20}}>
-                            <StyledButton title={'שמור'} onPress={handleSave}/>
+                            {needToSave && <StyledButton title={'שמור'} onPress={handleSave}/>}
                             {searchItem !== '' &&
                                 <StyledButton title={itemId ? 'חפש תמונה חדשה' : 'חפש שוב'} onPress={handleOnPress}/>}
                             {itemId && <StyledButton title={'מחק שינויים'} onPress={handleClearChanges}/>}
@@ -167,7 +182,8 @@ export const AddAndUpdateItemScreen = ({navigation, route}: AddItemScreenProps) 
                         }}
                     />
                 </ContentWrapper>
-                {imagesList.length > 0 && image === '' &&
+                {
+                    imagesList.length > 0 && image === '' &&
                     <>
                         <View>
                             {itemId ? <StyledText>בחר תמונה חדשה:</StyledText> :

@@ -17,7 +17,7 @@ interface Props {
     onItemPress?: (item: any) => void;
     shouldItemHaveIcons?: boolean;
     updateOrderFunc: (orderedIds: string[]) => Promise<any[]>;
-    editRemoveMode?: boolean;
+    isEditMode?: boolean;
     onDeletePress?: (itemId: string) => void;
     onEditPress?: (itemId: string, imageUri: string, itemName: string) => void;
 }
@@ -27,7 +27,7 @@ export const DragAndDrop = ({
                                 onItemPress,
                                 shouldItemHaveIcons = true,
                                 updateOrderFunc,
-                                editRemoveMode = false,
+                                isEditMode = false,
                                 onDeletePress,
                                 onEditPress
                             }: Props) => {
@@ -63,7 +63,7 @@ export const DragAndDrop = ({
                               imageUrl={item.imageUrl}
                               key={item._id}
                               hasIcon={shouldItemHaveIcons}
-                              editMode={editRemoveMode}
+                              isEditMode={isEditMode}
                               onDeletePress={onDeletePress}
                               onEditPress={onEditPress}
                 />

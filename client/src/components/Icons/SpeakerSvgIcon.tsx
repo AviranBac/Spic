@@ -1,6 +1,6 @@
 import {Pressable, StyleProp, View, ViewStyle} from "react-native";
 import Svg, {Path} from "react-native-svg";
-import {IconsStyles} from "./FavoriteIcon";
+import {IconsStyles} from "./GenericIcon/styles";
 
 type SpeakerIconProps = {
     loading: boolean;
