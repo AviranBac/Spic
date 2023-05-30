@@ -1,9 +1,9 @@
-import {Dimensions, SafeAreaView, ScrollView, Text, TouchableOpacity, View} from "react-native";
-import {DragSortableView} from "react-native-drag-sort";
-import React, {useEffect, useRef, useState} from "react";
-import {ClickableBox} from "../ClickableBox";
-import {ItemsWrapper, StyledButton} from "../../styles/shared-styles";
-import {styles} from "./styles";
+import { Dimensions, SafeAreaView, ScrollView, View } from "react-native";
+import { DragSortableView } from "react-native-drag-sort";
+import React, { useEffect, useRef, useState } from "react";
+import { ClickableBox } from "../ClickableBox";
+import { ItemsWrapper, StyledButton } from "../../styles/shared-styles";
+import { styles } from "./styles";
 import Toast from "react-native-toast-message";
 
 const deviceWidth = Dimensions.get('window').width
@@ -17,13 +17,19 @@ interface Props {
     onItemPress?: (item: any) => void;
     shouldItemHaveIcons?: boolean;
     updateOrderFunc: (orderedIds: string[]) => Promise<any[]>;
+    isEditMode?: boolean;
+    onDeletePress?: (itemId: string) => void;
+    onEditPress?: (itemId: string, imageUrl: string, itemName: string) => void;
 }
 
 export const DragAndDrop = ({
                                 items,
                                 onItemPress,
                                 shouldItemHaveIcons = true,
-                                updateOrderFunc
+                                updateOrderFunc,
+                                isEditMode = false,
+                                onDeletePress,
+                                onEditPress
                             }: Props) => {
     const [scrollEnabled, setScrollEnabled] = useState(true);
     const [isEdit, setIsEdit] = useState(false);
@@ -57,8 +63,10 @@ export const DragAndDrop = ({
                               imageUrl={item.imageUrl}
                               key={item._id}
                               hasIcon={shouldItemHaveIcons}
+                              isEditMode={isEditMode}
+                              onDeletePress={onDeletePress}
+                              onEditPress={onEditPress}
                 />
-
             </View>
         )
     }
@@ -110,7 +118,7 @@ export const DragAndDrop = ({
                 </View>}
                 <ItemsWrapper>
                     <DragSortableView
-                        dataSource={itemsList}
+                        dataSource={itemsList || []}
                         parentWidth={deviceWidth}
                         childrenWidth={isPortrait ? childrenWidth : childrenWidth}
                         childrenHeight={isPortrait ? childrenHeight : childrenHeight}

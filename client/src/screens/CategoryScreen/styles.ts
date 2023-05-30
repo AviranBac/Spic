@@ -13,5 +13,13 @@ export const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 10,
         left: 10
+    },
+    editModeWrapper: {
+        flex:0.1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        padding:10,
+        gap:10,
     }
 });
