@@ -15,6 +15,27 @@ import { ItemWithCategory } from "../db/dal/items.dal";
 
 const router = Router();
 
+/**
+ * @swagger
+ * /favorites:
+ *   get:
+ *     summary: Get favorite items by user ID
+ *     description: Get favorite items for the authenticated user.
+ *     tags: [Favorites]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad Request
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal Server Error
+ */
 router.get('/', authenticate, async (req: Request, res: Response) => {
     const { userId } = (req as AuthenticatedRequest).token;
     let response: ItemWithCategory[] | string;
@@ -32,6 +53,33 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
     res.status(statusCode).send(response);
 });
 
+/**
+ * @swagger
+ * /favorites:
+ *   post:
+ *     summary: Add or remove favorite item
+ *     description: Add or remove a favorite item for the authenticated user.
+ *     tags: [Favorites]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/FavoriteItemRequest'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad Request
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal Server Error
+ */
 router.post('/', authenticate, validateFavoriteItemRequest(), async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -59,6 +107,33 @@ router.post('/', authenticate, validateFavoriteItemRequest(), async (req: Reques
     res.status(statusCode).send(response);
 });
 
+/**
+ * @swagger
+ * /favorites/order:
+ *   put:
+ *     summary: Update favorites order
+ *     description: Update the order of favorites for the authenticated user.
+ *     tags: [Favorites]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/FavoritesOrderRequest'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad Request
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal Server Error
+ */
 router.put('/order', authenticate, validateFavoritesOrderRequest(), async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

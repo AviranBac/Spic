@@ -12,14 +12,15 @@ export const authenticate = async (
   next: NextFunction
 ) => {
   console.log(`Started authentication middleware in ${req.originalUrl}`);
-  const accessToken = req.headers.authorization as string;
+  const authorizationHeader = req.headers.authorization as string;
 
-  if (!accessToken) {
+  if (!authorizationHeader || !authorizationHeader.startsWith("Bearer ")) {
     return res
       .status(StatusCodes.FORBIDDEN)
-      .send({ response: "A token is required for authentication" });
+      .send({ response: "A Bearer token is required for authentication" });
   }
 
+  const accessToken: string = authorizationHeader.substring(7);
   const decoded = verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET);
   if (!decoded) return res.status(StatusCodes.UNAUTHORIZED).send({ response: "Invalid Token" });
   (req as AuthenticatedRequest).token = decoded;
