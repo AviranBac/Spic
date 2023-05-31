@@ -6,6 +6,9 @@ import { Category, CategoryModel } from "../schemas/category.schema";
 import { ItemIdsPerCategory } from "../schemas/user-preferences.schema";
 import { getAllCategoryIds } from "./categories.dal";
 import { getOrderedItemIdsByCategoryId } from "./user-preferences/ordered-items-per-category.dal";
+import { deleteItemIdFromPreferences, updateItemIdInPreferences } from "./user-preferences/user-preferences.dal";
+import { deleteItemIdFromRecords, updateItemIdInRecords } from "./chosen-item-records.dal";
+import { deleteItemIdFromFeedbacks, updateItemIdInFeedbacks } from "./feedbacks.dal";
 
 export type ItemWithId = Item & Require_id<Item>;
 
@@ -50,12 +53,28 @@ export const getItemsByCategoryAndUserId = async (categoryId: mongoose.Types.Obj
     return await getAllItemsWithS3Images(orderedItems);
 };
 
-export const deleteItemById = async (itemId: mongoose.Types.ObjectId): Promise<void> => {
-    await ItemModel.deleteOne({_id: itemId}).exec();
+export const deleteItemById = async (userId: mongoose.Types.ObjectId, itemId: mongoose.Types.ObjectId): Promise<void> => {
+    const itemToDelete = (await ItemModel.findById(itemId).lean())!;
+
+    if (itemToDelete.userId) {
+        await ItemModel.deleteOne({_id: itemId});
+    }
+
+    await deleteItemIdReferences(userId, itemToDelete.categoryId, itemId);
 }
 
-export const editItemById = async (itemId: mongoose.Types.ObjectId, updatedItem: Item): Promise<Item> => {
-    return (await ItemModel.findOneAndUpdate({_id: itemId}, updatedItem, {new: true}).exec()) as Item;
+export const editItemById = async (userId: mongoose.Types.ObjectId, itemId: mongoose.Types.ObjectId, updatedItem: ItemWithId): Promise<ItemWithId> => {
+    const currentItem: ItemWithId = (await ItemModel.findById(itemId).lean())!;
+
+    if (currentItem.userId) {
+        return (await ItemModel.findOneAndUpdate({_id: itemId}, updatedItem, {new: true}).exec()) as ItemWithId;
+    }
+
+    const {_id, ...newItemWithoutId} = updatedItem;
+    const newItem: ItemWithId = await addItem({...newItemWithoutId, userId});
+    await updateItemIdReferences(userId, newItem.categoryId, itemId, new mongoose.Types.ObjectId(newItem.id!));
+
+    return newItem;
 }
 
 export const getSharedItemIdsPerCategory = async (): Promise<ItemIdsPerCategory> => {
@@ -82,4 +101,21 @@ export const getItemIdsByUserId = async (userId: mongoose.Types.ObjectId): Promi
     };
 
     return (await ItemModel.find(query).lean()).map(item => item._id);
+}
+
+const updateItemIdReferences = async (userId: mongoose.Types.ObjectId,
+                                      categoryId: mongoose.Types.ObjectId,
+                                      oldItemId: mongoose.Types.ObjectId,
+                                      newItemId: mongoose.Types.ObjectId): Promise<void> => {
+    await updateItemIdInPreferences(userId, categoryId, oldItemId, newItemId);
+    await updateItemIdInRecords(userId, oldItemId, newItemId);
+    await updateItemIdInFeedbacks(userId, oldItemId, newItemId);
+}
+
+const deleteItemIdReferences = async (userId: mongoose.Types.ObjectId,
+                                      categoryId: mongoose.Types.ObjectId,
+                                      itemId: mongoose.Types.ObjectId): Promise<void> => {
+    await deleteItemIdFromPreferences(userId, categoryId, itemId);
+    await deleteItemIdFromRecords(userId, itemId);
+    await deleteItemIdFromFeedbacks(userId, itemId);
 }

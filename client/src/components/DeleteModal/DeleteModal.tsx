@@ -1,7 +1,7 @@
 import {Modal, Text, TouchableOpacity, View} from "react-native";
 import React from "react";
 import {styles} from "../FullActionModal/styles";
-import {CircleIcon} from "../icons/CircleIcon";
+import {CircleIcon} from "../Icons/CircleIcon";
 import {StyledButton} from "../../styles/shared-styles";
 import {StyledText} from "../../screens/HomeScreen/styles";
 
@@ -42,9 +42,7 @@ export const DeleteModal = ({handleClose, showDeleteModal, deleteItem}: Props) =
                                     onPress={handleClose}/>
                     </TouchableOpacity>
                 </TouchableOpacity>
-
             </Modal>
-
         </View>
     )
 }
