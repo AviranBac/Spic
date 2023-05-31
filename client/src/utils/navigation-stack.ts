@@ -12,8 +12,11 @@ export type HomeStackParamList = {
     Category: {
         category: Category
     },
-    AddItem: {
-        category: Category
+    UpsertItem: {
+        category: Category;
+        itemId?: string;
+        imageUrl?: string;
+        itemName?: string;
     }
 };
 export const HomeStack = createStackNavigator<HomeStackParamList>();

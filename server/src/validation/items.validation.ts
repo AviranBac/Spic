@@ -98,10 +98,18 @@ export const validateDeleteItemRequest = () => {
         body('_id', 'Invalid itemId')
             .isString()
             .custom(async (_id: string, {req}: { req: Request }) => {
-                if (await ItemModel.findOne({_id, userId: (req as AuthenticatedRequest).token.userId})) {
+                const query = {
+                    _id,
+                    $or: [
+                        {userId: {$exists: false}},
+                        {userId: (req as AuthenticatedRequest).token.userId}
+                    ]
+                };
+
+                if (await ItemModel.findOne(query)) {
                     return true;
                 }
-                throw new Error('itemId does not exist');
+                throw new Error('itemId does not exist globally or for the current user');
             })
     ];
 };

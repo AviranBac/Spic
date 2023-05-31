@@ -7,6 +7,9 @@ import {getFavorites} from "../../services/favorites.service";
 import {upsertFavoritesThunk} from "../../store/favorites/favorites.slice";
 import {getUserDetails, UserDetails} from "../../services/user-settings.service";
 import {updateUserDetailsThunk} from "../../store/user-details/user-details.slice";
+import Toast from "react-native-toast-message";
+import {toastConfig} from "../../styles/toast-confing";
+
 
 const logo = require('../../../assets/logo-spic.png');
 export const MainAppBar = () => {
@@ -16,7 +19,6 @@ export const MainAppBar = () => {
         const fetchData = async () => {
             const favorites: ItemWithCategory[] = await getFavorites();
             const filteredFavorites: string[] = favorites?.map((item: { _id: string; }) => item._id);
-
             const userDetails: UserDetails = await getUserDetails();
 
             dispatch(upsertFavoritesThunk(filteredFavorites));

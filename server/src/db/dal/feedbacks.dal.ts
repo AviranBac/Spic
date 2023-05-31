@@ -8,3 +8,16 @@ export const getFeedbacksByUserIdAndItemIds = async (userId: mongoose.Types.Obje
         .find({userId, itemId: {$in: itemIds}})
         .lean();
 };
+
+export const updateItemIdInFeedbacks = async (userId: mongoose.Types.ObjectId,
+                                              oldItemId: mongoose.Types.ObjectId,
+                                              newItemId: mongoose.Types.ObjectId): Promise<void> => {
+    await FeedbackModel.updateMany(
+        {userId, itemId: oldItemId},
+        {itemId: newItemId}
+    );
+}
+
+export const deleteItemIdFromFeedbacks = async (userId: mongoose.Types.ObjectId, itemId: mongoose.Types.ObjectId): Promise<void> => {
+    await FeedbackModel.deleteMany({userId, itemId});
+}

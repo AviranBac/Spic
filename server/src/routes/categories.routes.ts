@@ -10,6 +10,25 @@ import { validationResult } from "express-validator/check";
 
 const router = Router();
 
+/**
+ * @swagger
+ * /categories:
+ *   get:
+ *     summary: Get ordered categories
+ *     description: Get the ordered categories for the authenticated user.
+ *     tags: [Categories]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: OK
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal Server Error
+ */
 router.get('/', authenticate, async (req: Request, res: Response) => {
     const {userId} = (req as AuthenticatedRequest).token;
     let response: Category[] | string;
@@ -27,6 +46,33 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
     res.status(statusCode).send(response);
 });
 
+/**
+ * @swagger
+ * /categories/order:
+ *   put:
+ *     summary: Update categories order
+ *     description: Update the order of categories for the authenticated user.
+ *     tags: [Categories]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CategoriesOrderRequest'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad Request
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal Server Error
+ */
 router.put('/order', authenticate, validateCategoriesOrderRequest(), async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

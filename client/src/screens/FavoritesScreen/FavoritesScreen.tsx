@@ -1,13 +1,12 @@
 import {useAppSelector} from "../../store/hooks";
 import React, {useEffect, useState} from "react";
-import {ScrollView, Text, View} from 'react-native';
+import {Text} from 'react-native';
 import {selectFavoriteIds} from "../../store/favorites/favorites.selectors";
 import {getFavorites, updateFavoriteListOrder} from "../../services/favorites.service";
 import {HeadLinedWrapper, ItemsWrapper} from "../../styles/shared-styles";
 import {Wrapper} from "../HomeScreen/styles";
 import {DragAndDrop} from "../../components/DragAndDrop/DragAndDrop";
 import {ItemWithCategory} from "../../models/item";
-import {ClickableBox} from "../../components/ClickableBox";
 import {recordItemChosen} from "../../services/items.service";
 import {FullActionModal} from "../../components/FullActionModal/FullActionModal";
 
@@ -44,13 +43,12 @@ export const FavoritesScreen = () => {
                 <Text style={{fontSize: 30}}>המועדפים שלי: </Text>
             </HeadLinedWrapper>
             <ItemsWrapper>
-                <DragAndDrop items={favoriteItems} updateOrderFunc={updateFavoriteListOrder}/>
+                <DragAndDrop items={favoriteItems} onItemPress={onItemPress} updateOrderFunc={updateFavoriteListOrder}/>
             </ItemsWrapper>
             <FullActionModal itemWithCategory={activeItemWithCategory}
                              onRequestClose={onModalClose}
                              setVisible={setModalVisible}
                              visible={isModalVisible}/>
         </Wrapper>
-    )
-        ;
+    );
 }

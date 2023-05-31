@@ -5,7 +5,6 @@ import {
     deleteItemById,
     editItemById,
     getItemsByCategoryAndUserId,
-    getItemsById,
     ItemWithCategory,
     ItemWithId
 } from "../db/dal/items.dal";
@@ -24,13 +23,31 @@ import {
 import { upsertFeedbacks } from "../services/feedback";
 import { getCommonlyUsedItems } from "../services/commonly-used-items";
 import {
-    addItemToPreferences,
-    deleteItemFromPreferences,
+    addItemToPerCategoryPreferences,
     updateOrderedItemIdsByCategoryId
 } from "../db/dal/user-preferences/ordered-items-per-category.dal";
 
 const router = Router();
 
+/**
+ * @swagger
+ * /items/commonlyUsed:
+ *   get:
+ *     summary: Get commonly used items
+ *     description: Get the commonly used items for the authenticated user.
+ *     tags: [Items]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: OK
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal Server Error
+ */
 router.get('/commonlyUsed', authenticate, async (req: Request, res: Response) => {
     const {userId} = (req as AuthenticatedRequest).token;
     let response: ItemWithCategory[] | string;
@@ -48,6 +65,32 @@ router.get('/commonlyUsed', authenticate, async (req: Request, res: Response) =>
     res.status(statusCode).send(response);
 });
 
+/**
+ * @swagger
+ * /items/{categoryId}:
+ *   get:
+ *     summary: Get items by category ID
+ *     description: Get the items belonging to a specific category for the authenticated user.
+ *     tags: [Items]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: categoryId
+ *         required: true
+ *         description: ID of the category
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: OK
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal Server Error
+ */
 router.get('/:categoryId/', authenticate, async (req: Request, res: Response) => {
     const categoryId = req.params.categoryId;
     const {userId} = (req as AuthenticatedRequest).token;
@@ -66,6 +109,33 @@ router.get('/:categoryId/', authenticate, async (req: Request, res: Response) =>
     res.status(statusCode).send(response);
 });
 
+/**
+ * @swagger
+ * /items/record:
+ *   post:
+ *     summary: Add item record
+ *     description: Add a new item record and optionally update feedbacks.
+ *     tags: [Items]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ItemRecordRequest'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad Request
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal Server Error
+ */
 router.post('/record', authenticate, validateRecordRequest(), async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -110,6 +180,33 @@ router.post('/record', authenticate, validateRecordRequest(), async (req: Reques
     res.status(statusCode).send(response);
 });
 
+/**
+ * @swagger
+ * /items:
+ *   post:
+ *     summary: Add item
+ *     description: Add a new item to a specific category for the authenticated user.
+ *     tags: [Items]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/AddItemRequest'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad Request
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal Server Error
+ */
 router.post('/', authenticate, validateAddItemRequest(), async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -125,7 +222,7 @@ router.post('/', authenticate, validateAddItemRequest(), async (req: Request, re
 
     try {
         response = await addItem({name, imageUrl, categoryId, userId});
-        await addItemToPreferences(userId, categoryId, response._id);
+        await addItemToPerCategoryPreferences(userId, categoryId, response._id);
 
         console.log(`Added new item for userId ${userId}. Item: ${JSON.stringify(response)}`);
     } catch (error) {
@@ -137,6 +234,33 @@ router.post('/', authenticate, validateAddItemRequest(), async (req: Request, re
     res.status(statusCode).send(response);
 });
 
+/**
+ * @swagger
+ * /items:
+ *   put:
+ *     summary: Edit item
+ *     description: Edit an existing item for the authenticated user.
+ *     tags: [Items]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/EditItemRequest'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad Request
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal Server Error
+ */
 router.put('/', authenticate, validateEditItemRequest(), async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -144,14 +268,14 @@ router.put('/', authenticate, validateEditItemRequest(), async (req: Request, re
         return;
     }
 
-    const {userId} = (req as AuthenticatedRequest).token;
+    const userId = new mongoose.Types.ObjectId((req as AuthenticatedRequest).token.userId);
     const updatedItem: ItemWithId = req.body;
     const itemId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(updatedItem._id);
     let response: Item | string;
     let statusCode = StatusCodes.OK;
 
     try {
-        response = await editItemById(itemId, updatedItem);
+        response = await editItemById(userId, itemId, updatedItem);
         console.log(`Updated item with itemId: ${itemId.toString()}, userId: ${userId}`);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -162,6 +286,33 @@ router.put('/', authenticate, validateEditItemRequest(), async (req: Request, re
     res.status(statusCode).send(response);
 });
 
+/**
+ * @swagger
+ * /items/order:
+ *   put:
+ *     summary: Update item order
+ *     description: Update the order of items within a category for the authenticated user.
+ *     tags: [Items]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ItemOrderRequest'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad Request
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal Server Error
+ */
 router.put('/order', authenticate, validateItemOrderRequest(), async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -189,6 +340,33 @@ router.put('/order', authenticate, validateItemOrderRequest(), async (req: Reque
     res.status(statusCode).send(response);
 });
 
+/**
+ * @swagger
+ * /items:
+ *   delete:
+ *     summary: Delete item
+ *     description: Delete an existing item for the authenticated user.
+ *     tags: [Items]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/DeleteItemRequest'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad Request
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal Server Error
+ */
 router.delete('/', authenticate, validateDeleteItemRequest(), async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -202,10 +380,7 @@ router.delete('/', authenticate, validateDeleteItemRequest(), async (req: Reques
     let statusCode = StatusCodes.OK;
 
     try {
-        const deletedItemCategoryId: mongoose.Types.ObjectId = (await getItemsById([itemId]))[0].categoryId;
-
-        await deleteItemById(new mongoose.Types.ObjectId(itemId));
-        await deleteItemFromPreferences(userId, deletedItemCategoryId, itemId);
+        await deleteItemById(userId, itemId);
         console.log(`Deleted item with itemId: ${itemId}, userId: ${userId}`);
     } catch (error) {
         statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
