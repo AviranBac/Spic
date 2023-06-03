@@ -1,9 +1,9 @@
 import { Image, Modal, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { ItemWithCategory } from "../../models/item";
-import TextToSpeechIcon from "../icons/TextToSpeechIcon";
+import TextToSpeechIcon from "../Icons/TextToSpeechIcon";
 import { useAppSelector } from "../../store/hooks";
-import { CircleIcon } from "../icons/CircleIcon";
+import { CircleIcon } from "../Icons/CircleIcon";
 import { styles } from "./styles";
 import { selectGender } from "../../store/user-details/user-details.selectors";
 import { Gender } from "../../store/user-details/user-details.model";

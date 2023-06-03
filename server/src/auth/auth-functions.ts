@@ -6,6 +6,8 @@ import { StatusCodes } from "http-status-codes";
 import * as jwtUtils from "../utils/jwt";
 import { validationResult } from "express-validator/check";
 import { IUser, UserModel } from "../db/schemas/user.schema";
+import { UserPreferencesModel } from "../db/schemas/user-preferences.schema";
+import { getInitialPreferences } from "../db/dal/user-preferences/user-preferences.dal";
 
 export const register = async (req: Request, res: Response) => {
   const { email, password, username, gender, age } = req.body;
@@ -35,7 +37,11 @@ export const register = async (req: Request, res: Response) => {
           refreshTokens: []
         });
 
-        await userModel.save();
+        const {_id: userId} = await userModel.save();
+
+        const userPreferencesModel = new UserPreferencesModel({ ...(await getInitialPreferences()), userId });
+        await userPreferencesModel.save();
+
         status = StatusCodes.OK;
         response = userModel;
       }
