@@ -8,31 +8,37 @@ import {upsertFavoritesThunk} from "../../store/favorites/favorites.slice";
 import {getUserDetails, UserDetails} from "../../services/user-settings.service";
 import {updateUserDetailsThunk} from "../../store/user-details/user-details.slice";
 import Toast from "react-native-toast-message";
-import {toastConfig} from "../../styles/toast-confing";
 
 const logo = require('../../../assets/logo-spic.png');
+
 export const MainAppBar = () => {
     const dispatch = useAppDispatch();
+    const logoutHandler = () => {
+        dispatch(logoutThunk());
+    };
 
     useEffect(() => {
         const fetchData = async () => {
             const favorites: ItemWithCategory[] = await getFavorites();
             const filteredFavorites: string[] = favorites?.map((item: { _id: string; }) => item._id);
-            const userDetails: UserDetails = await getUserDetails();
-
+            try {
+                const userDetails: UserDetails = await getUserDetails();
+                dispatch(updateUserDetailsThunk(userDetails));
+            } catch (e) {
+                Toast.show({
+                    type: 'error',
+                    text1: 'טעינת הפרטים נכשלה 🚫',
+                    text2: 'אנא נסה שוב 🔄',
+                });
+                logoutHandler();
+            }
             dispatch(upsertFavoritesThunk(filteredFavorites));
-            dispatch(updateUserDetailsThunk(userDetails));
         };
         fetchData();
     }, []);
 
-    const logoutHandler = () => {
-        dispatch(logoutThunk());
-    };
-
     return (
         <StyledAppBar>
-            <Toast config={toastConfig}/>
             <Wrapper>
                 <ImageWrapper>
                     <StyledImage source={logo}/>
