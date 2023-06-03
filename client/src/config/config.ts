@@ -3,5 +3,5 @@ interface Config {
 }
 
 export const config: Config = {
-    serverUrl: 'http://spic.cs.colman.ac.il'
+    serverUrl: 'http://192.168.1.152:8080' // TODO: change to your local IP address so it'll work in mobile as well
 }
