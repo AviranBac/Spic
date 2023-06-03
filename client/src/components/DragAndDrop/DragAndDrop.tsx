@@ -1,5 +1,5 @@
 import {Dimensions, SafeAreaView, ScrollView, View} from "react-native";
-import {AutoDragSortableView, DragSortableView} from "react-native-drag-sort";
+import {DragSortableView} from "react-native-drag-sort";
 import React, {useEffect, useRef, useState} from "react";
 import {ClickableBox} from "../ClickableBox";
 import {ItemsWrapper, StyledButton} from "../../styles/shared-styles";
