@@ -137,8 +137,8 @@ export const DragAndDrop = ({
                         childrenHeight={childrenHeight}
                         marginChildrenTop={10}
                         marginChildrenBottom={10}
-                        marginChildrenLeft={isPortrait ? 45 : 62}
-                        marginChildrenRight={isPortrait ? 10 : 20}
+                        marginChildrenLeft={isPortrait ? initialWidth < 500 ? 10 : 45 : 62}
+                        marginChildrenRight={isPortrait ? initialWidth < 500 ? 80 : 10 : 20}
                         onDragStart={onSelectedDragStart}
                         onDragEnd={onSelectedDragEnd}
                         keyExtractor={(item) => item._id}
