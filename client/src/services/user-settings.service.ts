@@ -18,8 +18,5 @@ export const updateUserDetails = (data: Partial<UserDetails>): Promise<UserDetai
 
 export const getUserDetails = (): Promise<UserDetails> => {
     return axiosInstance.get('/user/')
-        .then(response => response.data)
-        .catch(error => {
-            console.error('Error:', error);
-        });
+        .then(response => response.data);
 }

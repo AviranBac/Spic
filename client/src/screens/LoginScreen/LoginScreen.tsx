@@ -10,6 +10,7 @@ import {AxiosResponse} from "axios";
 import {styles} from "./styles";
 
 type LoginScreenProps = StackScreenProps<UnauthenticatedStackParamList>;
+
 export interface LoginFormDetails {
     email: string,
     password: string
@@ -35,8 +36,12 @@ export const LoginScreen = ({navigation}: LoginScreenProps) => {
         let errorMessage: string;
 
         switch (error.data) {
-            case 'Invalid Credentials': errorMessage = 'פרטי ההתחברות שגויים. נסה שנית'; break;
-            default: errorMessage = 'אירעה שגיאה בהתחברות'; break;
+            case 'Invalid Credentials':
+                errorMessage = 'פרטי ההתחברות שגויים. נסה שנית';
+                break;
+            default:
+                errorMessage = 'אירעה שגיאה בהתחברות';
+                break;
         }
 
         setBackendHebrewError(errorMessage);
@@ -103,11 +108,11 @@ export const LoginScreen = ({navigation}: LoginScreenProps) => {
                                               disabled={!isValid}
                             >
                                 {isLoading ?
-                                    <ActivityIndicator size="large" color="white" /> :
+                                    <ActivityIndicator size="large" color="white"/> :
                                     <Text>התחבר</Text>
                                 }
                             </TouchableOpacity>
-                            { backendHebrewError &&
+                            {backendHebrewError &&
                                 <View style={styles.backendHebrewErrorContainer}>
                                     <Text style={styles.errorText}>{backendHebrewError}</Text>
                                 </View>
