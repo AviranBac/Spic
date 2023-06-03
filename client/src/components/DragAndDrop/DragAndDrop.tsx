@@ -1,16 +1,10 @@
-import { Dimensions, SafeAreaView, ScrollView, View } from "react-native";
-import { DragSortableView } from "react-native-drag-sort";
-import React, { useEffect, useRef, useState } from "react";
-import { ClickableBox } from "../ClickableBox";
-import { ItemsWrapper, StyledButton } from "../../styles/shared-styles";
-import { styles } from "./styles";
+import {Dimensions, SafeAreaView, ScrollView, View} from "react-native";
+import {AutoDragSortableView, DragSortableView} from "react-native-drag-sort";
+import React, {useEffect, useRef, useState} from "react";
+import {ClickableBox} from "../ClickableBox";
+import {ItemsWrapper, StyledButton} from "../../styles/shared-styles";
+import {styles} from "./styles";
 import Toast from "react-native-toast-message";
-
-const deviceWidth = Dimensions.get('window').width
-const deviceHeight = Dimensions.get('window').height
-
-const childrenWidth = deviceWidth / 4;
-const childrenHeight = deviceHeight / 4;
 
 interface Props {
     items: any[];
@@ -31,16 +25,34 @@ export const DragAndDrop = ({
                                 onDeletePress,
                                 onEditPress
                             }: Props) => {
+    const initialWidth = Dimensions.get('window').width;
+    const initialHeight = Dimensions.get('window').height;
+    const portraitCheck = Dimensions.get('window').height > Dimensions.get('window').width;
+
+    const [deviceWidth, setDeviceWidth] = useState(initialWidth);
+    const [childrenWidth, setChildrenWidth] = useState(portraitCheck ? initialWidth / 4 : initialWidth / 6);
+    const [childrenHeight, setChildrenHeight] = useState(portraitCheck ? initialHeight / 4 : initialHeight / 3);
+
     const [scrollEnabled, setScrollEnabled] = useState(true);
     const [isEdit, setIsEdit] = useState(false);
     const setMap = useRef(new Map());
     const [itemsList, setItemsList] = useState(items);
-    const [isPortrait, setIsPortrait] = useState(true);
+    const [isPortrait, setIsPortrait] = useState(portraitCheck);
 
     useEffect(() => {
         const handleOrientationChange = ({window}: any) => {
             const {height, width} = window;
-            setIsPortrait(height > width);
+            setDeviceWidth(width);
+
+            if (height > width) {
+                setIsPortrait(true);
+                setChildrenWidth(window.width / 4);
+                setChildrenHeight(window.height / 4);
+            } else {
+                setIsPortrait(false);
+                setChildrenWidth(window.width / 6);
+                setChildrenHeight(window.height / 3);
+            }
         };
 
         const dimensionsHandler = Dimensions.addEventListener('change', handleOrientationChange);
@@ -49,6 +61,7 @@ export const DragAndDrop = ({
             dimensionsHandler.remove();
         };
     }, []);
+
     useEffect(() => {
         setItemsList(items)
     }, [items])
@@ -120,12 +133,12 @@ export const DragAndDrop = ({
                     <DragSortableView
                         dataSource={itemsList || []}
                         parentWidth={deviceWidth}
-                        childrenWidth={isPortrait ? childrenWidth : childrenWidth}
-                        childrenHeight={isPortrait ? childrenHeight : childrenHeight}
+                        childrenWidth={childrenWidth}
+                        childrenHeight={childrenHeight}
                         marginChildrenTop={10}
                         marginChildrenBottom={10}
-                        marginChildrenLeft={45}
-                        marginChildrenRight={10}
+                        marginChildrenLeft={isPortrait ? 45 : 62}
+                        marginChildrenRight={isPortrait ? 10 : 20}
                         onDragStart={onSelectedDragStart}
                         onDragEnd={onSelectedDragEnd}
                         keyExtractor={(item) => item._id}
