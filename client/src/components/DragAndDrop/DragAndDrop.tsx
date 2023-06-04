@@ -25,6 +25,7 @@ export const DragAndDrop = ({
                                 onDeletePress,
                                 onEditPress
                             }: Props) => {
+    const iphoneWidth = 500;
     const initialWidth = Dimensions.get('window').width;
     const initialHeight = Dimensions.get('window').height;
     const portraitCheck = Dimensions.get('window').height > Dimensions.get('window').width;
@@ -137,8 +138,8 @@ export const DragAndDrop = ({
                         childrenHeight={childrenHeight}
                         marginChildrenTop={10}
                         marginChildrenBottom={10}
-                        marginChildrenLeft={isPortrait ? initialWidth < 500 ? 10 : 45 : 62}
-                        marginChildrenRight={isPortrait ? initialWidth < 500 ? 80 : 10 : 20}
+                        marginChildrenLeft={isPortrait ? initialWidth < iphoneWidth ? 10 : 45 : 62}
+                        marginChildrenRight={isPortrait ? initialWidth < iphoneWidth ? 80 : 10 : 20}
                         onDragStart={onSelectedDragStart}
                         onDragEnd={onSelectedDragEnd}
                         keyExtractor={(item) => item._id}
