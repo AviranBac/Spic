@@ -6,7 +6,7 @@ import HttpStatus, { StatusCodes } from "http-status-codes";
 import mongoose, * as Mongoose from "mongoose";
 import { updateOrderedCategoryIds } from "../db/dal/user-preferences/ordered-categories.dal";
 import { validateCategoriesOrderRequest } from "../validation/categories.validation";
-import { validationResult } from "express-validator/check";
+import { validationResult } from "express-validator";
 
 const router = Router();
 

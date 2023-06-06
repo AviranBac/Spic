@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 import { Request, Response, Router } from "express";
 import HttpStatus, { StatusCodes } from "http-status-codes";
-import { validationResult } from "express-validator/check";
+import { validationResult } from "express-validator";
 import { getUserDetails, setUserDetails } from "../db/dal/users.dal";
 import { authenticate, AuthenticatedRequest } from "../auth/auth-middleware";
 import validateUpdateUserRequest from "../validation/user.validation";
