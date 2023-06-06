@@ -1,4 +1,4 @@
-import { body, ValidationChain } from "express-validator/check";
+import { body, ValidationChain } from "express-validator";
 import { ItemModel } from "../db/schemas/item.schema";
 import { CategoryModel } from "../db/schemas/category.schema";
 import mongoose from "mongoose";

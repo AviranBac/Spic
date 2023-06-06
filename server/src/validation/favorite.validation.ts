@@ -1,4 +1,4 @@
-import { body } from "express-validator/check";
+import { body } from "express-validator";
 import { getItemIdsByUserId } from "../db/dal/items.dal";
 import { Request } from "express-validator/src/base";
 import { AuthenticatedRequest } from "../auth/auth-middleware";

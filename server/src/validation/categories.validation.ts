@@ -1,4 +1,4 @@
-import { body } from "express-validator/check";
+import { body } from "express-validator";
 import { getAllCategoryIds } from "../db/dal/categories.dal";
 import { isEqual, sortBy } from "lodash";
 

@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import * as jwtUtils from "../utils/jwt";
-import { validationResult } from "express-validator/check";
+import { validationResult } from "express-validator";
 import { IUser, UserModel } from "../db/schemas/user.schema";
 import { UserPreferencesModel } from "../db/schemas/user-preferences.schema";
 import { getInitialPreferences } from "../db/dal/user-preferences/user-preferences.dal";
