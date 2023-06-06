@@ -8,7 +8,7 @@ import {
     ItemWithCategory,
     ItemWithId
 } from "../db/dal/items.dal";
-import { validationResult } from "express-validator/check";
+import { validationResult } from "express-validator";
 import HttpStatus, { StatusCodes } from "http-status-codes";
 import { addRecord } from "../db/dal/chosen-item-records.dal";
 import mongoose from "mongoose";

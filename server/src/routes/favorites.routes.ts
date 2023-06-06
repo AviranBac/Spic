@@ -6,7 +6,7 @@ import {
     removeFavoriteItem,
     updateOrderedFavoriteItemIds
 } from "../db/dal/user-preferences/ordered-favorites.dal";
-import { validationResult } from "express-validator/check";
+import { validationResult } from "express-validator";
 import HttpStatus, { StatusCodes } from "http-status-codes";
 import mongoose from "mongoose";
 import Mongoose from "mongoose";

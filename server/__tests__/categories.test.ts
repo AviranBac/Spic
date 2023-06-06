@@ -1,17 +1,22 @@
 import request from "supertest";
 import mongoose from "mongoose";
-import { describe, expect, test, jest, beforeAll, afterEach } from '@jest/globals';
+import { afterEach, describe, expect, jest, test } from '@jest/globals';
 import { app } from "../src/server/app";
 import * as jwtUtils from "../src/utils/jwt";
 import { getOrderedCategories } from '../src/db/dal/categories.dal';
 import { updateOrderedCategoryIds } from "../src/db/dal/user-preferences/ordered-categories.dal";
+import HttpStatus from "http-status-codes";
+
+const userId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId();
+const {access_token: accessToken} = jwtUtils.signToken(`${userId}`);
 
 jest.mock("../src/server/server", () => ({
     initializeApplication: jest.fn()
 }));
 
+const orderedCategoryIds: string[] = ['646bbb18e7172a753df3032c', '646bbb18e7172a753df3032d'];
 jest.mock("../src/db/dal/categories.dal", () => ({
-    getOrderedCategories: jest.fn().mockImplementation(() => Promise.resolve([]))
+    getOrderedCategories: jest.fn().mockImplementation(() => Promise.resolve(orderedCategoryIds))
 }));
 
 jest.mock("../src/db/dal/user-preferences/ordered-categories.dal", () => ({
@@ -22,29 +27,36 @@ jest.mock("../src/validation/categories.validation", () => ({
     validateCategoriesOrderRequest: jest.fn().mockReturnValue([]),
 }));
 
-let accessToken = '';
-
-beforeAll(() => {
-    const testId = new mongoose.Types.ObjectId();
-    const { access_token } = jwtUtils.signToken(`${testId}`);
-    accessToken = access_token;
+afterEach(() => {
+    jest.clearAllMocks()
 });
-
-afterEach(() => { jest.clearAllMocks() });
 
 describe('Categories Routes', () => {
     test('Get /categories', async () => {
-        const res: any = await request(app).get("/categories").set("Authorization", `Bearer ${accessToken}`).send();
+        const res = await request(app)
+            .get("/categories")
+            .set("Authorization", `Bearer ${accessToken}`)
+            .send();
+
         expect(res).toBeTruthy();
-        expect(res.statusCode).toBe(200);
-        expect(getOrderedCategories).toHaveBeenCalledTimes(1);
+        expect(res.statusCode).toEqual(HttpStatus.OK);
+        expect(res.body).toEqual(orderedCategoryIds);
+        expect(getOrderedCategories).toHaveBeenCalledWith(userId);
     });
 
     test('Put /categories/order', async () => {
-        const res: any = await request(app).put("/categories/order").set("Authorization", `Bearer ${accessToken}`).send({orderedCategoryIds: ['646bbb18e7172a753df3032b', '646bbb18e7172a753df3032c']});
+        const res = await request(app)
+            .put("/categories/order")
+            .set("Authorization", `Bearer ${accessToken}`)
+            .send({orderedCategoryIds});
+
         expect(res).toBeTruthy();
-        expect(res.statusCode).toBe(200);
-        expect(getOrderedCategories).toHaveBeenCalledTimes(1);
-        expect(updateOrderedCategoryIds).toHaveBeenCalledTimes(1);
+        expect(res.statusCode).toEqual(HttpStatus.OK);
+        expect(res.body).toEqual(orderedCategoryIds);
+        expect(updateOrderedCategoryIds).toHaveBeenCalledWith(
+            userId,
+            orderedCategoryIds.map(id => new mongoose.Types.ObjectId(id))
+        );
+        expect(getOrderedCategories).toHaveBeenCalledWith(userId);
     });
 });

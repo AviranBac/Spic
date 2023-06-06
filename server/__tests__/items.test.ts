@@ -1,18 +1,72 @@
 import request from "supertest";
 import mongoose from "mongoose";
-import { describe, expect, test, jest, beforeAll, afterEach } from '@jest/globals';
+import { afterEach, describe, expect, jest, test } from '@jest/globals';
 import { app } from "../src/server/app";
 import * as jwtUtils from "../src/utils/jwt";
 import { getCommonlyUsedItems } from "../src/services/commonly-used-items";
-import { getItemsByCategoryAndUserId } from "../src/db/dal/items.dal";
-import { validateRecordRequest } from "../src/validation/items.validation";
+import { getItemsByCategoryAndUserId, ItemWithCategory } from "../src/db/dal/items.dal";
+import { Item } from '../src/db/schemas/item.schema';
+import HttpStatus from "http-status-codes";
+import { addRecord } from "../src/db/dal/chosen-item-records.dal";
+import { upsertFeedbacks } from "../src/services/feedback";
+
+const convertObjectIdsToString = (items: Item[] | ItemWithCategory[]) => {
+    return items.map((item: Item | ItemWithCategory) => ({
+            ...item,
+            ...((item as ItemWithCategory)._id && {_id: item.id!.toString()}),
+            id: item.id!.toString(),
+            userId: item.userId?.toString(),
+            categoryId: item.categoryId.toString(),
+            ...((item as ItemWithCategory).category && {
+                category: {
+                    ...(item as ItemWithCategory).category,
+                    id: (item as ItemWithCategory).category.id!.toString()
+                }
+            })
+        }
+    ));
+}
+
+const userId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId();
+const {access_token: accessToken} = jwtUtils.signToken(`${userId}`);
+
+jest
+    .useFakeTimers()
+    .setSystemTime(new Date('2023-06-06'));
 
 jest.mock("../src/server/server", () => ({
     initializeApplication: jest.fn()
 }));
 
+const categoryId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId();
+const mockedItems: Item[] = [
+    {
+        id: new mongoose.Types.ObjectId('646bbb18e7172a753df3032a'),
+        name: 'אייטם 1',
+        userId,
+        categoryId,
+        imageUrl: 'https://test.com'
+    }
+];
+const mockedCommonlyUsedItems: ItemWithCategory[] = [
+    {
+        ...mockedItems[0],
+        _id: mockedItems[0].id!,
+        category: {
+            id: mockedItems[0].categoryId,
+            name: 'קטגוריה 1',
+            imageUrl: 'https://test.com',
+            sentenceBeginning: ''
+        }
+    }
+];
+
 jest.mock("../src/services/commonly-used-items", () => ({
-    getCommonlyUsedItems: jest.fn().mockImplementation(() => Promise.resolve([]))
+    getCommonlyUsedItems: jest.fn().mockImplementation(() => Promise.resolve(mockedCommonlyUsedItems))
+}));
+
+jest.mock("../src/db/dal/items.dal", () => ({
+    getItemsByCategoryAndUserId: jest.fn().mockImplementation(() => Promise.resolve(mockedItems))
 }));
 
 jest.mock("../src/services/feedback", () => ({
@@ -23,11 +77,6 @@ jest.mock("../src/db/dal/chosen-item-records.dal", () => ({
     addRecord: jest.fn().mockImplementation(() => Promise.resolve())
 }));
 
-jest.mock("../src/db/dal/items.dal", () => ({
-    addItem: jest.fn().mockImplementation(() => Promise.resolve()),
-    getItemsByCategoryAndUserId: jest.fn().mockImplementation(() => Promise.resolve([]))
-}));
-
 jest.mock("../src/validation/items.validation", () => ({
     validateRecordRequest: jest.fn().mockReturnValue([]),
     validateAddItemRequest: jest.fn().mockReturnValue([]),
@@ -36,42 +85,49 @@ jest.mock("../src/validation/items.validation", () => ({
     validateItemOrderRequest: jest.fn().mockReturnValue([]),
 }));
 
-jest.mock("../src/db/dal/user-preferences/ordered-items-per-category.dal", () => ({
-    addItemToPerCategoryPreferences:jest.fn().mockImplementation(() => Promise.resolve()),
-}));
-
-let accessToken = '';
-
-beforeAll(() => {
-    const testId = new mongoose.Types.ObjectId();
-    const { access_token } = jwtUtils.signToken(`${testId}`);
-    accessToken = access_token;
+afterEach(() => {
+    jest.clearAllMocks()
 });
-
-afterEach(() => { jest.clearAllMocks() });
 
 describe('Items Routes', () => {
     test('Get /items/commonlyUsed', async () => {
-        const res: any = await request(app).get("/items/commonlyUsed").set("Authorization", `Bearer ${accessToken}`).send();
+        const res = await request(app)
+            .get("/items/commonlyUsed")
+            .set("Authorization", `Bearer ${accessToken}`)
+            .send();
+
         expect(res).toBeTruthy();
-        expect(res.statusCode).toBe(200);
-        expect(getCommonlyUsedItems).toHaveBeenCalledTimes(1);
+        expect(res.statusCode).toEqual(HttpStatus.OK);
+        expect(res.body).toEqual(convertObjectIdsToString(mockedCommonlyUsedItems));
+        expect(getCommonlyUsedItems).toHaveBeenCalledWith(userId, new Date());
     });
 
     test('Get /items/:categoryId', async () => {
-        const res: any = await request(app).get("/items/646bbb18e7172a753df3032b").set("Authorization", `Bearer ${accessToken}`).send({orderedCategoryIds: ['646bbb18e7172a753df3032b', '646bbb18e7172a753df3032c']});
+        const res = await request(app)
+            .get(`/items/${categoryId}`)
+            .set("Authorization", `Bearer ${accessToken}`)
+            .send();
+
         expect(res).toBeTruthy();
-        expect(res.statusCode).toBe(200);
-        expect(getItemsByCategoryAndUserId).toHaveBeenCalledTimes(1);
+        expect(res.statusCode).toEqual(HttpStatus.OK);
+        expect(res.body).toEqual(convertObjectIdsToString(mockedItems));
+        expect(getItemsByCategoryAndUserId).toHaveBeenCalledWith(categoryId, userId);
     });
 
     test('Post /items/record', async () => {
-        const res: any = await request(app).post("/items/record").set("Authorization", `Bearer ${accessToken}`).send({
-            itemId: '646bbb18e7172a753df3032b',
-            requestTime: new Date(),
-            recommendedItemIds: ['646bbb18e7172a753df3032d', '646bbb18e7172a753df3032c']
-        });
+        const itemId: string = new mongoose.Types.ObjectId().toString();
+        const requestTime: string = new Date().toString();
+        const recommendedItemIds: string[] = [itemId];
+
+        const res = await request(app)
+            .post("/items/record")
+            .set("Authorization", `Bearer ${accessToken}`)
+            .send({itemId, requestTime, recommendedItemIds});
+
         expect(res).toBeTruthy();
-        expect(res.statusCode).toBe(200);
+        expect(res.statusCode).toEqual(HttpStatus.OK);
+        expect(res.body).toEqual({});
+        expect(addRecord).toHaveBeenCalledWith({itemId: new mongoose.Types.ObjectId(itemId), userId, requestTime});
+        expect(upsertFeedbacks).toHaveBeenCalledWith(recommendedItemIds, itemId, userId)
     });
 });
