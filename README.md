@@ -7,6 +7,7 @@ Final project in Full Stack Development - Bachelor's Degree
 * TypeScript
 * MongoDB
 * Amazon S3
+* Docker
 
 #### External APIs:
 * Google Cloud Text-to-Speech
