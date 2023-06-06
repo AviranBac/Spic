@@ -12,27 +12,8 @@ import { describe, expect, test, jest, beforeAll, afterEach } from '@jest/global
 import { app } from "../src/server/app";
 import * as jwtUtils from "../src/utils/jwt";
 import { getCommonlyUsedItems } from "../src/services/commonly-used-items";
-import {
-    addItem,
-    deleteItemById,
-    editItemById,
-    getItemsByCategoryAndUserId,
-    ItemWithCategory,
-    ItemWithId
-} from "../src/db/dal/items.dal";
-import {
-    validateAddItemRequest,
-    validateDeleteItemRequest,
-    validateEditItemRequest,
-    validateItemOrderRequest,
-    validateRecordRequest
-} from "../src/validation/items.validation";
-import {
-    addItemToPerCategoryPreferences,
-    updateOrderedItemIdsByCategoryId
-} from "../src/db/dal/user-preferences/ordered-items-per-category.dal";
-import { upsertFeedbacks } from "../src/services/feedback";
-import { addRecord } from "../src/db/dal/chosen-item-records.dal";
+import { getItemsByCategoryAndUserId } from "../src/db/dal/items.dal";
+import { validateRecordRequest } from "../src/validation/items.validation";
 
 jest.mock("../src/server/server", () => ({
     initializeApplication: jest.fn()
@@ -101,17 +82,4 @@ describe('Items Routes', () => {
         expect(res).toBeTruthy();
         expect(res.statusCode).toBe(200);
     });
-
-    // test('Post /items/', async () => {
-    //     const res: any = await request(app).post("/items/").set("Authorization", `Bearer ${accessToken}`).send({
-    //         name: 'test', 
-    //         imageUrl: 'test',
-    //         categoryId: '646bbb18e7172a753df3032b',
-    //     });
-    //     expect(res).toBeTruthy();
-    //     expect(res.statusCode).toBe(200);
-    //     expect(addRecord).toHaveBeenCalledTimes(1);
-    //     expect(upsertFeedbacks).toHaveBeenCalledTimes(1);
-    //     expect(addItemToPerCategoryPreferences).toHaveBeenCalledTimes(1);
-    // });
 });
