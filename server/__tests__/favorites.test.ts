@@ -1,10 +1,3 @@
-jest.mock("../src/routes/auth.routes");
-jest.mock("../src/routes/user.routes");
-jest.mock("../src/db/mongo-connection");
-jest.mock("../src/routes/items.routes");
-jest.mock("../src/routes/photos.routes");
-jest.mock('../src/routes/text-to-speech.routes');
-
 import request from "supertest";
 import { describe, expect, test, jest, beforeAll, afterEach } from '@jest/globals';
 import { app } from "../src/server/app";
